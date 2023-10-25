@@ -1,0 +1,65 @@
+version: "3.4"
+
+networks:
+  pal-network:
+
+services:
+  frontend:
+    build:
+      context: frontend
+      target: development
+    stdin_open: true
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: always
+    networks:
+      - pal-network
+  backend:
+    build:
+      context: ./backend
+      target: builder
+    volumes:
+      - ./backend/app:/app
+    env_file:
+      - .env
+    restart: "no"
+    networks:
+      - pal-network
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo
+    restart: always
+    env_file:
+      - .env
+    networks:
+      - pal-network
+    volumes:
+      - ./data:/data/db
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    env_file:
+      - .env
+    networks:
+      - pal-network
+    depends_on:
+      - mongo
+  nginx:
+    restart: always
+    build: ./nginx/
+    volumes:
+      - ./nginx/ssl/key.pem:/root/ssl/key.pem
+      - ./nginx/ssl/cert.pem:/root/ssl/cert.pem
+      - ./logs/nginx:/var/log/nginx/
+    ports:
+      - "443:443"
+    depends_on:
+      - backend
+      - frontend
+      - mongo
+      - mongo-express
+    networks:
+      - pal-network
