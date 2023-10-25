@@ -1,9 +1,14 @@
 import React from "react";
+import {Layout} from "../components";
 
 export const Login = () => {
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
+    <Layout>
+      <div className="h-48">
+        <form>
+          <p>dsds</p>
+        </form>
+      </div>
+    </Layout>
   )
 }
