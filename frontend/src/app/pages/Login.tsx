@@ -6,7 +6,7 @@ export const Login = () => {
     <Layout>
       <div className="h-48">
         <form>
-          <p>dsds</p>
+
         </form>
       </div>
     </Layout>
