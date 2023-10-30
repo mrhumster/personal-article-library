@@ -3,6 +3,9 @@ version: "3.4"
 networks:
   pal-network:
 
+volumes:
+  node_modules:
+
 services:
   frontend:
     build:

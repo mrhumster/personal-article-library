@@ -1,22 +1,29 @@
 import React, {useEffect, useRef, useState} from "react";
 import { Tooltip } from '@consta/uikit/Tooltip';
 import { Button } from '@consta/uikit/Button';
+import {IconComponent} from "@consta/uikit/Icon";
 
+interface HeaderButtonPropsIFace {
+  text: string
+  icon: IconComponent | undefined
+  active: boolean
+  callback: () => void
+}
 
-export const HeaderButton = (props) => {
+export const HeaderButton = (props: HeaderButtonPropsIFace) => {
   const { text, icon, active, callback } = props
-  const buttonRef = useRef(undefined)
+  const buttonRef = useRef<HTMLButtonElement>(null)
   const [showTooltip, setShowTooltip] = useState(false)
 
   useEffect(() => {
-    if (buttonRef) {
-      buttonRef.current.addEventListener('mouseover', () => setShowTooltip(true))
-      buttonRef.current.addEventListener('mouseout', () => setShowTooltip(false))
+    if (buttonRef.current) {
+      buttonRef.current?.addEventListener('mouseover', () => setShowTooltip(true))
+      buttonRef.current?.addEventListener('mouseout', () => setShowTooltip(false))
     }
     return () => {
-      if (buttonRef) {
-        buttonRef.current.removeEventListener('mouseover', () => setShowTooltip(true))
-        buttonRef.current.removeEventListener('mouseout', () => setShowTooltip(false))
+      if (buttonRef.current) {
+        buttonRef.current?.removeEventListener('mouseover', () => setShowTooltip(true))
+        buttonRef.current?.removeEventListener('mouseout', () => setShowTooltip(false))
       }
     }
 

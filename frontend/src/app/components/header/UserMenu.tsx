@@ -3,41 +3,52 @@ import { Tooltip } from '@consta/uikit/Tooltip';
 import { Avatar } from '@consta/uikit/Avatar';
 import { IconExit } from '@consta/icons/IconExit';
 import { IconSettings } from '@consta/icons/IconSettings';
-import { ContextMenu } from '@consta/uikit/ContextMenu';
+import {ContextMenu} from '@consta/uikit/ContextMenu';
+import {logout} from "../../hooks/user.actions.ts";
+import {useDispatch} from "react-redux";
+import {clearAuthData} from "../../features/auth/authSlice.ts";
+import {IconComponent} from "@consta/uikit/Icon";
 
 type Item = {
-  label: string;
-  imageLeft?: IconComponent;
-  imageRight?: IconComponent;
+  label: string,
+  imageLeft?:  IconComponent,
+  accent?:  "alert" | "success" | "warning" | undefined,
+  onClick?: () => void
 };
 
-const items: Item[] = [
-  {
-    label: 'Настройки',
-    accent: 'primary',
-    imageLeft: IconSettings,
-  },
-  {
-    label: 'Выйти',
-    accent: 'primary',
-    imageLeft: IconExit
-  },
-];
 
 export const UserMenu = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const buttonRef= useRef(undefined)
-  const [showTooltip, setShowTooltip] = useState(false)
-  // TODO: Закрывать меню по клику вне области
+  const buttonRef= useRef<HTMLDivElement>(null)
+  const [showTooltip, setShowTooltip] = useState<boolean>(false)
+  const dispatch = useDispatch()
+  const handleClickExit = () => {
+    dispatch(clearAuthData())
+    logout()
+  }
+  const items: Item[] = [
+    {
+      label: 'Настройки',
+      imageLeft: IconSettings
+    },
+    {
+      label: 'Выйти',
+      imageLeft: IconExit,
+      onClick: handleClickExit
+    },
+  ];
+
   useEffect(() => {
-    if (buttonRef) {
-      buttonRef.current.addEventListener('mouseover', () => setShowTooltip(true))
-      buttonRef.current.addEventListener('mouseout', () => setShowTooltip(false))
+    if (buttonRef.current) {
+      console.log(buttonRef)
+      buttonRef.current?.addEventListener('mouseover', () => setShowTooltip(true))
+      buttonRef.current?.addEventListener('mouseout', () => setShowTooltip(false))
     }
     return () => {
-      if (buttonRef) {
-        buttonRef.current.removeEventListener('mouseover', () => setShowTooltip(true))
-        buttonRef.current.removeEventListener('mouseout', () => setShowTooltip(false))
+      if (buttonRef.current) {
+        console.log(buttonRef)
+        buttonRef.current?.removeEventListener('mouseover', () => setShowTooltip(true))
+        buttonRef.current?.removeEventListener('mouseout', () => setShowTooltip(false))
       }
     }
 
@@ -50,25 +61,25 @@ export const UserMenu = () => {
          ref={buttonRef}
          onClick={() => setIsOpen(!isOpen)}
     >
-      <Avatar name="Вадим Матвеев" />
+      <Avatar name="Вадим Матвеев" className="select-none" />
       <Tooltip className={showTooltip && !isOpen? 'z-40':'hidden z-40'}
-                       direction="rightCenter"
-                       spareDirection="downStartLeft"
-                       size="m"
-                       anchorRef={buttonRef}
-                       isInteractive={false}
-                       offset={6}
+               direction="rightCenter"
+               spareDirection="downStartLeft"
+               size="m"
+               anchorRef={buttonRef}
+               isInteractive={false}
+               offset={6}
       >{isOpen ? 'Меню' : 'Аккаунт'}</Tooltip>
       <ContextMenu
         isOpen={isOpen}
         items={items}
+        onClickOutside={() => setIsOpen(false)}
         getItemStatus={(item) => item.accent}
         getItemLeftIcon={(item) => item.imageLeft}
-        getItemRightIcon={(item) => item.imageRight}
         anchorRef={buttonRef}
         direction={"upRight"}
-        offset={-48}
-        arrowOffset={-35}
+        offset={-40}
+        arrowOffset={-45}
       />
     </div>
   )

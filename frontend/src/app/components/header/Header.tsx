@@ -1,20 +1,22 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React from 'react'
 import { IconBook } from "@consta/uikit/IconBook";
 import { IconDocFilled } from "@consta/uikit/IconDocFilled";
 import logo from '../../../assets/images/logo-without-text.svg'
 import {HeaderButton} from "./HeaderButton.tsx";
 import {UserMenu} from "./UserMenu.tsx";
 
+
 export const Header = () => {
   const handlerClickLibButton = () => {
     console.log('click')
   }
 
+
   return (
     <header className="bg-zinc-900 text-white shadow-xl absolute inset-y-0 left-0 w-16 top-0 z-10">
-        <section className="max-w-screen-lg h-full mx-auto p-2 flex flex-col">
-          <h1 className="mb-4 mx-auto w-6">
-            <a href="#hero">
+        <section className="max-w-screen-lg h-full mx-auto p-1 flex flex-col">
+          <h1 className="mb-4 mt-2 mx-auto w-6">
+            <a href="#">
               <img className="mx-auto" src={logo} alt="logo"/>
             </a>
           </h1>
@@ -24,7 +26,7 @@ export const Header = () => {
               <HeaderButton text="Библиотека" icon={IconBook} active={true} callback={handlerClickLibButton}/>
               <HeaderButton text="Блокнот" icon={IconDocFilled} active={false} callback={handlerClickLibButton}/>
             </nav>
-            <nav className="flex flex-col">
+            <nav className="flex flex-col mb-1">
               <UserMenu />
             </nav>
           </div>
