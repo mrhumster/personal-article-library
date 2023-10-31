@@ -1,14 +1,9 @@
-// @ts-ignore
+
 import IconBookSizeM from '../../../assets/icons/books/books_m.svg?react'
-// @ts-ignore
 import IconClockSizeM from '../../../assets/icons/clock/clock_m.svg?react'
-// @ts-ignore
 import IconStarSizeM from '../../../assets/icons/star/star_m.svg?react'
-// @ts-ignore
 import IconOpenBookSizeM from '../../../assets/icons/open_book/open_book_m.svg?react'
-// @ts-ignore
 import IconCopyFileSizeM from '../../../assets/icons/copy_file/copy_file_m.svg?react'
-// @ts-ignore
 import IconTrashSizeM from '../../../assets/icons/trash/trash_m.svg?react'
 import { createIcon } from '@consta/icons/Icon';
 
