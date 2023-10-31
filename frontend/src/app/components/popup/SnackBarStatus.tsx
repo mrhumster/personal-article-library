@@ -15,7 +15,7 @@ const mapIconByStatus: Record<SnackBarItemStatus, IconComponent | undefined> = {
   warning: undefined,
 };
 
-const getItemIcon = (item: Item) => mapIconByStatus[item.status];
+const getItemIcon = (item: Item): IconComponent | undefined => mapIconByStatus[item.status];
 const getItemShowProgress = (item: Item) => item.progressMode;
 
 

@@ -2,7 +2,7 @@ import React from 'react';
 import {Header} from "../header";
 import {RootState} from "../../store";
 import { useSelector } from 'react-redux'
-import {SnackBarStatus} from "../snack-bar-status/SnackBarStatus.tsx";
+import {SnackBarStatus} from "../popup/SnackBarStatus.tsx";
 
 export const Layout =({children} : {children: JSX.Element}) => {
   const auth = useSelector((state: RootState) => state.auth)

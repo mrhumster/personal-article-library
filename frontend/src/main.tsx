@@ -4,21 +4,20 @@ import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import { Theme, presetGpnDark } from '@consta/uikit/Theme';
 import './style.css'
 import {Login} from "./app/pages";
-import { store } from './app/store/store.ts'
+import { store } from './app/store'
 import { Provider } from 'react-redux'
 import {WorkSpace} from "./app/pages/WorkSpace.tsx";
 import {ProtectedRoute} from "./app/routes/ProtectedRoute.tsx";
 
-const router = createBrowserRouter([
-  {
-    path: '/login',
-    element: <Login/>
-  },
-  {
-    path: '/',
-    element: <ProtectedRoute><WorkSpace /></ProtectedRoute>
-  }
-  ],
+const router = createBrowserRouter(
+  [{
+            path: '/login',
+            element: <Login/>
+          },
+          {
+            path: '/',
+            element: <ProtectedRoute><WorkSpace /></ProtectedRoute>
+          }],
   {
     basename: "/"
   }

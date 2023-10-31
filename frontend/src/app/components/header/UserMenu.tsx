@@ -6,7 +6,7 @@ import { IconSettings } from '@consta/icons/IconSettings';
 import {ContextMenu} from '@consta/uikit/ContextMenu';
 import {logout} from "../../hooks/user.actions.ts";
 import {useDispatch, useSelector} from "react-redux";
-import {clearAuthData} from "../../features/auth/authSlice.ts";
+import {clearAuthData} from "../../features/auth";
 import {IconComponent} from "@consta/uikit/Icon";
 import {RootState} from "../../store";
 
@@ -78,6 +78,7 @@ export const UserMenu = () => {
         onClickOutside={() => setIsOpen(false)}
         getItemStatus={(item) => item.accent}
         getItemLeftIcon={(item) => item.imageLeft}
+        size={'s'}
         anchorRef={buttonRef}
         direction={"upRight"}
         offset={-40}
