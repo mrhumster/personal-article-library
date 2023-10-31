@@ -15,6 +15,7 @@ class UserSchema(BaseModel):
     username: str = Field(...)
     email: EmailStr = Field(...)
     disabled: bool = Field(...)
+    fullName: str = Field(...)
     theme: str
 
 class UpdateUserModel(BaseModel):
@@ -68,6 +69,7 @@ class UserRegister(BaseModel):
     username: str
     password: str
     email: str
+    fullName: str
     disabled: Optional[bool] = None
     theme: Optional[str] = 'light'
 

@@ -1,6 +1,8 @@
 import {BaseQueryFn, createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 import {createSlice} from "@reduxjs/toolkit";
 import {getUser, setUserData} from "../../hooks/user.actions.ts";
+import {addMessage} from "../alert";
+import {isErrorWithDetail} from "../helpers.ts";
 
 const user= getUser()
 
@@ -15,13 +17,24 @@ export interface UserResponse {
   id: string,
   email: string,
   username: string,
+  fullName: string,
+  disabled: boolean,
+  theme: string
+}
+
+export interface UserIFace {
+  username: string,
+  password: string,
+  email: string,
+  fullName: string,
   disabled: boolean,
   theme: string
 }
 
 export interface AuthState {
   username: string | undefined,
-  email: string | undefined
+  email: string | undefined,
+  fullName: string | undefined
   isExists: boolean | undefined,
   isLogin: boolean
 }
@@ -29,6 +42,7 @@ export interface AuthState {
 const initialState: AuthState = {
   username: user?.username,
   email: user?.email,
+  fullName: user?.fullName,
   isExists: user ? true : undefined,
   isLogin: !!user
 }
@@ -44,6 +58,11 @@ const baseQuery = fetchBaseQuery({
 
 const baseQueryWithErrorHandler: BaseQueryFn = async (args, api, extraOptions) => {
   const result = await baseQuery(args, api, extraOptions)
+  if (result.error) {
+    if (isErrorWithDetail(result.error.data)) {
+      api.dispatch(addMessage({message: result.error.data.detail, status: 'alert', progressMode: 'line'}))
+    }
+  }
   return result
 }
 
@@ -54,7 +73,7 @@ export const backendApi = createApi({
     checkUsername: builder.query({
       query: (username) => `/users/${username}`,
       transformResponse: (response: { data: UserResponse[] }) => response.data[0],
-      transformErrorResponse: (response: ErrorResponse) => response.data.detail
+      transformErrorResponse: (response: ErrorResponse) => response.data
     }),
     getToken: builder.mutation({
       query: (args) => {
@@ -72,6 +91,18 @@ export const backendApi = createApi({
         }
       },
       transformErrorResponse: (response: ErrorResponse) => response.data.detail
+    }),
+    createUser: builder.mutation({
+      query: (args) => {
+        return {
+          url: '/users/create',
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(args)
+        }
+      }
     })
   }),
 })
@@ -90,6 +121,12 @@ export const authSlice = createSlice({
     },
     setUsername: (state: AuthState, action) => {
       state.username = action.payload
+    },
+    setEmail: (state: AuthState, action) => {
+      state.email = action.payload
+    },
+    setFullNameAction: (state: AuthState, action) => {
+      state.fullName = action.payload
     },
     clearAuthData: (state: AuthState) => {
       state.isExists = undefined
@@ -122,19 +159,28 @@ export const authSlice = createSlice({
         setUserData(payload)
       }
     )
+    builder.addMatcher(
+      backendApi.endpoints.createUser.matchFulfilled,
+      (state, {payload}) => {
+        state.isLogin = true
+        setUserData(payload)
+      }
+    )
   }
 })
 
 export const {
+  setEmail,
   setUsername,
+  setFullNameAction,
   setUserAsExist,
   setUserAsNotExist,
   clearAuthData
 } = authSlice.actions
 
-export default authSlice.reducer
 
 export const {
   useCheckUsernameQuery ,
-  useGetTokenMutation
+  useGetTokenMutation,
+  useCreateUserMutation
 } = backendApi

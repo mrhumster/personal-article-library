@@ -2,7 +2,8 @@
 interface UserIFace {
     username: string,
     email: string,
-    theme: string
+    theme: string,
+    fullName: string
 }
 
 interface UserDataIFace {

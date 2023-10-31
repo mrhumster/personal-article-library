@@ -5,9 +5,10 @@ import { IconExit } from '@consta/icons/IconExit';
 import { IconSettings } from '@consta/icons/IconSettings';
 import {ContextMenu} from '@consta/uikit/ContextMenu';
 import {logout} from "../../hooks/user.actions.ts";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {clearAuthData} from "../../features/auth/authSlice.ts";
 import {IconComponent} from "@consta/uikit/Icon";
+import {RootState} from "../../store";
 
 type Item = {
   label: string,
@@ -21,6 +22,7 @@ export const UserMenu = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const buttonRef= useRef<HTMLDivElement>(null)
   const [showTooltip, setShowTooltip] = useState<boolean>(false)
+  const auth = useSelector((state: RootState) => state.auth)
   const dispatch = useDispatch()
   const handleClickExit = () => {
     dispatch(clearAuthData())
@@ -61,7 +63,7 @@ export const UserMenu = () => {
          ref={buttonRef}
          onClick={() => setIsOpen(!isOpen)}
     >
-      <Avatar name="Вадим Матвеев" className="select-none" />
+      <Avatar name={auth.fullName} className="select-none" />
       <Tooltip className={showTooltip && !isOpen? 'z-40':'hidden z-40'}
                direction="rightCenter"
                spareDirection="downStartLeft"

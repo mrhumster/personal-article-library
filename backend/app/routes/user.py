@@ -34,10 +34,11 @@ async def get_user_data(username: str):
     user = await retrieve_user(username)
     logger.info(user)
     if user:
+        user.pop('hashed_password')
         return ResponseModel(user, 'Пользователь успешно доставлен')
     raise HTTPException(
         status_code=status.HTTP_400_BAD_REQUEST,
-        detail='Пользователь не найден',
+        detail='Пользователь не найден. Для регистрации укажите адрес электронной почты.',
         headers={'WWW-Authenticate': 'Bearer'}
     )
 
@@ -59,7 +60,6 @@ async def update_user_data(username: str, req: UpdateUserModel = Body(...), curr
 
 @router.post("/token", response_model=Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    logger.info(form_data)
     user = await authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -80,8 +80,9 @@ async def create_user(register_form: UserRegister):
         'hashed_password': create_password_hash(register_form.password),
         'joined': str(datetime.now(timezone.utc)),
         'email': register_form.email,
-        'disabled': False,
-        'theme': 'light'
+        'fullName': register_form.fullName,
+        'disabled': register_form.disabled,
+        'theme': register_form.theme
     }
 
     check_users = await get_user(attributes['username'])

@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
-import {authSlice, backendApi} from "../features/auth/authSlice.ts"
+import {authSlice, backendApi} from "../features/auth"
 import { setupListeners } from "@reduxjs/toolkit/query";
+import {snackBarSlice} from "../features/alert";
 
 export const store = configureStore({
     reducer: {
         [backendApi.reducerPath]: backendApi.reducer,
-        auth: authSlice.reducer
+        auth: authSlice.reducer,
+        snackBar: snackBarSlice.reducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()
