@@ -71,7 +71,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     access_token = create_access_token(
         data={"sub": user['username']}, expires_delta=access_token_expires
     )
-    return {"access": access_token, "refresh": "Sorry, this method not implement", "user": user, "token_type": "bearer"}
+    return {"access_token": access_token, "refresh": "Sorry, this method not implement", "user": user, "token_type": "bearer"}
 
 @router.post("/create", response_model=Token)
 async def create_user(register_form: UserRegister):

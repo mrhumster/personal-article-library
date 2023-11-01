@@ -26,7 +26,8 @@ export interface AuthState {
 
 
 export interface UserDataIFace {
-    access: string,
+    access_token: string,
+    token_type: string,
     refresh: string,
     user: UserIFace
 }

@@ -12,7 +12,7 @@ from utils.environment import Config
 from utils.schema import UserSchema, TokenData
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="users/token")
 
 
 def create_password_hash(password):

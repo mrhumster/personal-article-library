@@ -102,10 +102,10 @@ export const Login = () => {
         <div
           className="w-96 h-96 dark:bg-zinc-800 bg-gray-100 border dark:border-zinc-900 rounded dark:shadow-zinc-900 shadow-xl">
           <form className='flex flex-col justify-center items-center' onSubmit={handleSubmit}>
-            <img src={logo} alt="logo" className={auth.isExists ? 'mt-4 w-16' : 'mt-4 w-24'}/>
-            <h3 className="text-2xl text-zinc-300 p-3">Библиотека</h3>
+            <img src={logo} alt="logo" className={auth.isExists ? 'mt-4 w-16  select-none' : 'mt-4 w-24 select-none'}/>
+            <h3 className="p-3 select-none text-gray-200 text-xl antialiased font-normal tracking-wide">Personal Article Library</h3>
             {auth.isExists && auth.email &&
-                <User className='mb-5'
+                <User className='mb-5 select-none'
                       name={auth.fullName}
                       info={auth.email}
                       view="ghost"

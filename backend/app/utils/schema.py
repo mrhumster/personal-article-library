@@ -1,4 +1,7 @@
+from dataclasses import dataclass
 from typing import Optional, List
+
+from fastapi import Form
 from pydantic import BaseModel, Field, EmailStr
 from datetime import datetime
 
@@ -13,15 +16,16 @@ class AuthorSchema(BaseModel):
     first_name: str
     last_name: str
 
-class ArticleSchema(BaseModel):
-    owner: str = Field(...)
-    added: datetime = Field(...)
-    file: str
-    year: int
-    title: str
-    source: str
-    reference_type: str
-    authors: AuthorSchema
+@dataclass
+class ArticleSchema:
+    owner: str = Form(...)
+    added: datetime = Form(...)
+    file: str = Form(...)
+    year: int = Form(...)
+    title: str = Form(...)
+    source: str = Form(...)
+    reference_type: str = Form(...)
+
 
 class UserSchema(BaseModel):
     username: str = Field(...)
@@ -71,7 +75,7 @@ class TokenData(BaseModel):
     username: Optional[str] = None
 
 class Token(BaseModel):
-    access: str
+    access_token: str
     refresh: str
     user: UserSchema
     token_type: str

@@ -23,7 +23,7 @@ export const AddNewCollection = () => {
     }
   }, [])
 
-  if (isClicked) return <TextField className="ms-4 me-4" ref={inputRef} placeholder={'Имя коллекции'}/>
+  if (isClicked) return <TextField className="ms-4 me-4" size={'s'} ref={inputRef} placeholder={'Имя коллекции'}/>
   if (!isClicked) return <Text className="ms-4 italic text-stone-500" onClick={() => setIsClicked(true)}>Новая коллекция</Text>
 
 }

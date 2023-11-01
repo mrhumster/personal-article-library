@@ -9,6 +9,7 @@ from utils.environment import Config
 client = motor.motor_asyncio.AsyncIOMotorClient(Config.MONGO_URI)
 database = client.users
 user_collection = database.get_collection("users_collection")
+article_collection = database.get_collection("articles_collection")
 history_collection = database.get_collection("history_query")
 
 
@@ -97,3 +98,18 @@ async def get_user(username: str) -> dict | bool:
     if user:
         return user_helper(user)
     return False
+
+'''
+Helper function for CRUD of Article object in MongoDB
+'''
+# TODO: Доделать хелпер
+def article_helper(article) -> dict:
+    return {
+        "id": str(article["_id"]),
+        "owner": article["owner"],
+    }
+
+async def add_article(article_data: dict) -> dict:
+    article = await article_collection.insert_one(article_data)
+    new_article = await article_collection.find_one({"_id": article.inserted_id})
+    return article_helper(new_article)

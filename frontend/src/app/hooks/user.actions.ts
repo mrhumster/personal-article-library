@@ -11,7 +11,7 @@ export function getUser() {
 
 export function getAccessToken() {
     const auth:UserDataIFace = JSON.parse(localStorage.getItem("auth")!);
-    if (auth && auth.access) return auth.access;
+    if (auth && auth.access_token) return auth.access_token;
     return;
 }
 
@@ -24,7 +24,8 @@ export function getRefreshToken() {
 
 export function setUserData(data: UserDataIFace) {
     localStorage.setItem("auth", JSON.stringify({
-        access: data.access,
+        access_token: data.access_token,
+        token_type: data.token_type,
         refresh: data.refresh,
         user: data.user,
     }))

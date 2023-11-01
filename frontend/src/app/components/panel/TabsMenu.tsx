@@ -5,9 +5,9 @@ import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
 import {IconBookmarkStroked} from "@consta/uikit/IconBookmarkStroked";
 import {IconBook, IconClock, IconCopyFile, IconOpenBook, IconStar, IconTrash} from "./Icons.ts";
 import {useDispatch, useSelector} from "react-redux";
-import {setSelectedMenuItem} from "../../features/ui/uiSlice.ts";
+import {setSelectedMenuItem} from "../../features/ui";
 import {RootState} from "../../store";
-import {collectionsMenuItemButton} from "./collectionsMenuItemButton.tsx";
+import {collectionsMenuItemButton} from "./CollectionsMenuItemButton.tsx";
 import {AddNewCollection} from "./AddNewCollection.tsx";
 
 type Group = {
