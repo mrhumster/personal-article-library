@@ -5,7 +5,5 @@ export {
   clearAuthData,
   setEmail,
   setUsername,
-  useGetTokenMutation,
-  useCheckUsernameQuery,
-  backendApi
+  setFullName
 } from './authSlice.ts'

@@ -11,12 +11,13 @@ import {
   clearAuthData,
   setUsername as setUsernameAction,
   setEmail as setEmailAction,
-  useCheckUsernameQuery,
-  useGetTokenMutation, setFullNameAction, useCreateUserMutation, UserIFace
-} from "../features/auth/authSlice.ts";
+  setFullName as setFullNameAction
+} from "../features/auth"
 import {RootState} from "../store";
-import {getUser} from "../hooks/user.actions.ts";
+import {getUser} from "../hooks";
 import {useNavigate} from "react-router-dom";
+import {useCheckUsernameQuery, useCreateUserMutation, useGetTokenMutation} from "../services/backend";
+import {UserIFace} from "../types";
 
 
 export const Login = () => {

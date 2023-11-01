@@ -2,7 +2,6 @@ from typing import Optional, List
 from pydantic import BaseModel, Field, EmailStr
 from datetime import datetime
 
-
 class HistoryBaseSchema(BaseModel):
     username: str = Field(...)
     query: str = Field(...)
@@ -10,6 +9,19 @@ class HistoryBaseSchema(BaseModel):
 class HistorySchema(HistoryBaseSchema):
     date: datetime
 
+class AuthorSchema(BaseModel):
+    first_name: str
+    last_name: str
+
+class ArticleSchema(BaseModel):
+    owner: str = Field(...)
+    added: datetime = Field(...)
+    file: str
+    year: int
+    title: str
+    source: str
+    reference_type: str
+    authors: AuthorSchema
 
 class UserSchema(BaseModel):
     username: str = Field(...)

@@ -42,13 +42,11 @@ export const UserMenu = () => {
 
   useEffect(() => {
     if (buttonRef.current) {
-      console.log(buttonRef)
       buttonRef.current?.addEventListener('mouseover', () => setShowTooltip(true))
       buttonRef.current?.addEventListener('mouseout', () => setShowTooltip(false))
     }
     return () => {
       if (buttonRef.current) {
-        console.log(buttonRef)
         buttonRef.current?.removeEventListener('mouseover', () => setShowTooltip(true))
         buttonRef.current?.removeEventListener('mouseout', () => setShowTooltip(false))
       }

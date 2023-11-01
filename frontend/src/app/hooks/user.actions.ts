@@ -1,16 +1,4 @@
-
-interface UserIFace {
-    username: string,
-    email: string,
-    theme: string,
-    fullName: string
-}
-
-interface UserDataIFace {
-    access: string,
-    refresh: string,
-    user: UserIFace
-}
+import {UserDataIFace} from "../types";
 
 export function getUser() {
     const auth:UserDataIFace = JSON.parse(localStorage.getItem("auth")!);
@@ -23,7 +11,8 @@ export function getUser() {
 
 export function getAccessToken() {
     const auth:UserDataIFace = JSON.parse(localStorage.getItem("auth")!);
-    return auth.access;
+    if (auth && auth.access) return auth.access;
+    return;
 }
 
 
