@@ -5,7 +5,7 @@ from routes.article import router as article_route
 from utils.environment import Config
 
 
-app = FastAPI(title='Event World App',
+app = FastAPI(title='Personal Article Library API',
               description='API build for MongoDB with FastAPI',
               version='0.1',
               docs_url='/docs',

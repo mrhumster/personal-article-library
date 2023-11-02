@@ -8,7 +8,7 @@ from starlette.background import BackgroundTasks
 from uvicorn.main import logger
 
 from authorisation.auth import get_current_active_user
-from utils.db import add_article
+from utils.db import add_article, retrieve_articles
 from utils.environment import Config
 from utils.schema import ResponseModel, User, ArticleSchema, ArticleInDB
 
@@ -52,5 +52,13 @@ async def upload(attach: UploadFile, background_tasks: BackgroundTasks, current_
 
     background_tasks.add_task(analyzeFile, file_uuid=filename, user=current_user, meta=meta)
     attach.file.close()
-
     return {'meta': meta}
+
+@router.get("/", response_description="Статьи")
+async def get_articles(current_user: User = Depends(get_current_active_user)):
+    articles = await retrieve_articles(current_user)
+    if articles:
+        return {'articles': articles}
+    raise HTTPException(
+        status_code=status.HTTP_204_NO_CONTENT
+    )

@@ -5,7 +5,7 @@ from bson.objectid import ObjectId
 from uvicorn.main import logger
 
 from utils.environment import Config
-from utils.schema import ArticleInDB
+from utils.schema import ArticleInDB, User
 
 client = motor.motor_asyncio.AsyncIOMotorClient(Config.MONGO_URI)
 database = client.pal
@@ -60,21 +60,6 @@ async def retrieve_user_by_name(username: str) -> dict | bool:
         return user_helper(user)
     return False
 
-async def retrieve_history_item_by_username(username: str) -> list:
-    history_items = []
-    async for item in history_collection.find({"username": username}).sort("-date"):
-        history_items.append(history_helper(item))
-
-    unique = collections.OrderedDict()
-    for elem in history_items:
-        unique.setdefault(elem["query"], elem)
-    return list(unique.values())[::-1][:5]
-
-
-async def delete_history_by_username_and_query(username: str, query: str) -> bool:
-    result = await history_collection.delete_many({'username': username, 'query': query})
-    return True
-
 
 async def update_user(username: str, data: dict):
     if len(data) < 1:
@@ -103,14 +88,27 @@ async def get_user(username: str) -> dict | bool:
 '''
 Helper function for CRUD of Article object in MongoDB
 '''
-# TODO: Доделать хелпер
 def article_helper(article) -> dict:
     return {
         "id": str(article["_id"]),
         "owner": article["owner"],
+        "added": article["added"],
+        "file_name": article["file_name"],
+        "file_uuid": article["file_uuid"],
+        "year": article["year"],
+        "title": article["title"],
+        "authors": article["authors"],
+        "source": article["source"],
+        "reference_type": article["reference_type"]
     }
 
 async def add_article(article_data: ArticleInDB) -> dict:
     article = await article_collection.insert_one(article_data.dict())
     new_article = await article_collection.find_one({"_id": article.inserted_id})
     return article_helper(new_article)
+
+async def retrieve_articles(user: User) -> list[dict]:
+    articles = []
+    async for article in article_collection.find({"owner": user['username']}):
+        articles.append(article_helper(article))
+    return articles
