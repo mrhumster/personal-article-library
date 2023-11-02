@@ -19,7 +19,9 @@ const baseQuery = fetchBaseQuery({
 export const baseQueryWithErrorHandler: BaseQueryFn = async (args, api, extraOptions) => {
   const result = await baseQuery(args, api, extraOptions)
   if (result.error) {
+    console.log(result)
     if (isErrorWithDetail(result.error.data)) {
+      console.log('che')
       api.dispatch(addMessage({message: result.error.data.detail, status: 'alert', progressMode: 'line'}))
     }
   }

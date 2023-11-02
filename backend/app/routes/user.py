@@ -103,7 +103,7 @@ async def create_user(register_form: UserRegister):
         data={"sub": user['username']}, expires_delta=access_token_expires
     )
     return {
-        "access": access_token,
+        "access_token": access_token,
         "refresh": "Sorry, this method not implement",
         "user": user,
         "token_type": "bearer"

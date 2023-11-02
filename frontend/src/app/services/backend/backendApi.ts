@@ -6,17 +6,16 @@ export const backendApi = createApi({
   reducerPath: 'backendApi',
   baseQuery: baseQueryWithErrorHandler,
   endpoints: (builder) => ({
-    addArticle: builder.mutation({
-      query: (args) => {
+    addArticleFile: builder.mutation({
+      query: (body) => {
         return {
-          url: '/article',
+          url: '/articles/upload',
           method: 'POST',
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          },
-          body: args
+          body: body,
+          formData: true
         }
-      }
+      },
+      transformErrorResponse: (response: ErrorResponse) => response.data
     }),
     checkUsername: builder.query({
       query: (username) => `/users/${username}`,
@@ -58,5 +57,6 @@ export const backendApi = createApi({
 export const {
   useCheckUsernameQuery ,
   useGetTokenMutation,
-  useCreateUserMutation
+  useCreateUserMutation,
+  useAddArticleFileMutation
 } = backendApi

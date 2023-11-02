@@ -39,6 +39,7 @@ export const authSlice = createSlice({
       state.isLogin = false
       state.username = undefined
       state.email = undefined
+      state.fullName = undefined
     },
   },
   extraReducers: (builder) => {

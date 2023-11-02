@@ -8,7 +8,7 @@ from utils.environment import Config
 from utils.schema import ArticleInDB
 
 client = motor.motor_asyncio.AsyncIOMotorClient(Config.MONGO_URI)
-database = client.users
+database = client.pal
 user_collection = database.get_collection("users_collection")
 article_collection = database.get_collection("articles_collection")
 history_collection = database.get_collection("history_query")
