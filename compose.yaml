@@ -5,6 +5,7 @@ networks:
 
 volumes:
   node_modules:
+  uploads:
 
 services:
   frontend:
@@ -24,6 +25,7 @@ services:
       target: builder
     volumes:
       - ./backend/app:/app
+      - uploads:/uploads/
     env_file:
       - .env
     restart: always
@@ -57,6 +59,7 @@ services:
       - ./nginx/ssl/key.pem:/root/ssl/key.pem
       - ./nginx/ssl/cert.pem:/root/ssl/cert.pem
       - ./logs/nginx:/var/log/nginx/
+      - uploads:/www/media/
     ports:
       - "443:443"
     depends_on:

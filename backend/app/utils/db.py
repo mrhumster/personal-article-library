@@ -5,6 +5,7 @@ from bson.objectid import ObjectId
 from uvicorn.main import logger
 
 from utils.environment import Config
+from utils.schema import ArticleInDB
 
 client = motor.motor_asyncio.AsyncIOMotorClient(Config.MONGO_URI)
 database = client.users
@@ -109,7 +110,7 @@ def article_helper(article) -> dict:
         "owner": article["owner"],
     }
 
-async def add_article(article_data: dict) -> dict:
-    article = await article_collection.insert_one(article_data)
+async def add_article(article_data: ArticleInDB) -> dict:
+    article = await article_collection.insert_one(article_data.dict())
     new_article = await article_collection.find_one({"_id": article.inserted_id})
     return article_helper(new_article)

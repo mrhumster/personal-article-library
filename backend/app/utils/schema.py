@@ -20,11 +20,23 @@ class AuthorSchema(BaseModel):
 class ArticleSchema:
     owner: str = Form(...)
     added: datetime = Form(...)
-    file: str = Form(...)
+    file_name: str = Form(...)
     year: int = Form(...)
     title: str = Form(...)
     source: str = Form(...)
     reference_type: str = Form(...)
+
+
+class ArticleInDB(BaseModel):
+    owner: str = Field(...)
+    added: datetime = Field(...)
+    file_name: str = Field(...)
+    file_uuid: str = Field(...)
+    year: Optional[int]
+    title: Optional[str]
+    authors: Optional[list[AuthorSchema]]
+    source: Optional[str]
+    reference_type: Optional[str]
 
 
 class UserSchema(BaseModel):
