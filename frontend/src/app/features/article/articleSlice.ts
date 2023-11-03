@@ -1,14 +1,29 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {ArticleIFace} from "../../types";
+import {ArticleStateIFace} from "../../types";
+import {backendApi} from "../../services/backend";
 
-const initialState: ArticleIFace[] = []
+const initialState: ArticleStateIFace = {
+  articles: []
+}
 
-const articleSlice = createSlice({
+export const articleSlice = createSlice({
   name: 'article',
   initialState,
   reducers: {
-    addArticle: (state: ArticleIFace[], action) => [...state, action.payload],
-    removeArticle: (state: ArticleIFace[], action) => state.filter((item) => item === action.payload)
+    addArticle: (state: ArticleStateIFace, action) => {
+      state.articles = [...state.articles, action.payload]
+    },
+    removeArticle: (state: ArticleStateIFace, action) => {
+      state.articles.filter((item) => item === action.payload)
+    }
+  },
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      backendApi.endpoints.getArticles.matchFulfilled,
+      (state: ArticleStateIFace, {payload}) => {
+        state.articles = payload
+      }
+    )
   }
 })
 
@@ -16,4 +31,3 @@ export const {
   addArticle,
   removeArticle
 } = articleSlice.actions
-export default articleSlice

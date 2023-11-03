@@ -54,8 +54,7 @@ export const authSlice = createSlice({
     )
     builder.addMatcher(
       backendApi.endpoints.checkUsername.matchRejected,
-      (state, action) => {
-        console.log(action.payload)
+      (state) => {
         state.isExists = false
       }
     )

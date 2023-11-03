@@ -3,6 +3,7 @@ export {
   useCheckUsernameQuery,
   useCreateUserMutation,
   useGetTokenMutation,
-  useAddArticleFileMutation
+  useAddArticleFileMutation,
+  useGetArticlesQuery
 } from './backendApi.ts'
 export {baseQueryWithErrorHandler} from './baseQuery.ts'

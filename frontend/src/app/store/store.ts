@@ -4,6 +4,8 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import {snackBarSlice} from "../features/alert";
 import {uiSlice} from "../features/ui";
 import {backendApi} from "../services/backend";
+import {articleSlice} from "../features/article";
+
 
 
 export const store = configureStore({
@@ -11,7 +13,8 @@ export const store = configureStore({
         [backendApi.reducerPath]: backendApi.reducer,
         auth: authSlice.reducer,
         snackBar: snackBarSlice.reducer,
-        ui: uiSlice.reducer
+        ui: uiSlice.reducer,
+        articles: articleSlice.reducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()

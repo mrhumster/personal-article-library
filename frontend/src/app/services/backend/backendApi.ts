@@ -1,11 +1,16 @@
 import {createApi} from "@reduxjs/toolkit/dist/query/react";
-import {ErrorResponse, UserResponse} from "../../types";
+import {ArticleIFace, ErrorResponse, UserResponse} from "../../types";
 import {baseQueryWithErrorHandler} from "./baseQuery.ts";
 
 export const backendApi = createApi({
   reducerPath: 'backendApi',
   baseQuery: baseQueryWithErrorHandler,
   endpoints: (builder) => ({
+    getArticles: builder.query({
+      query: () => '/articles/',
+      transformResponse: (response: { articles: ArticleIFace[] }) => response.articles,
+      transformErrorResponse: (response: ErrorResponse) => response.data
+    }),
     addArticleFile: builder.mutation({
       query: (body) => {
         return {
@@ -58,5 +63,6 @@ export const {
   useCheckUsernameQuery ,
   useGetTokenMutation,
   useCreateUserMutation,
-  useAddArticleFileMutation
+  useAddArticleFileMutation,
+  useGetArticlesQuery
 } = backendApi

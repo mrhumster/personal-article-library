@@ -1,7 +1,12 @@
 import {createSlice} from "@reduxjs/toolkit";
 
 export interface uiState {
-  checked?: number
+  checked?: number,
+  rightSideBar: {
+    isSidebarOpen: boolean
+    article?: string
+    activeTab: number
+  }
   uploadProgress: {
     show: boolean,
     error: boolean,
@@ -17,6 +22,10 @@ export interface uiState {
 
 export const initialState: uiState = {
   checked: 0,
+  rightSideBar: {
+    activeTab: 0,
+    isSidebarOpen: false,
+  },
   uploadProgress: {
     show: false,
     error: false,
@@ -50,6 +59,17 @@ export const uiSlice = createSlice({
     },
     setError: (state: uiState, action) => {
       state.uploadProgress.error = action.payload
+    },
+    openSideBar: (state: uiState, action) => {
+      state.rightSideBar.isSidebarOpen = true
+      state.rightSideBar.article = action.payload
+    },
+    closeSideBar: (state: uiState) => {
+      state.rightSideBar.isSidebarOpen = false
+      state.rightSideBar.article = undefined
+    },
+    setActiveTab: (state: uiState, action) => {
+      state.rightSideBar.activeTab = action.payload
     }
   }
 })
@@ -60,5 +80,8 @@ export const {
   setFileInProgress,
   setLoading,
   setSuccess,
-  setError
+  setError,
+  openSideBar,
+  closeSideBar,
+  setActiveTab
 } = uiSlice.actions

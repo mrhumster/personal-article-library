@@ -6,5 +6,8 @@ export {
   setFileInProgress,
   setLoading,
   setError,
-  setSuccess
+  setSuccess,
+  openSideBar,
+  closeSideBar,
+  setActiveTab
 } from './uiSlice.ts'

@@ -4,7 +4,7 @@ import { Avatar } from '@consta/uikit/Avatar';
 import { IconExit } from '@consta/icons/IconExit';
 import { IconSettings } from '@consta/icons/IconSettings';
 import {ContextMenu} from '@consta/uikit/ContextMenu';
-import {logout} from "../../hooks/user.actions.ts";
+import {logout} from "../../hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {clearAuthData} from "../../features/auth";
 import {IconComponent} from "@consta/uikit/Icon";
