@@ -3,8 +3,9 @@ import {useGetArticlesQuery} from "../../services/backend";
 import {Table, TableColumn} from '@consta/uikit/Table';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
+import {openSideBar, setActiveTab} from "../../features/ui";
+import Moment from "react-moment";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
-import {openSideBar} from "../../features/ui";
 
 export const AllReferences = () => {
   const {refetch} = useGetArticlesQuery({})
@@ -15,8 +16,8 @@ export const AllReferences = () => {
   }, [])
 
   const handleRowClick = (arg: { id: string; e: React.MouseEvent }) => {
-    console.log(arg)
     dispatch(openSideBar({id: arg.id}))
+    dispatch(setActiveTab(0))
   }
 
   const columns: TableColumn<typeof articles[number]>[] = [
@@ -43,7 +44,7 @@ export const AllReferences = () => {
     {
       title: 'Добавлен',
       accessor: "added",
-      renderCell: (row) => <div>{new Date(row.added).toString()}</div>
+      renderCell: (row) => <div><Moment date={row.added} format="DD.MM.YYYY"/></div>
     },
     {
       title: 'Файл',
@@ -52,8 +53,10 @@ export const AllReferences = () => {
     }
   ];
   return (
-      <div className='h-screen'>
+    <Theme preset={presetGpnDefault}>
+      <div className='h-screen w-full'>
         <Table rows={articles} columns={columns} onRowClick={handleRowClick} isResizable={true}/>
       </div>
+    </Theme>
   )
 }

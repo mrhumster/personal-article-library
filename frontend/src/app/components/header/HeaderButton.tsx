@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import { Tooltip } from '@consta/uikit/Tooltip';
 import { Button } from '@consta/uikit/Button';
 import {IconComponent} from "@consta/uikit/Icon";
+import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
 
 interface HeaderButtonPropsIFace {
   text: string
@@ -11,7 +12,7 @@ interface HeaderButtonPropsIFace {
 }
 
 export const HeaderButton = (props: HeaderButtonPropsIFace) => {
-  const { text, icon, active, callback } = props
+  const {text, icon, active, callback} = props
   const buttonRef = useRef<HTMLButtonElement>(null)
   const [showTooltip, setShowTooltip] = useState(false)
 
@@ -30,17 +31,20 @@ export const HeaderButton = (props: HeaderButtonPropsIFace) => {
   }, [buttonRef])
   return (
     <div>
-      <Button view={active? "primary": "secondary"} className="w-20" iconRight={icon} onlyIcon onClick={callback} ref={buttonRef}/>
-              <Tooltip className={showTooltip? 'z-40':'hidden z-40'}
-                       direction="rightCenter"
-                       spareDirection="downStartLeft"
-                       size="m"
-                       anchorRef={buttonRef}
-                       isInteractive={false}
-                       offset={9}
-              >
-                { text }
-              </Tooltip>
+      <Button view={active ? "primary" : "secondary"} className="w-20" iconRight={icon} onlyIcon onClick={callback}
+              ref={buttonRef}/>
+      <Theme preset={presetGpnDefault}>
+        <Tooltip className={showTooltip ? 'z-40' : 'hidden z-40'}
+                 direction="rightCenter"
+                 spareDirection="downStartLeft"
+                 size="m"
+                 anchorRef={buttonRef}
+                 isInteractive={false}
+                 offset={9}
+        >
+          {text}
+        </Tooltip>
+      </Theme>
     </div>
   )
 }

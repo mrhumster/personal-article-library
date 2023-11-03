@@ -8,7 +8,9 @@ import {setError, setFileInProgress, setLoading, setSuccess, showUploadProgress}
 import {filesize} from "filesize";
 import moment from 'moment';
 import 'moment-timezone';
+import 'moment/locale/ru';
 
+moment().locale('ru')
 
 export const AddNewFileButton = () => {
   const [
@@ -26,10 +28,11 @@ export const AddNewFileButton = () => {
     const form_data = new FormData()
     form_data.append('attach', file)
     addArticleFile(form_data)
+    const extension = file.name.slice((file.name.lastIndexOf(".") - 1 >>> 0) + 2)
     dispatch(setFileInProgress({
         name: file.name,
-        extension: file.name.slice((file.name.lastIndexOf(".") - 1 >>> 0) + 2),
-        description: `${filesize(file.size, {standard: "jedec"})} ${moment(file.lastModified).format('DD.MM.YYYY')}`
+        extension: extension,
+        description: `${extension} | ${filesize(file.size, {standard: "jedec"})} | ${moment(file.lastModified).format('DD MMMM YYYY')}`
       }))
   }
 

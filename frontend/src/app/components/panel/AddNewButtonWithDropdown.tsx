@@ -1,13 +1,11 @@
 import React, {useRef, useState} from "react";
 import {ContextMenu} from "@consta/uikit/ContextMenu";
 import {Button} from "@consta/uikit/Button";
-import { FileField } from '@consta/uikit/FileField';
 import {IconAdd} from "@consta/uikit/IconAdd";
 import {IconComponent} from "@consta/uikit/Icon";
-import {IconDocAdd} from "@consta/uikit/IconDocAdd";
 import {IconEdit} from "@consta/uikit/IconEdit";
-import { Text } from '@consta/uikit/Text';
 import {AddNewFileButton} from "./AddNewFileButton.tsx";
+import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
 
 
 type Item = {
@@ -42,6 +40,7 @@ export const AddNewButtonWithDropdown = () => {
               onClick={() => setIsOpen(!isOpen)}
               iconLeft={IconAdd}
       />
+      <Theme preset={presetGpnDefault}>
       <ContextMenu
         isOpen={isOpen}
         items={items}
@@ -55,6 +54,7 @@ export const AddNewButtonWithDropdown = () => {
         arrowOffset={58}
         size={'s'}
       />
+        </Theme>
     </div>
   );
 }

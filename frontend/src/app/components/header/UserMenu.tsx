@@ -9,6 +9,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {clearAuthData} from "../../features/auth";
 import {IconComponent} from "@consta/uikit/Icon";
 import {RootState} from "../../store";
+import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
 
 type Item = {
   label: string,
@@ -62,6 +63,7 @@ export const UserMenu = () => {
          onClick={() => setIsOpen(!isOpen)}
     >
       <Avatar name={auth.fullName} className="select-none" />
+      <Theme preset={presetGpnDefault}>
       <Tooltip className={showTooltip && !isOpen? 'z-40':'hidden z-40'}
                direction="rightCenter"
                spareDirection="downStartLeft"
@@ -82,6 +84,7 @@ export const UserMenu = () => {
         offset={-40}
         arrowOffset={-45}
       />
+      </Theme>
     </div>
   )
 }
