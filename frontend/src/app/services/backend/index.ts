@@ -5,6 +5,7 @@ export {
   useGetTokenMutation,
   useAddArticleFileMutation,
   useGetArticlesQuery,
-  useGetArticleQuery
+  useGetArticleQuery,
+  useUpdateArticleMutation
 } from './backendApi.ts'
 export {baseQueryWithErrorHandler} from './baseQuery.ts'

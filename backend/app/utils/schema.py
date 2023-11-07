@@ -1,3 +1,4 @@
+import numbers
 from dataclasses import dataclass
 from typing import Optional, List
 
@@ -36,12 +37,9 @@ class ArticleInDB(BaseModel):
     title: Optional[str]
     authors: Optional[list[AuthorSchema]]
     source: Optional[str]
-    reference_type: Optional[str]
+    reference_type: int = 0
 
 class UpdateArticleModel(BaseModel):
-    added: datetime = Field(...)
-    file_name: str = Field(...)
-    file_uuid: str = Field(...)
     year: Optional[int]
     title: Optional[str]
     authors: Optional[list[AuthorSchema]]

@@ -101,7 +101,6 @@ async def retrieve_articles(user: User) -> list[dict]:
     return articles
 
 async def retrieve_article(article_id: str) -> dict | bool:
-    logger.info(article_id)
     article = await article_collection.find_one({"_id": ObjectId(article_id)})
     logger.info(article)
     if article:
@@ -112,10 +111,11 @@ async def update_article(article_id: str, data: dict):
     if len(data) < 1:
         return False
     article = await article_collection.find_one({"_id": ObjectId(article_id)})
+
     if article:
         updated_article = await article_collection.update_one(
             {"_id": ObjectId(article_id)}, {"$set": data}
         )
         if updated_article:
-            return True
-        return False
+            article = await article_collection.find_one({"_id": ObjectId(article_id)})
+            return article_helper(article)

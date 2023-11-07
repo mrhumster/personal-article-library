@@ -8,10 +8,7 @@ export const AddNewCollection = () => {
   const inputRef = useRef(null)
 
   const handleClick = (event: MouseEvent) => {
-    console.log(inputRef.current)
-    // @ts-ignore
     if (inputRef.current && !inputRef.current.contains(event.target)) {
-      console.log(event)
       setIsClicked(false)
     }
   }

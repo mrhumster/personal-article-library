@@ -4,7 +4,8 @@ export interface AuthorIFace {
 }
 
 export interface ArticleStateIFace {
-  articles: ArticleIFace[]
+  articles: ArticleIFace[],
+  current_article?: ArticleIFace
 }
 
 export interface ArticleIFace {
@@ -17,6 +18,6 @@ export interface ArticleIFace {
   source?: string
   file_name?: string
   file_uuid?: string
-  reference_type?: string
+  reference_type: number
   authors: AuthorIFace[]
 }

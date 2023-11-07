@@ -6,6 +6,16 @@ export const backendApi = createApi({
   reducerPath: 'backendApi',
   baseQuery: baseQueryWithErrorHandler,
   endpoints: (builder) => ({
+    updateArticle: builder.mutation({
+      query: (data) => {
+        const { id, ...body } = data
+        return {
+          url: `/articles/${id}`,
+          method: 'PUT',
+          body: body
+        }
+      }
+    }),
     getArticle: builder.query({
       query: (article_id) => `/articles/${article_id}`
     }),
@@ -68,5 +78,6 @@ export const {
   useCreateUserMutation,
   useAddArticleFileMutation,
   useGetArticlesQuery,
-  useGetArticleQuery
+  useGetArticleQuery,
+  useUpdateArticleMutation
 } = backendApi

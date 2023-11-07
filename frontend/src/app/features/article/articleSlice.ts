@@ -3,7 +3,8 @@ import {ArticleStateIFace} from "../../types";
 import {backendApi} from "../../services/backend";
 
 const initialState: ArticleStateIFace = {
-  articles: []
+  articles: [],
+  current_article: undefined
 }
 
 export const articleSlice = createSlice({
@@ -15,6 +16,11 @@ export const articleSlice = createSlice({
     },
     removeArticle: (state: ArticleStateIFace, action) => {
       state.articles.filter((item) => item === action.payload)
+    },
+    setCurrentReferenceType: (state: ArticleStateIFace, action) => {
+      if (state.current_article) {
+        state.current_article.reference_type = action.payload
+      }
     }
   },
   extraReducers: (builder) => {
@@ -24,10 +30,23 @@ export const articleSlice = createSlice({
         state.articles = payload
       }
     )
+    builder.addMatcher(
+      backendApi.endpoints.getArticle.matchFulfilled,
+      (state: ArticleStateIFace, {payload}) => {
+        state.current_article = payload.data[0]
+      }
+    )
+    builder.addMatcher(
+      backendApi.endpoints.updateArticle.matchFulfilled,
+      (state: ArticleStateIFace, {payload}) => {
+        state.current_article = payload.data[0]
+      }
+    )
   }
 })
 
 export const {
   addArticle,
-  removeArticle
+  removeArticle,
+  setCurrentReferenceType
 } = articleSlice.actions
