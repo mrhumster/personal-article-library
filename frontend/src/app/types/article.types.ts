@@ -21,3 +21,8 @@ export interface ArticleIFace {
   reference_type: number
   authors: AuthorIFace[]
 }
+
+export type ReferenceTypeItem = {
+  label: string;
+  id: number;
+};

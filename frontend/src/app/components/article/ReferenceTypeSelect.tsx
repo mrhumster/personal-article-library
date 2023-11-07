@@ -3,27 +3,8 @@ import { Combobox } from '@consta/uikit/ComboboxCanary';
 import {useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {useUpdateArticleMutation} from "../../services/backend";
-
-type ReferenceTypeItem = {
-  label: string;
-  id: number;
-};
-
-const items: ReferenceTypeItem[] = [
-  {
-    label: 'Не классифицировано',
-    id: 0,
-  },
-  {
-    label: 'Книга',
-    id: 1,
-  },
-  {
-    label: 'Журнал',
-    id: 2
-  },
-];
-
+import {ReferenceTypeItem} from "../../types";
+import {ReferenceTypeItems} from "../../items/reference_type.items.ts";
 
 export const ReferenceTypeSelect = () => {
   const article = useSelector((state: RootState) => state.articles.current_article)
@@ -34,8 +15,8 @@ export const ReferenceTypeSelect = () => {
     return (
       <Combobox
         placeholder="Выберите вариант"
-        items={items}
-        value={items[article?.reference_type ? article?.reference_type : 0]}
+        items={ReferenceTypeItems}
+        value={ReferenceTypeItems[article?.reference_type ? article?.reference_type : 0]}
         onChange={handleChange}
         size={'s'}
         view={'clear'}
