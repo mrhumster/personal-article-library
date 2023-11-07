@@ -25,19 +25,6 @@ def user_helper(user) -> dict:
         "hashed_password": user["hashed_password"]
     }
 
-def history_helper(history) -> dict:
-    return {
-        "id": str(history["_id"]),
-        "username": history["username"],
-        "query": history["query"],
-        "date": history["date"]
-    }
-
-async def add_history_item(history_data: dict) -> dict:
-    history = await history_collection.insert_one(history_data)
-    new_history = await history_collection.find_one({"_id": history.inserted_id})
-    return history_helper(new_history)
-
 async def retrieve_users():
     users = []
     async for user in user_collection.find():
@@ -112,3 +99,23 @@ async def retrieve_articles(user: User) -> list[dict]:
     async for article in article_collection.find({"owner": user['username']}):
         articles.append(article_helper(article))
     return articles
+
+async def retrieve_article(article_id: str) -> dict | bool:
+    logger.info(article_id)
+    article = await article_collection.find_one({"_id": ObjectId(article_id)})
+    logger.info(article)
+    if article:
+        return article_helper(article)
+    return False
+
+async def update_article(article_id: str, data: dict):
+    if len(data) < 1:
+        return False
+    article = await article_collection.find_one({"_id": ObjectId(article_id)})
+    if article:
+        updated_article = await article_collection.update_one(
+            {"_id": ObjectId(article_id)}, {"$set": data}
+        )
+        if updated_article:
+            return True
+        return False

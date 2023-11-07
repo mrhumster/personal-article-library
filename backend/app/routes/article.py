@@ -2,19 +2,30 @@ import datetime
 import os.path
 import uuid
 
-from fastapi import APIRouter, UploadFile, Depends, HTTPException
+from fastapi import APIRouter, UploadFile, Depends, HTTPException, Body
 from starlette import status
 from starlette.background import BackgroundTasks
 from uvicorn.main import logger
 
 from authorisation.auth import get_current_active_user
-from utils.db import add_article, retrieve_articles
+from utils.db import add_article, retrieve_articles, retrieve_article, update_article
 from utils.environment import Config
-from utils.schema import ResponseModel, User, ArticleSchema, ArticleInDB
+from utils.schema import ResponseModel, User, ArticleSchema, ArticleInDB, UpdateArticleModel
 
 router = APIRouter()
 
 UPLOADS = Config.UPLOADS
+
+async def get_article_permission(article_id: str, current_user: User):
+    article = await retrieve_article(article_id)
+    if article and article['owner'] != current_user['username']:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail='Нет доступа к статье',
+            headers={'WWW-Authenticate': 'Bearer'}
+        )
+    else:
+        return article
 
 async def analyzeFile(file_uuid, user, meta):
     """
@@ -63,3 +74,28 @@ async def get_articles(current_user: User = Depends(get_current_active_user)):
     raise HTTPException(
         status_code=status.HTTP_204_NO_CONTENT
     )
+
+@router.get("/{article_id}", response_description='Статья')
+async def get_article_data(article_id: str, current_user: User = Depends(get_current_active_user)):
+    article = await get_article_permission(article_id, current_user)
+    if not article:
+        raise HTTPException(
+            status_code=status.HTTP_204_NO_CONTENT,
+            headers={'WWW-Authenticate': 'Bearer'}
+        )
+    return ResponseModel(article, 'Статья успешно доставлен')
+
+@router.put("/{article_id}", response_description='Статья')
+async def update_article_data(article_id: str, req: UpdateArticleModel = Body(...), current_user: User = Depends(get_current_active_user)):
+    article = await get_article_permission(article_id, current_user)
+    req = {k: v for k, v in req.dict().items() if v is not None}
+    updated_article = await update_article(article_id, req)
+    if updated_article:
+        return ResponseModel(
+            {"detail": f"Article with ID: {article_id} update is successful"},
+            "Article updated successfully",
+        )
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_204_NO_CONTENT,
+            headers={'WWW-Authenticate': 'Bearer'})

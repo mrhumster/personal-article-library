@@ -38,6 +38,15 @@ class ArticleInDB(BaseModel):
     source: Optional[str]
     reference_type: Optional[str]
 
+class UpdateArticleModel(BaseModel):
+    added: datetime = Field(...)
+    file_name: str = Field(...)
+    file_uuid: str = Field(...)
+    year: Optional[int]
+    title: Optional[str]
+    authors: Optional[list[AuthorSchema]]
+    source: Optional[str]
+    reference_type: Optional[str]
 
 class UserSchema(BaseModel):
     username: str = Field(...)

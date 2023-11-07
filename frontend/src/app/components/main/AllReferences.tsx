@@ -1,11 +1,13 @@
 import React, {useEffect} from "react";
 import {useGetArticlesQuery} from "../../services/backend";
 import {Table, TableColumn} from '@consta/uikit/Table';
+import {IconSearchStroked} from '@consta/icons/IconSearchStroked'
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {openSideBar, setActiveTab} from "../../features/ui";
 import Moment from "react-moment";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
+import {Button} from "@consta/uikit/Button";
 
 export const AllReferences = () => {
   const {refetch} = useGetArticlesQuery({})
@@ -55,6 +57,14 @@ export const AllReferences = () => {
   return (
     <Theme preset={presetGpnDefault}>
       <div className='h-screen w-full'>
+        <div className='flex'>
+          <div className='p-2'>
+            Все ссылки
+          </div>
+          <div className='p-2'>
+            <Button label='Поиск' size={'xs'} view={'clear'} iconLeft={IconSearchStroked}/>
+          </div>
+        </div>
         <Table rows={articles} columns={columns} onRowClick={handleRowClick} isResizable={true}/>
       </div>
     </Theme>

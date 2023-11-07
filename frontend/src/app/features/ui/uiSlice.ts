@@ -4,7 +4,9 @@ export interface uiState {
   checked?: number,
   rightSideBar: {
     isSidebarOpen: boolean
-    article?: string
+    article?: {
+      id: string
+    }
     activeTab: number
   }
   uploadProgress: {
