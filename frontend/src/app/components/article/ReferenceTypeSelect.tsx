@@ -13,7 +13,7 @@ export const ReferenceTypeSelect = () => {
     updateArticle({id: article?.id, reference_type: value?.id})
   }
     return (
-      <div className='w-size'>
+      <div className='w-size ps-2'>
         <Combobox
           placeholder="Выберите вариант"
           items={ReferenceTypeItems}

@@ -49,6 +49,7 @@ export const AllReferences = () => {
       accessor: 'authors',
       align: 'center',
       sortable: true,
+      width: 200,
       renderCell: (row: ArticleIFace) => <div>{authorsToString(row.authors)}</div>
     },
     {
@@ -68,6 +69,7 @@ export const AllReferences = () => {
     {
       title: 'Добавлен',
       accessor: "added",
+      sortable: true,
       renderCell: (row: ArticleIFace) => <div><Moment date={row.added} format="DD.MM.YYYY"/></div>
     },
     {
