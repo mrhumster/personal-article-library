@@ -1,10 +1,10 @@
-import numbers
 from dataclasses import dataclass
-from typing import Optional, List
+from datetime import datetime
+from typing import Optional
 
 from fastapi import Form
 from pydantic import BaseModel, Field, EmailStr
-from datetime import datetime
+
 
 class HistoryBaseSchema(BaseModel):
     username: str = Field(...)

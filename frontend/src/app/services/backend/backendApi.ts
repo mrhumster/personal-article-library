@@ -1,6 +1,10 @@
 import {createApi} from "@reduxjs/toolkit/dist/query/react";
 import {ArticleIFace, ErrorResponse, UserResponse} from "../../types";
 import {baseQueryWithErrorHandler} from "./baseQuery.ts";
+import {normalize, schema} from "normalizr";
+import {isResponseWithData} from "../helpers.ts";
+
+export const articleEntity = new schema.Entity('articles')
 
 export const backendApi = createApi({
   reducerPath: 'backendApi',
@@ -14,14 +18,22 @@ export const backendApi = createApi({
           method: 'PUT',
           body: body
         }
-      }
+      },
+      transformResponse: (response) => {
+        if (isResponseWithData(response)) {
+            return response.data[0]
+        }
+      },
     }),
     getArticle: builder.query({
       query: (article_id) => `/articles/${article_id}`
     }),
     getArticles: builder.query({
       query: () => '/articles/',
-      transformResponse: (response: { articles: ArticleIFace[] }) => response.articles,
+      transformResponse: (response: { articles: ArticleIFace[] }) => {
+        const normalized = normalize(response.articles, [articleEntity])
+        return normalized.entities
+      },
       transformErrorResponse: (response: ErrorResponse) => response.data
     }),
     addArticleFile: builder.mutation({

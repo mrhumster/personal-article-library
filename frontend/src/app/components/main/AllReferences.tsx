@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useGetArticlesQuery} from "../../services/backend";
 import {Table, TableColumn} from '@consta/uikit/Table';
 import {IconSearchStroked} from '@consta/icons/IconSearchStroked'
@@ -8,10 +8,31 @@ import {openSideBar, setActiveTab} from "../../features/ui";
 import Moment from "react-moment";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
 import {Button} from "@consta/uikit/Button";
+import {ArticleIFace, AuthorIFace} from "../../types";
+import {customDenormalize} from "../../services/helpers.ts";
+import { Text } from '@consta/uikit/Text';
+
+export const authorsToString = (authors: AuthorIFace[]) => {
+  let content
+  if (authors.length > 0) {
+    const authorsList = authors.map(({first_name, last_name}) => `${last_name} ${first_name ? first_name[0] : ''}.`)
+    content = authorsList.map((author, index) => <span key={index} className="mx-1">{author}</span>)
+  } else {
+    content = <span>Нет автора</span>
+  }
+  return <Text size={'s'} fontStyle={'italic'} weight={'light'}>{content}</Text>
+}
 
 export const AllReferences = () => {
   const {refetch} = useGetArticlesQuery({})
-  const articles = useSelector((state: RootState) => state.articles.articles)
+  const {ids, entities} = useSelector((state: RootState) => state.articles.articles)
+  const [articles, setArticles] = useState<ArticleIFace[]>()
+
+  useEffect(() => {
+    setArticles(customDenormalize(ids, entities))
+  }, [ids, entities])
+
+
   const dispatch = useDispatch()
   useEffect(()=> {
     refetch()
@@ -28,6 +49,7 @@ export const AllReferences = () => {
       accessor: 'authors',
       align: 'center',
       sortable: true,
+      renderCell: (row: ArticleIFace) => <div>{authorsToString(row.authors)}</div>
     },
     {
       title: 'Год',
@@ -46,12 +68,12 @@ export const AllReferences = () => {
     {
       title: 'Добавлен',
       accessor: "added",
-      renderCell: (row) => <div><Moment date={row.added} format="DD.MM.YYYY"/></div>
+      renderCell: (row: ArticleIFace) => <div><Moment date={row.added} format="DD.MM.YYYY"/></div>
     },
     {
       title: 'Файл',
       accessor: "file_name",
-      renderCell: (row) => <div>{row.file_name? <div>Есть</div>: <></>}</div>
+      renderCell: (row: ArticleIFace) => <div>{row.file_name? <div>✅</div>: <></>}</div>
     }
   ];
   return (
@@ -65,7 +87,12 @@ export const AllReferences = () => {
             <Button label='Поиск' size={'xs'} view={'clear'} iconLeft={IconSearchStroked}/>
           </div>
         </div>
-        <Table rows={articles} columns={columns} onRowClick={handleRowClick} isResizable={true}/>
+        {articles && <Table
+            rows={articles}
+            columns={columns}
+            onRowClick={handleRowClick}
+            getCellWrap={() => 'break'}
+            isResizable={false} />}
       </div>
     </Theme>
   )

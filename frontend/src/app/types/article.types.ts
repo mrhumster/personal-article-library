@@ -4,7 +4,12 @@ export interface AuthorIFace {
 }
 
 export interface ArticleStateIFace {
-  articles: ArticleIFace[],
+  articles: {
+    ids: string[],
+    entities: {
+      [key: string] : ArticleIFace
+    }
+  },
   current_article?: ArticleIFace
 }
 
@@ -14,7 +19,7 @@ export interface ArticleIFace {
   added: string
   file?: string
   year?: number
-  title?: number
+  title: string | null
   source?: string
   file_name?: string
   file_uuid?: string

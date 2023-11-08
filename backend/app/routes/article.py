@@ -87,7 +87,6 @@ async def get_article_data(article_id: str, current_user: User = Depends(get_cur
 @router.put("/{article_id}", response_description='Статья')
 async def update_article_data(article_id: str, req: UpdateArticleModel = Body(...), current_user: User = Depends(get_current_active_user)):
     article = await get_article_permission(article_id, current_user)
-    logger.info('REQ:', req)
     req = {k: v for k, v in req.dict().items() if v is not None}
     updated_article = await update_article(article_id, req)
     if updated_article:
