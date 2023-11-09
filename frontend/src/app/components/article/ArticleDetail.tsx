@@ -5,6 +5,7 @@ import {useGetArticleQuery} from "../../services/backend";
 import {ReferenceTypeSelect} from "./ReferenceTypeSelect.tsx";
 import {TitleEdit} from "./TitleEdit.tsx";
 import {AuthorsEdit} from "./AuthorsEdit.tsx";
+import {PublicationDetailsEdit} from "./PublicationDetailsEdit.tsx";
 
 export const ArticleDetail = () => {
   const selected_article = useSelector((state: RootState) => state.ui.rightSideBar.article)
@@ -20,6 +21,7 @@ export const ArticleDetail = () => {
       <ReferenceTypeSelect />
       <TitleEdit />
       <AuthorsEdit />
+      <PublicationDetailsEdit />
     </div>
   )
 }

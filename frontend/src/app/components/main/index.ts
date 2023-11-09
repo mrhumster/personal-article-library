@@ -1,1 +1,1 @@
-export {AllReferences} from './AllReferences.tsx'
+export {AllReferences, publicationDetailToString, authorsToString} from './AllReferences.tsx'

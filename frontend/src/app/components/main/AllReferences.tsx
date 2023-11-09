@@ -12,6 +12,7 @@ import {ArticleIFace, AuthorIFace} from "../../types";
 import {customDenormalize} from "../../services/helpers.ts";
 import { Text } from '@consta/uikit/Text';
 import {IconFunnel} from "@consta/uikit/IconFunnel";
+import {PublicationDetails} from "../../types";
 
 export const authorsToString = (authors: AuthorIFace[]) => {
   let content
@@ -20,9 +21,26 @@ export const authorsToString = (authors: AuthorIFace[]) => {
       ({first_name, last_name}) => `${last_name} ${first_name ? first_name[0] : ''}.`)
     content = authorsList.map((author, index) => <span key={index} className="inline-block mx-1">{author}</span>)
   } else {
-    content = <span className="inline-block">Нет автора</span>
+    content = <span className="ms-1">Добавить информацию об авторе(ах)</span>
   }
   return <Text size={'s'} fontStyle={'italic'} weight={'light'}>{content}</Text>
+}
+
+export const publicationDetailToString = (details: PublicationDetails | undefined) => {
+  if (!details) {
+    return (
+    <Text size={'s'} fontStyle={'italic'} weight={'light'}>
+      <span className={'ms-1'}>Добавить информации о публикации</span>
+    </Text>
+    )
+  }
+  return (
+    <Text size={'s'} fontStyle={'italic'} weight={'light'}>
+      <span>({details.year}),</span>
+      <span>{details.pages?.start} - {details.pages?.end},</span>
+      <span>{details.volume}</span>
+    </Text>
+  )
 }
 
 export const AllReferences = () => {

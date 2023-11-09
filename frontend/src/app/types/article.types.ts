@@ -18,7 +18,7 @@ export interface ArticleIFace {
   owner: string
   added: string
   file?: string
-  year?: number
+  publication?: PublicationDetails
   title: string | null
   source?: string
   file_name?: string
@@ -36,8 +36,8 @@ export type PublicationDetails = {
   year?: number;
   title?: string; // book title, encyclopedia title, conference title
   pages?: {
-    from: number;
-    to: number;
+    start: number;
+    end: number;
   };
   volume?: string;
   issue?: string;

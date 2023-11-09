@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {useUpdateArticleMutation} from "../../services/backend";
@@ -10,11 +10,44 @@ import {authorsToString} from "../main/AllReferences.tsx";
 
 
 export const AuthorsEdit = () => {
-  const [edit, setEdit] = useState(false)
+  const [active, setActive] = useState(false)
   const [value, setValue] = useState<string | null>('')
   const authors = useSelector((state: RootState) => state.articles.current_article?.authors)
   const id = useSelector((state: RootState) => state.articles.current_article?.id)
-  const [updateArticle, {isLoading, result}] = useUpdateArticleMutation()
+  const [updateArticle] = useUpdateArticleMutation()
+
+  const myRef = useRef<HTMLInputElement>(null);
+
+  const handleClickOutside = (e: TouchEvent | MouseEvent) => {
+    if (myRef.current) {
+      if (!myRef.current.contains(e.target as Node)) {
+        // Update to backend
+        const authorsList = value?.split('\n')
+        const authors: AuthorIFace[] = []
+        if (authorsList) {
+          authorsList.map((name) => {
+            if (name.length > 1) {
+              const [first_name, last_name] = name.replace(/\s+/g, ' ').split(' ', 2)
+              const author: AuthorIFace = {
+                first_name: first_name,
+                last_name: last_name
+              }
+              authors.push(author)
+            }
+          })
+        }
+        debouncedSetValue(authors)
+        setActive(false);
+      }
+    }
+  }
+
+  const handleClickInside = () => setActive(true);
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  });
 
   const handleChange = (authors: AuthorIFace[]) => {
     updateArticle({id: id, authors: authors})
@@ -34,35 +67,13 @@ export const AuthorsEdit = () => {
     setValue(value)
   }
 
-  const expand = () => {
-    setEdit(true);
-  }
-
-  const close = () => {
-    const authorsList = value?.split('\n')
-    const authors: AuthorIFace[] = []
-    if (authorsList) {
-      authorsList.map((name) => {
-        if (name.length > 1) {
-          const [first_name, last_name] = name.replace(/\s+/g, ' ').split(' ', 2)
-          const author: AuthorIFace = {
-            first_name: first_name,
-            last_name: last_name
-          }
-          authors.push(author)
-        }
-      })
-    }
-    debouncedSetValue(authors)
-    setEdit(false);
-  }
 
   const defaultClasses = 'mt-1 p-1 pt-0'
   const activeClasses = 'border rounded border-sky-700'
   const passiveClasses = 'border rounded border-transparent hover:border-sky-700 hover:border-dotted'
 
   const getClass = () => {
-    if (edit) {
+    if (active) {
       return [activeClasses, defaultClasses].join(' ')
     }
     return [passiveClasses, defaultClasses].join(' ')
@@ -71,15 +82,15 @@ export const AuthorsEdit = () => {
   return (
     <>
 
-      {!edit &&
+      {!active &&
         <Text className="border rounded border-transparent hover:border-sky-700 hover:border-dotted"
-              onClick={expand} onFocus={expand} onBlur={close}>
+              onClick={() => setActive(true)}>
           {authors && authorsToString(authors)}
         </Text>
       }
 
 
-      {edit &&
+      {active &&
         <TextField
           className={getClass()}
           width={'full'}
@@ -89,7 +100,8 @@ export const AuthorsEdit = () => {
           minRows={1}
           maxRows={5}
           value={value}
-          onBlur={close}
+          ref={myRef}
+          onClick={handleClickInside}
           caption={'Имя и фамилия авторов разделенных новой строкой'}
           onChange={change}
         />
