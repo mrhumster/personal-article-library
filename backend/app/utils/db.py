@@ -86,7 +86,7 @@ def article_helper(article) -> dict:
         "title": article["title"],
         "authors": article["authors"],
         "source": article["source"],
-        "reference_type": article["reference_type"]
+        "reference_type": int(article["reference_type"])
     }
 
 async def add_article(article_data: ArticleInDB) -> dict:
@@ -102,7 +102,6 @@ async def retrieve_articles(user: User) -> list[dict]:
 
 async def retrieve_article(article_id: str) -> dict | bool:
     article = await article_collection.find_one({"_id": ObjectId(article_id)})
-    logger.info(article)
     if article:
         return article_helper(article)
     return False

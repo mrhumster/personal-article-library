@@ -43,7 +43,7 @@ class ArticleInDB(BaseModel):
     reference_type: int = 0
 
 class UpdateArticleModel(BaseModel):
-    year: Optional[int]
+    publication: Optional[PublicationDetails]
     title: Optional[str]
     authors: Optional[list[AuthorSchema]]
     source: Optional[str]
