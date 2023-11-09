@@ -36,7 +36,8 @@ async def analyzeFile(file_uuid, user, meta):
         'added': datetime.datetime.now(),
         'file_uuid': file_uuid,
         'file_name': meta['original_name'],
-        'title': meta['original_name']
+        'title': meta['original_name'],
+        'authors': []
     })
     article = await add_article(article)
     return article

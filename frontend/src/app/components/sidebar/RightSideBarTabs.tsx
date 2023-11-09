@@ -37,11 +37,12 @@ export const RightSideBarTabs = () => {
     dispatch(setActiveTab(value.key))
   }
   return (
-    <div className='mt-3 px-3'>
+    <div className='px-1'>
       <Tabs value={items[selectedTab]}
+            className={'mt-2'}
             onChange={({ value}) => handleTabClick(value)}
             items={items}
-            view="bordered"
+            view={"bordered"}
             getItemLeftIcon={getItemIcon}/>
     </div>
   )

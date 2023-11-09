@@ -11,14 +11,16 @@ import {Button} from "@consta/uikit/Button";
 import {ArticleIFace, AuthorIFace} from "../../types";
 import {customDenormalize} from "../../services/helpers.ts";
 import { Text } from '@consta/uikit/Text';
+import {IconFunnel} from "@consta/uikit/IconFunnel";
 
 export const authorsToString = (authors: AuthorIFace[]) => {
   let content
   if (authors.length > 0) {
-    const authorsList = authors.map(({first_name, last_name}) => `${last_name} ${first_name ? first_name[0] : ''}.`)
-    content = authorsList.map((author, index) => <span key={index} className="mx-1">{author}</span>)
+    const authorsList = authors.map(
+      ({first_name, last_name}) => `${last_name} ${first_name ? first_name[0] : ''}.`)
+    content = authorsList.map((author, index) => <span key={index} className="inline-block mx-1">{author}</span>)
   } else {
-    content = <span>Нет автора</span>
+    content = <span className="inline-block">Нет автора</span>
   }
   return <Text size={'s'} fontStyle={'italic'} weight={'light'}>{content}</Text>
 }
@@ -26,6 +28,7 @@ export const authorsToString = (authors: AuthorIFace[]) => {
 export const AllReferences = () => {
   const {refetch} = useGetArticlesQuery({})
   const {ids, entities} = useSelector((state: RootState) => state.articles.articles)
+  const isOpen = useSelector((state: RootState) => state.ui.rightSideBar.isSidebarOpen)
   const [articles, setArticles] = useState<ArticleIFace[]>()
 
   useEffect(() => {
@@ -34,7 +37,7 @@ export const AllReferences = () => {
 
 
   const dispatch = useDispatch()
-  useEffect(()=> {
+  useEffect(() => {
     refetch()
   }, [])
 
@@ -50,7 +53,7 @@ export const AllReferences = () => {
       align: 'center',
       sortable: true,
       width: 200,
-      renderCell: (row: ArticleIFace) => <div>{authorsToString(row.authors)}</div>
+      renderCell: (row: ArticleIFace) => <div>{row.authors ? authorsToString(row.authors) : <div className={"italic"}>Пусто</div>}</div>
     },
     {
       title: 'Год',
@@ -75,18 +78,23 @@ export const AllReferences = () => {
     {
       title: 'Файл',
       accessor: "file_name",
-      renderCell: (row: ArticleIFace) => <div>{row.file_name? <div>✅</div>: <></>}</div>
+      renderCell: (row: ArticleIFace) => <div>{row.file_name ? <div>✅</div> : <></>}</div>
     }
   ];
   return (
     <Theme preset={presetGpnDefault}>
       <div className='h-screen w-full'>
-        <div className='flex'>
-          <div className='p-2'>
+        <div className={`flex items-center border-b border-slate-300 justify-items-stretch ${isOpen ? 'w-3/4' : 'w-full'}`}>
+          <Text size={'l'} className='ms-5 font-light flex-grow whitespace-nowrap select-none tracking-tighter'>
             Все ссылки
-          </div>
-          <div className='p-2'>
-            <Button label='Поиск' size={'xs'} view={'clear'} iconLeft={IconSearchStroked}/>
+          </Text>
+          <div id='buttons' className={`flex ${isOpen ? 'me-20' : 'me-2'}`}>
+            <div className='p-1'>
+              <Button label='Поиск' size={'m'} view={'clear'} iconLeft={IconSearchStroked}/>
+            </div>
+            <div className='p-1'>
+              <Button label='Фильтр' size={'m'} view={'clear'} iconLeft={IconFunnel}/>
+            </div>
           </div>
         </div>
         {articles && <Table
@@ -94,7 +102,7 @@ export const AllReferences = () => {
             columns={columns}
             onRowClick={handleRowClick}
             getCellWrap={() => 'break'}
-            isResizable={false} />}
+            isResizable={false}/>}
       </div>
     </Theme>
   )

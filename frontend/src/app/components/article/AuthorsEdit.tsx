@@ -7,8 +7,6 @@ import {TextField} from "@consta/uikit/TextField";
 import {AuthorIFace} from "../../types";
 import { Text } from '@consta/uikit/Text';
 import {authorsToString} from "../main/AllReferences.tsx";
-import {SkeletonText} from "@consta/uikit/Skeleton";
-import {Loader} from "@consta/uikit/LoaderCanary";
 
 
 export const AuthorsEdit = () => {

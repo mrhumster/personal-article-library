@@ -31,3 +31,14 @@ export type ReferenceTypeItem = {
   label: string;
   id: number;
 };
+
+export type PublicationDetails = {
+  year?: number;
+  title?: string; // book title, encyclopedia title, conference title
+  pages?: {
+    from: number;
+    to: number;
+  };
+  volume?: string;
+  issue?: string;
+}

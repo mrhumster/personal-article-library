@@ -5,13 +5,16 @@ from typing import Optional
 from fastapi import Form
 from pydantic import BaseModel, Field, EmailStr
 
+class Pages(BaseModel):
+    start: Optional[int]
+    end: Optional[int]
 
-class HistoryBaseSchema(BaseModel):
-    username: str = Field(...)
-    query: str = Field(...)
-
-class HistorySchema(HistoryBaseSchema):
-    date: datetime
+class PublicationDetails(BaseModel):
+    year: Optional[int]
+    title: Optional[str]
+    pages: Optional[Pages]
+    volume: Optional[str]
+    issue: Optional[str]
 
 class AuthorSchema(BaseModel):
     first_name: str
@@ -33,9 +36,9 @@ class ArticleInDB(BaseModel):
     added: datetime = Field(...)
     file_name: str = Field(...)
     file_uuid: str = Field(...)
-    year: Optional[int]
+    publication: Optional[PublicationDetails]
     title: Optional[str]
-    authors: Optional[list[AuthorSchema]]
+    authors: list[AuthorSchema]
     source: Optional[str]
     reference_type: int = 0
 

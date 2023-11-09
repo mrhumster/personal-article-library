@@ -82,7 +82,7 @@ def article_helper(article) -> dict:
         "added": article["added"],
         "file_name": article["file_name"],
         "file_uuid": article["file_uuid"],
-        "year": article["year"],
+        "publication": article["publication"],
         "title": article["title"],
         "authors": article["authors"],
         "source": article["source"],

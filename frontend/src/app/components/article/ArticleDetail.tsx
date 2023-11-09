@@ -8,12 +8,13 @@ import {AuthorsEdit} from "./AuthorsEdit.tsx";
 
 export const ArticleDetail = () => {
   const selected_article = useSelector((state: RootState) => state.ui.rightSideBar.article)
-  const { refetch } = useGetArticleQuery(selected_article?.id, {skip: !selected_article?.id})
+  const { isUninitialized, refetch } = useGetArticleQuery(selected_article?.id, {skip: !selected_article?.id})
+
   useEffect(() => {
-    if (selected_article) {
+    if (selected_article && !isUninitialized) {
       refetch()
     }
-  }, [selected_article])
+  }, [selected_article, isUninitialized])
   return (
     <div className='m-4'>
       <ReferenceTypeSelect />
