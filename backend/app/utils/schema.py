@@ -30,6 +30,8 @@ class ArticleSchema:
     source: str = Form(...)
     reference_type: str = Form(...)
 
+class AdditionalInformationBook(BaseModel):
+    edition: Optional[str]
 
 class ArticleInDB(BaseModel):
     owner: str = Field(...)
@@ -41,6 +43,8 @@ class ArticleInDB(BaseModel):
     authors: list[AuthorSchema]
     source: Optional[str]
     reference_type: int = 0
+    additional_information: Optional[AdditionalInformationBook]
+
 
 class UpdateArticleModel(BaseModel):
     publication: Optional[PublicationDetails]
@@ -48,6 +52,7 @@ class UpdateArticleModel(BaseModel):
     authors: Optional[list[AuthorSchema]]
     source: Optional[str]
     reference_type: Optional[str]
+    additional_information: Optional[AdditionalInformationBook]
 
 class UserSchema(BaseModel):
     username: str = Field(...)

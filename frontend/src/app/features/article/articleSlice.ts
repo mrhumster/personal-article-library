@@ -29,6 +29,11 @@ export const articleSlice = createSlice({
       if (state.current_article) {
         state.current_article.reference_type = action.payload
       }
+    },
+    setAdditionalInformation: (state: ArticleStateIFace, {payload}) => {
+      if (state.current_article && payload) {
+        state.current_article.additional_information = {...state.current_article.additional_information,  ...payload}
+      }
     }
   },
   extraReducers: (builder) => {
@@ -66,5 +71,6 @@ export const articleSlice = createSlice({
 export const {
   addArticle,
   removeArticle,
-  setCurrentReferenceType
+  setCurrentReferenceType,
+  setAdditionalInformation
 } = articleSlice.actions

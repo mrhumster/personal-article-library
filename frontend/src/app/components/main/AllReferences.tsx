@@ -27,7 +27,7 @@ export const authorsToString = (authors: AuthorIFace[]) => {
 }
 
 export const publicationDetailToString = (details: PublicationDetails | undefined) => {
-  if (!details) {
+  if ( !details?.year) {
     return (
     <Text size={'s'} fontStyle={'italic'} weight={'light'}>
       <span className={'ms-1'}>Добавить информации о публикации</span>

@@ -6,7 +6,7 @@ import {useDebounce} from "@consta/uikit/useDebounce";
 import {TextField} from "@consta/uikit/TextField";
 import {AuthorIFace} from "../../types";
 import { Text } from '@consta/uikit/Text';
-import {authorsToString} from "../main/AllReferences.tsx";
+import {authorsToString} from "../main";
 
 
 export const AuthorsEdit = () => {

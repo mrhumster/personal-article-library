@@ -25,6 +25,11 @@ export interface ArticleIFace {
   file_uuid?: string
   reference_type: number
   authors: AuthorIFace[]
+  additional_information: AdditionalInformationIFace
+}
+
+export interface AdditionalInformationIFace {
+  edition?: string
 }
 
 export type ReferenceTypeItem = {

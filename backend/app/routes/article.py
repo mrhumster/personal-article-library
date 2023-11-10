@@ -37,7 +37,7 @@ async def analyzeFile(file_uuid, user, meta):
         'file_uuid': file_uuid,
         'file_name': meta['original_name'],
         'title': meta['original_name'],
-        'authors': []
+        'authors': [],
     })
     article = await add_article(article)
     return article

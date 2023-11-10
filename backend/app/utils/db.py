@@ -86,7 +86,8 @@ def article_helper(article) -> dict:
         "title": article["title"],
         "authors": article["authors"],
         "source": article["source"],
-        "reference_type": int(article["reference_type"])
+        "reference_type": int(article["reference_type"]),
+        "additional_information": article["additional_information"]
     }
 
 async def add_article(article_data: ArticleInDB) -> dict:
