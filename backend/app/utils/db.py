@@ -75,6 +75,12 @@ async def get_user(username: str) -> dict | bool:
 '''
 Helper function for CRUD of Article object in MongoDB
 '''
+def additional_information_helper(information) -> dict:
+    return {
+        'edition': information['edition'],
+        'editors': information['editors']
+    }
+
 def article_helper(article) -> dict:
     return {
         "id": str(article["_id"]),

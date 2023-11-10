@@ -3,6 +3,12 @@ export interface AuthorIFace {
   last_name?: string
 }
 
+export interface EditorsIFace {
+  last_name?: string
+  first_name?: string
+  sur_name? :string
+}
+
 export interface ArticleStateIFace {
   articles: {
     ids: string[],
@@ -25,11 +31,12 @@ export interface ArticleIFace {
   file_uuid?: string
   reference_type: number
   authors: AuthorIFace[]
-  additional_information: AdditionalInformationIFace
+  additional_information: AdditionalInformationIFace | null
 }
 
 export interface AdditionalInformationIFace {
   edition?: string
+  editors?: EditorsIFace[]
 }
 
 export type ReferenceTypeItem = {

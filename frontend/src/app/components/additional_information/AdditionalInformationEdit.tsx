@@ -4,6 +4,7 @@ import {getAdditionInformationFormByType} from "./getAdditionInformationFormByTy
 import {useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {useUpdateArticleMutation} from "../../services/backend";
+import {getAdditionInformationTableByType} from "./getAdditionInformationTableByType.tsx";
 
 export const AdditionalInformationEdit = () => {
   const [active, setActive] = useState<boolean>(false)
@@ -63,24 +64,24 @@ export const AdditionalInformationEdit = () => {
   return (
     <>
       {!active &&
-        <Text className="border rounded border-transparent hover:border-sky-700 hover:border-dotted" onClick={handleClickInside}>
+        <Text className="border rounded border-transparent hover:border-sky-700 hover:border-dotted py-1" onClick={handleClickInside}>
           { !moreInfo && !current_article?.additional_information &&
             <Text size={'s'} weight={'light'} cursor={'pointer'} fontStyle={'italic'}>
-                <span className={'ms-1'}>Добавить дополнительную информацию</span>
+                <span onClick={() => setActive(true)} className={'ms-1'}>Добавить дополнительную информацию</span>
             </Text>
           }
           { !moreInfo && current_article?.additional_information &&
             <div ref={lessInfoRef}>
               <Text size={'s'} weight={'light'} cursor={'pointer'} fontStyle={'italic'}>
-                <span ref={showMoreInfoRef} className={'ms-1 text-sky-500 underline'}>Развернуть</span>
+                <span ref={showMoreInfoRef} className={'ms-1 text-sky-500 hover:underline'}>Показать дополнительную информацию</span>
               </Text>
             </div>
           }
           { moreInfo &&
               <div ref={moreInfoRef}>
-                <Text>{current_article?.additional_information.edition}</Text>
-                <Text  size={'s'} cursor={'pointer'} weight={'light'} fontStyle={'italic'}>
-                  <span  ref={showLessInfoRef} className={'ms-1 text-sky-500 underline'}>Скрыть</span>
+                {getAdditionInformationTableByType(reference_type)}
+                <Text size={'s'} cursor={'pointer'} weight={'light'} fontStyle={'italic'}>
+                  <span ref={showLessInfoRef} className={'ms-1 text-sky-500 hover:underline'}>Скрыть</span>
                 </Text>
               </div>
           }

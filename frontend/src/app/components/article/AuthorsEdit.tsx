@@ -83,7 +83,7 @@ export const AuthorsEdit = () => {
     <>
 
       {!active &&
-        <Text className="border rounded border-transparent hover:border-sky-700 hover:border-dotted"
+        <Text className="border rounded border-transparent hover:border-sky-700 hover:border-dotted py-1"
               onClick={() => setActive(true)}>
           {authors && authorsToString(authors)}
         </Text>

@@ -30,8 +30,14 @@ class ArticleSchema:
     source: str = Form(...)
     reference_type: str = Form(...)
 
+class EditorsSchema(BaseModel):
+    last_name: Optional[str]
+    first_name: Optional[str]
+    sur_name: Optional[str]
+
 class AdditionalInformationBook(BaseModel):
     edition: Optional[str]
+    editors: Optional[list[EditorsSchema]]
 
 class ArticleInDB(BaseModel):
     owner: str = Field(...)
