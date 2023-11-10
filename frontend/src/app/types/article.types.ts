@@ -37,6 +37,10 @@ export interface ArticleIFace {
 export interface AdditionalInformationIFace {
   edition?: string
   editors?: EditorsIFace[]
+  city?: string
+  publisher?: string
+  month?: number
+  day?: number
 }
 
 export type ReferenceTypeItem = {

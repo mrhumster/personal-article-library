@@ -38,6 +38,10 @@ class EditorsSchema(BaseModel):
 class AdditionalInformationBook(BaseModel):
     edition: Optional[str]
     editors: Optional[list[EditorsSchema]]
+    city: Optional[str]
+    publisher: Optional[str]
+    month: Optional[int]
+    day: Optional[int]
 
 class ArticleInDB(BaseModel):
     owner: str = Field(...)
