@@ -25,9 +25,7 @@ export const AddNewFileButton = ({ text, article }:{text: ReactNode, article?: s
     const file: File = (target.files as FileList)[0];
     const form_data = new FormData()
     form_data.append('attach', file)
-    if (article) {
-      form_data.append('article', article)
-    }
+    if (article) { form_data.append('article', article)}
     addArticleFile(form_data)
     const extension = file.name.slice((file.name.lastIndexOf(".") - 1 >>> 0) + 2)
     dispatch(setFileInProgress({

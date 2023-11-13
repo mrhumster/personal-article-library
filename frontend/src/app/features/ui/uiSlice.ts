@@ -1,26 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-
-export interface uiState {
-  checked?: number,
-  rightSideBar: {
-    isSidebarOpen: boolean
-    article?: {
-      id: string
-    }
-    activeTab: number
-  }
-  uploadProgress: {
-    show: boolean,
-    error: boolean,
-    success: boolean,
-    loading: boolean,
-    file: {
-      name: string
-      extension: string
-      description: string
-    } | undefined
-  }
-}
+import {uiState} from "../../types";
 
 export const initialState: uiState = {
   checked: 0,

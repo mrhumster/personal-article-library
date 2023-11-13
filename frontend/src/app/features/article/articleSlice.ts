@@ -55,14 +55,22 @@ export const articleSlice = createSlice({
     builder.addMatcher(
       backendApi.endpoints.updateArticle.matchFulfilled,
       (state: ArticleStateIFace, action) => {
-        if (state.articles.ids.indexOf(action.payload.id) === -1) {
-          state.articles.ids.push(action.payload.id)
-        }
-        state.articles.entities[action.payload.id] = action.payload
+        if (action.payload) {
+          if (state.articles.ids.indexOf(action.payload.id) === -1) {
+            state.articles.ids.push(action.payload.id)
+          }
+          state.articles.entities[action.payload.id] = action.payload
 
-        if (action.payload.id === state.current_article?.id) {
-          state.current_article = action.payload
+          if (action.payload.id === state.current_article?.id) {
+            state.current_article = action.payload
+          }
         }
+      }
+    )
+    builder.addMatcher(
+      backendApi.endpoints.addArticleFile.matchFulfilled,
+      (state: ArticleStateIFace, action) => {
+        const article_id = action.payload.meta.article
       }
     )
   }

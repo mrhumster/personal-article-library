@@ -32,13 +32,17 @@ async def analyzeFile(file_uuid, user, meta):
     """
     Create
     """
+    logger.info(meta)
     if meta['article'] is None:
         article = ArticleInDB.parse_obj({
             'owner': user['username'],
             'added': datetime.datetime.now(),
             'files': [{
                 'file_uuid': file_uuid,
-                'file_name': meta['original_name']
+                'file_name': meta['original_name'],
+                'extension': meta['extension'],
+                'size': meta['size'],
+                'created': meta['created']
             }],
             'title': meta['original_name'],
             'authors': [],
@@ -48,7 +52,13 @@ async def analyzeFile(file_uuid, user, meta):
     else:
         article = await retrieve_article(meta['article'])
         updated_article = await update_article(meta['article'], {
-            'files': [{'file_uuid': file_uuid,'file_name': meta['original_name']}]+article['files']})
+            'files': [{
+                'file_uuid': file_uuid,
+                'file_name': meta['original_name'],
+                'extension': meta['extension'],
+                'size': meta['size'],
+                'created': meta['created']
+            }]+article['files']})
         return updated_article
 
 @router.post("/upload", status_code=201)
@@ -67,10 +77,19 @@ async def upload(attach: UploadFile, background_tasks: BackgroundTasks, article:
     meta['title'] = title
     meta['author'] = current_user['username']
     meta['article'] = article
+    meta['extension'] = file_extension[1:]
+    meta['size'] = len(contents)
+
+
     if not os.path.exists(UPLOADS):
         os.mkdir(UPLOADS)
-    with open(f'{UPLOADS}{filename}', 'wb') as f:
+
+    file_path = f'{UPLOADS}{filename}'
+
+    with open(file_path, 'wb') as f:
         f.write(contents)
+
+    meta['created'] = datetime.datetime.fromtimestamp(os.path.getatime(file_path))
 
     background_tasks.add_task(analyzeFile, file_uuid=filename, user=current_user, meta=meta)
     attach.file.close()
@@ -98,7 +117,6 @@ async def get_article_data(article_id: str, current_user: User = Depends(get_cur
 @router.put("/{article_id}", response_description='Статья')
 async def update_article_data(article_id: str, req: UpdateArticleModel = Body(...), current_user: User = Depends(get_current_active_user)):
     article = await get_article_permission(article_id, current_user)
-    logger.info(req)
     req = {k: v for k, v in req.dict().items() if v is not None}
     updated_article = await update_article(article_id, req)
     if updated_article:

@@ -23,14 +23,14 @@ export const authorsToString = (authors: AuthorIFace[]) => {
   } else {
     content = <span className="ms-1">Добавить информацию об авторе(ах)</span>
   }
-  return <Text size={'s'} fontStyle={'italic'} weight={'light'}>{content}</Text>
+  return <Text className={'cursor-pointer select-none'} size={'s'} fontStyle={'italic'} weight={'light'}>{content}</Text>
 }
 
 export const publicationDetailToString = (details: PublicationDetails | undefined) => {
   if ( !details?.year) {
     return (
     <Text size={'s'} fontStyle={'italic'} weight={'light'}>
-      <span className={'ms-1'}>Добавить информации о публикации</span>
+      <span className={'ms-1 cursor-pointer select-none'}>Добавить информации о публикации</span>
     </Text>
     )
   }
@@ -44,7 +44,7 @@ export const publicationDetailToString = (details: PublicationDetails | undefine
 }
 
 export const AllReferences = () => {
-  const {refetch} = useGetArticlesQuery({})
+  const {refetch} = useGetArticlesQuery({},{pollingInterval: 3000})
   const {ids, entities} = useSelector((state: RootState) => state.articles.articles)
   const isOpen = useSelector((state: RootState) => state.ui.rightSideBar.isSidebarOpen)
   const [articles, setArticles] = useState<ArticleIFace[]>()
@@ -77,6 +77,7 @@ export const AllReferences = () => {
       title: 'Год',
       accessor: 'year',
       sortable: true,
+      renderCell: (row: ArticleIFace) => <div>{row.publication?.year}</div>
     },
     {
       title: 'Название',
@@ -96,7 +97,7 @@ export const AllReferences = () => {
     {
       title: 'Файл',
       accessor: "file_name",
-      renderCell: (row: ArticleIFace) => <div>{row.file_name ? <div>✅</div> : <></>}</div>
+      renderCell: (row: ArticleIFace) => <div>{row.files ? <div>✅</div> : <></>}</div>
     }
   ];
   return (

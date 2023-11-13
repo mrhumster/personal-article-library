@@ -1,7 +1,5 @@
-import {list} from "postcss";
-
 export interface AuthorIFace {
-  first_name?: string,
+  first_name?: string
   last_name?: string
 }
 
@@ -22,8 +20,11 @@ export interface ArticleStateIFace {
 }
 
 export interface FileScheme {
-  file_name?: string
-  file_uuid?: string
+  file_name?: string;
+  file_uuid?: string;
+  extension?: string;
+  size: number;
+  created?: Date;
 }
 
 export interface ArticleIFace {
@@ -54,13 +55,15 @@ export type ReferenceTypeItem = {
   id: number;
 };
 
+export type PagesType = {
+  start: number
+  end: number
+};
+
 export type PublicationDetails = {
   year?: number;
   title?: string; // book title, encyclopedia title, conference title
-  pages?: {
-    start: number;
-    end: number;
-  };
+  pages?: PagesType
   volume?: string;
   issue?: string;
-}
+};

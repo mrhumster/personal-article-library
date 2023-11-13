@@ -45,7 +45,11 @@ export const backendApi = createApi({
           formData: true
         }
       },
-      transformErrorResponse: (response: ErrorResponse) => response.data
+      transformErrorResponse: (response: ErrorResponse) => {response.data},
+      transformResponse: (response: any) => {
+
+        return response
+      }
     }),
     checkUsername: builder.query({
       query: (username) => `/users/${username}`,
