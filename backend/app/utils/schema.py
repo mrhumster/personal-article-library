@@ -6,15 +6,15 @@ from fastapi import Form
 from pydantic import BaseModel, Field, EmailStr
 
 class Pages(BaseModel):
-    start: Optional[int]
-    end: Optional[int]
+    start: Optional[int] = Field(gt=1, lt=999999)
+    end: Optional[int] = Field(gt=1, lt=999999)
 
 class PublicationDetails(BaseModel):
-    year: Optional[int]
-    title: Optional[str]
+    year: Optional[int] = Field(gt=1900, lt=2100)
+    title: Optional[str] = Field(max_length=300)
     pages: Optional[Pages]
-    volume: Optional[str]
-    issue: Optional[str]
+    volume: Optional[str] = Field(max_length=100)
+    issue: Optional[str] = Field(max_length=200)
 
 class AuthorSchema(BaseModel):
     first_name: str
@@ -31,27 +31,30 @@ class ArticleSchema:
     reference_type: str = Form(...)
 
 class EditorsSchema(BaseModel):
-    last_name: Optional[str]
-    first_name: Optional[str]
-    sur_name: Optional[str]
+    last_name: Optional[str] = Field(max_length=100)
+    first_name: Optional[str] = Field(max_length=100)
+    sur_name: Optional[str] = Field(max_length=100)
 
 class AdditionalInformationBook(BaseModel):
-    edition: Optional[str]
-    editors: Optional[list[EditorsSchema]]
-    city: Optional[str]
-    publisher: Optional[str]
+    edition: Optional[str] = Field(max_length=200)
+    editors: Optional[list[EditorsSchema]] = Field(max_items=5)
+    city: Optional[str] = Field(max_length=100)
+    publisher: Optional[str] = Field(max_length=200)
     month: Optional[int] = Field(gt=0, lt=13)
     day: Optional[int] = Field(gt=0, lt=32)
+
+class FileScheme(BaseModel):
+    file_name: str = Field(...)
+    file_uuid: str = Field(...)
 
 class ArticleInDB(BaseModel):
     owner: str = Field(...)
     added: datetime = Field(...)
-    file_name: str = Field(...)
-    file_uuid: str = Field(...)
+    files: Optional[list[FileScheme]]
     publication: Optional[PublicationDetails]
-    title: Optional[str]
-    authors: list[AuthorSchema]
-    source: Optional[str]
+    title: Optional[str] = Field(max_length=300)
+    authors: list[AuthorSchema] = Field(max_items=5)
+    source: Optional[str] = Field(max_length=200)
     reference_type: int = 0
     additional_information: Optional[AdditionalInformationBook]
 
@@ -82,12 +85,6 @@ def ResponseModel(data: dict, message: str) -> dict:
         "message": message
     }
 
-def ResponseHistoryModel(items: list, message: str) -> dict:
-    return {
-        "items": items,
-        "code": 200,
-        "message": message
-    }
 
 def ErrorResponseModel(error: str, code: int, message: str) -> dict:
     return {

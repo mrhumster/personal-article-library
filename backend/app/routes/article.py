@@ -34,8 +34,10 @@ async def analyzeFile(file_uuid, user, meta):
     article = ArticleInDB.parse_obj({
         'owner': user['username'],
         'added': datetime.datetime.now(),
-        'file_uuid': file_uuid,
-        'file_name': meta['original_name'],
+        'files': [{
+            'file_uuid': file_uuid,
+            'file_name': meta['original_name']
+        }],
         'title': meta['original_name'],
         'authors': [],
     })

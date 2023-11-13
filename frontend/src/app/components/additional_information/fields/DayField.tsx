@@ -4,7 +4,6 @@ import {setAdditionalInformation} from "../../../features/article";
 import {GridItem} from "@consta/uikit/Grid";
 import {TextField} from "@consta/uikit/TextField";
 import React, {useEffect, useState} from "react";
-import {isNumber} from "@consta/uikit/__internal__/src/utils/type-guards";
 
 export const DayField = () => {
   const value = useSelector((state: RootState) => state.articles.current_article?.additional_information?.day)
@@ -16,7 +15,6 @@ export const DayField = () => {
   }
 
   const validate = (value: string | undefined) => {
-    console.log((/^[0-3]?[0-9]{1}$/.test(value) && Number(value) > 0 && Number(value) < 32))
     if (value) {
       if (/^[0-3]?[0-9]{1}$/.test(value) && Number(value) > 0 && Number(value) < 32) {
         setError(undefined)

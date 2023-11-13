@@ -1,3 +1,5 @@
+import {list} from "postcss";
+
 export interface AuthorIFace {
   first_name?: string,
   last_name?: string
@@ -19,6 +21,11 @@ export interface ArticleStateIFace {
   current_article?: ArticleIFace
 }
 
+export interface FileScheme {
+  file_name?: string
+  file_uuid?: string
+}
+
 export interface ArticleIFace {
   id: string
   owner: string
@@ -27,8 +34,7 @@ export interface ArticleIFace {
   publication?: PublicationDetails
   title: string | null
   source?: string
-  file_name?: string
-  file_uuid?: string
+  files?: FileScheme[]
   reference_type: number
   authors: AuthorIFace[]
   additional_information: AdditionalInformationIFace | null
