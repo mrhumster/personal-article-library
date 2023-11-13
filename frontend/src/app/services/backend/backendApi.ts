@@ -2,7 +2,7 @@ import {createApi} from "@reduxjs/toolkit/dist/query/react";
 import {ArticleIFace, ErrorResponse, UserResponse} from "../../types";
 import {baseQueryWithErrorHandler} from "./baseQuery.ts";
 import {normalize, schema} from "normalizr";
-import {isResponseWithData} from "../helpers.ts";
+import {ResponseWithArticle} from "../../types/api.types.ts";
 
 export const articleEntity = new schema.Entity('articles')
 
@@ -19,9 +19,9 @@ export const backendApi = createApi({
           body: body
         }
       },
-      transformResponse: (response) => {
-        if (isResponseWithData(response)) {
-            return response.data[0]
+      transformResponse: (response: ResponseWithArticle) => {
+        if (response) {
+          return response.data[0]
         }
       },
     }),

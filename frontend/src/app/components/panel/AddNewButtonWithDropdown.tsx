@@ -6,6 +6,8 @@ import {IconComponent} from "@consta/uikit/Icon";
 import {IconEdit} from "@consta/uikit/IconEdit";
 import {AddNewFileButton} from "./AddNewFileButton.tsx";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
+import {IconDocAdd} from "@consta/uikit/IconDocAdd";
+import {Text} from "@consta/uikit/Text";
 
 
 type Item = {
@@ -20,7 +22,7 @@ const items: Item[] = [
   {
     label: undefined,
     imageLeft: undefined,
-    rightSide: <AddNewFileButton />
+    rightSide: <AddNewFileButton text={<><IconDocAdd className="my-auto" size={'xs'}/><Text className="ms-2" size={"s"}>Добавить с ПК</Text></>} />
   },
   {
     label: 'Добавить вручную',

@@ -7,6 +7,7 @@ import {TitleEdit} from "./TitleEdit.tsx";
 import {AuthorsEdit} from "./AuthorsEdit.tsx";
 import {PublicationDetailsEdit} from "../publication_details/PublicationDetailsEdit.tsx";
 import {AdditionalInformationEdit} from "../additional_information/AdditionalInformationEdit.tsx";
+import {ArticleFiles} from "../article_files";
 
 
 export const ArticleDetail = () => {
@@ -25,6 +26,7 @@ export const ArticleDetail = () => {
       <AuthorsEdit />
       <PublicationDetailsEdit />
       <AdditionalInformationEdit />
+      <ArticleFiles />
     </div>
   )
 }

@@ -1,8 +1,9 @@
 import datetime
 import os.path
 import uuid
+from typing import Optional, Annotated
 
-from fastapi import APIRouter, UploadFile, Depends, HTTPException, Body
+from fastapi import APIRouter, UploadFile, Depends, HTTPException, Body, Form
 from starlette import status
 from starlette.background import BackgroundTasks
 from uvicorn.main import logger
@@ -31,21 +32,27 @@ async def analyzeFile(file_uuid, user, meta):
     """
     Create
     """
-    article = ArticleInDB.parse_obj({
-        'owner': user['username'],
-        'added': datetime.datetime.now(),
-        'files': [{
-            'file_uuid': file_uuid,
-            'file_name': meta['original_name']
-        }],
-        'title': meta['original_name'],
-        'authors': [],
-    })
-    article = await add_article(article)
-    return article
+    if meta['article'] is None:
+        article = ArticleInDB.parse_obj({
+            'owner': user['username'],
+            'added': datetime.datetime.now(),
+            'files': [{
+                'file_uuid': file_uuid,
+                'file_name': meta['original_name']
+            }],
+            'title': meta['original_name'],
+            'authors': [],
+        })
+        article = await add_article(article)
+        return article
+    else:
+        article = await retrieve_article(meta['article'])
+        updated_article = await update_article(meta['article'], {
+            'files': [{'file_uuid': file_uuid,'file_name': meta['original_name']}]+article['files']})
+        return updated_article
 
 @router.post("/upload", status_code=201)
-async def upload(attach: UploadFile, background_tasks: BackgroundTasks, current_user: User = Depends(get_current_active_user)):
+async def upload(attach: UploadFile, background_tasks: BackgroundTasks, article: Optional[str] = Form(None), current_user: User = Depends(get_current_active_user)):
     meta = {}
     contents = attach.file.read()
     title, file_extension = os.path.splitext(attach.filename)
@@ -59,6 +66,7 @@ async def upload(attach: UploadFile, background_tasks: BackgroundTasks, current_
     meta['original_name'] = attach.filename
     meta['title'] = title
     meta['author'] = current_user['username']
+    meta['article'] = article
     if not os.path.exists(UPLOADS):
         os.mkdir(UPLOADS)
     with open(f'{UPLOADS}{filename}', 'wb') as f:

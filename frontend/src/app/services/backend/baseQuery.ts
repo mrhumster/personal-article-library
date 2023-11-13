@@ -2,7 +2,6 @@ import {BaseQueryFn, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {isErrorWithDetail, isErrorWithDetailList} from "../helpers.ts";
 import {addMessage} from "../../features/alert";
 import {getAccessToken} from "../../hooks";
-import React from "react";
 
 const token = getAccessToken()
 

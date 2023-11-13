@@ -1,7 +1,5 @@
-import {IconDocAdd} from "@consta/uikit/IconDocAdd";
-import {Text} from "@consta/uikit/Text";
 import {FileField} from "@consta/uikit/FileField";
-import React, {ChangeEvent, useEffect} from "react";
+import React, {ChangeEvent, ReactNode, useEffect} from "react";
 import {useAddArticleFileMutation} from "../../services/backend";
 import {useDispatch} from "react-redux";
 import {setError, setFileInProgress, setLoading, setSuccess, showUploadProgress} from "../../features/ui";
@@ -12,7 +10,7 @@ import 'moment/locale/ru';
 
 moment().locale('ru')
 
-export const AddNewFileButton = () => {
+export const AddNewFileButton = ({ text, article }:{text: ReactNode, article?: string}) => {
   const [
     addArticleFile,
     { isUninitialized,
@@ -27,6 +25,9 @@ export const AddNewFileButton = () => {
     const file: File = (target.files as FileList)[0];
     const form_data = new FormData()
     form_data.append('attach', file)
+    if (article) {
+      form_data.append('article', article)
+    }
     addArticleFile(form_data)
     const extension = file.name.slice((file.name.lastIndexOf(".") - 1 >>> 0) + 2)
     dispatch(setFileInProgress({
@@ -61,7 +62,7 @@ export const AddNewFileButton = () => {
   return (
   <>
     <FileField id="addFileDialog" onChange={handleChange}>
-      <IconDocAdd className="my-auto" size={'xs'}/><Text className="ms-2" size={"s"}>Добавить с ПК</Text>
+      {text}
     </FileField>
   </>
   )

@@ -1,7 +1,5 @@
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 import {ResponseWithArticle} from "../types/api.types.ts";
-import {ArticleIFace} from "../types";
-import {ArticleDetail} from "../components/article";
 import {ErrorDetailSchema} from "./backend/baseQuery.ts";
 
 /**
@@ -37,7 +35,7 @@ export function isErrorWithDetailList(error: unknown): error is { detail: ErrorD
 
 export function isResponseWithData(response: ResponseWithArticle) {
   return (
-    typeof response === 'object' && response != null && 'data' in response && typeof (response as any).data === 'object'
+    typeof response === 'object' && response != null && 'data' in response && typeof (response as ResponseWithArticle).data === 'object'
   )
 }
 
