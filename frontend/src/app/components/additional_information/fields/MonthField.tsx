@@ -9,13 +9,13 @@ export const MonthField = () => {
   const value = useSelector((state: RootState) => state.articles.current_article?.additional_information?.month)
   const dispatch = useDispatch()
 
-  const handleChange = ({value}:{value: number | null}) => {
+  const handleChange = ({value}:{value: string | null}) => {
     dispatch(setAdditionalInformation({month: value}))
   }
 
   return (
     <GridItem col={1}>
-      <TextField size={'s'} width={'full'} label={'Месяц'} type={'number'} min={1} max={12} incrementButtons={false} onChange={handleChange} value={value}/>
+      <TextField size={'s'} width={'full'} label={'Месяц'} onChange={handleChange} value={value}/>
     </GridItem>
   )
 }

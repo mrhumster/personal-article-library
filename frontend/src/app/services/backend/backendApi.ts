@@ -13,7 +13,6 @@ export const backendApi = createApi({
     updateArticle: builder.mutation({
       query: (data) => {
         const { id, ...body } = data
-        console.log('***', body)
         return {
           url: `/articles/${id}`,
           method: 'PUT',

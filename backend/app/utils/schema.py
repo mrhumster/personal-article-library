@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Annotated
 
 from fastapi import Form
 from pydantic import BaseModel, Field, EmailStr
@@ -40,8 +40,8 @@ class AdditionalInformationBook(BaseModel):
     editors: Optional[list[EditorsSchema]]
     city: Optional[str]
     publisher: Optional[str]
-    month: Optional[int]
-    day: Optional[int]
+    month: Optional[int] = Field(gt=0, lt=13)
+    day: Optional[int] = Field(gt=0, lt=32)
 
 class ArticleInDB(BaseModel):
     owner: str = Field(...)

@@ -2,6 +2,7 @@ import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 import {ResponseWithArticle} from "../types/api.types.ts";
 import {ArticleIFace} from "../types";
 import {ArticleDetail} from "../components/article";
+import {ErrorDetailSchema} from "./backend/baseQuery.ts";
 
 /**
  * Type predicate to narrow an unknown error to `FetchBaseQueryError`
@@ -24,6 +25,13 @@ export function isErrorWithMessage(error: unknown): error is { message: string }
 export function isErrorWithDetail(error: unknown): error is { detail: string } {
   return (
     typeof error === 'object' && error != null && 'detail' in error && typeof (error as any).detail === 'string'
+  )
+}
+
+
+export function isErrorWithDetailList(error: unknown): error is { detail: ErrorDetailSchema[] } {
+  return (
+    typeof error === 'object' && error != null && 'detail' in error && typeof (error as any).detail === 'object'
   )
 }
 

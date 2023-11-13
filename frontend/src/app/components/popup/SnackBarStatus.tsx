@@ -25,7 +25,7 @@ export const SnackBarStatus: React.FC = () => {
 
   return (
 
-      <SnackBar className="absolute right-0 bottom-0 mb-2"
+      <SnackBar className="absolute right-0 bottom-0 mb-2 z-40"
         items={items}
         onItemClose={(item) => dispatch(removeMessage(item))}
         getItemShowProgress={getItemShowProgress}
