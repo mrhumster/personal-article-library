@@ -1,6 +1,6 @@
 import {FileField} from "@consta/uikit/FileField";
 import React, {ChangeEvent, ReactNode, useEffect} from "react";
-import {useAddArticleFileMutation} from "../../services/backend";
+import {useAddArticleFileMutation, useGetArticleQuery} from "../../services/backend";
 import {useDispatch} from "react-redux";
 import {setError, setFileInProgress, setLoading, setSuccess, showUploadProgress} from "../../features/ui";
 import {filesize} from "filesize";
@@ -18,6 +18,9 @@ export const AddNewFileButton = ({ text, article }:{text: ReactNode, article?: s
       isError,
       isSuccess
     }] = useAddArticleFileMutation()
+
+  const { refetch } = useGetArticleQuery(article)
+
   const dispatch = useDispatch()
 
   const handleChange = (event: DragEvent | ChangeEvent<Element>) => {
@@ -35,12 +38,14 @@ export const AddNewFileButton = ({ text, article }:{text: ReactNode, article?: s
       }))
   }
 
+
   useEffect(() => {
     dispatch(setLoading(isLoading))
   }, [isLoading])
 
   useEffect(()=> {
     dispatch(setSuccess(isSuccess))
+    refetch()
   }, [isSuccess])
 
   useEffect(() => {

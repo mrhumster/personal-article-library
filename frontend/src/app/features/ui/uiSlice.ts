@@ -1,5 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {uiState} from "../../types";
+import {backendApi} from "../../services/backend";
 
 export const initialState: uiState = {
   checked: 0,
@@ -13,6 +14,9 @@ export const initialState: uiState = {
     success: false,
     loading: false,
     file: undefined
+  },
+  dragndrop: {
+    activeAllReferenceDragNDropField: false
   }
 }
 
@@ -51,7 +55,20 @@ export const uiSlice = createSlice({
     },
     setActiveTab: (state: uiState, action) => {
       state.rightSideBar.activeTab = action.payload
+    },
+    setActiveAllReferenceDragNDropField: (state: uiState, action) => {
+      state.dragndrop.activeAllReferenceDragNDropField = action.payload
     }
+  },
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      backendApi.endpoints.getArticle.matchFulfilled,
+      (state: uiState, action) => {
+        if (!action.payload) {
+          state.rightSideBar.isSidebarOpen = false
+        }
+      }
+    )
   }
 })
 export const {
@@ -64,5 +81,6 @@ export const {
   setError,
   openSideBar,
   closeSideBar,
-  setActiveTab
+  setActiveTab,
+  setActiveAllReferenceDragNDropField
 } = uiSlice.actions

@@ -25,5 +25,8 @@ export interface uiState {
       extension: string
       description: string
     } | undefined
+  },
+  dragndrop: {
+    activeAllReferenceDragNDropField: boolean
   }
 }

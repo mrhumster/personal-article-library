@@ -31,8 +31,10 @@ export const backendApi = createApi({
     getArticles: builder.query({
       query: () => '/articles/',
       transformResponse: (response: { articles: ArticleIFace[] }) => {
-        const normalized = normalize(response.articles, [articleEntity])
-        return normalized.entities
+        if (response) {
+          const normalized = normalize(response.articles, [articleEntity])
+          return normalized.entities
+        }
       },
       transformErrorResponse: (response: ErrorResponse) => response.data
     }),
@@ -46,10 +48,7 @@ export const backendApi = createApi({
         }
       },
       transformErrorResponse: (response: ErrorResponse) => {response.data},
-      transformResponse: (response: any) => {
-
-        return response
-      }
+      transformResponse: (response: any) => {return response}
     }),
     checkUsername: builder.query({
       query: (username) => `/users/${username}`,

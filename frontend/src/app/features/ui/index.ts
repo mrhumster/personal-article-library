@@ -9,5 +9,6 @@ export {
   setSuccess,
   openSideBar,
   closeSideBar,
-  setActiveTab
+  setActiveTab,
+  setActiveAllReferenceDragNDropField
 } from './uiSlice.ts'

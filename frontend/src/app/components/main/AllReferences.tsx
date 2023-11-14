@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {RefObject, useEffect, useRef, useState} from "react";
 import {useGetArticlesQuery} from "../../services/backend";
 import {Table, TableColumn} from '@consta/uikit/Table';
 import {IconSearchStroked} from '@consta/icons/IconSearchStroked'
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
-import {openSideBar, setActiveTab} from "../../features/ui";
+import {openSideBar, setActiveAllReferenceDragNDropField, setActiveTab} from "../../features/ui";
 import Moment from "react-moment";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
 import {Button} from "@consta/uikit/Button";
@@ -13,6 +13,7 @@ import {customDenormalize} from "../../services/helpers.ts";
 import { Text } from '@consta/uikit/Text';
 import {IconFunnel} from "@consta/uikit/IconFunnel";
 import {PublicationDetails} from "../../types";
+import {DragLayout} from "../layout";
 
 export const authorsToString = (authors: AuthorIFace[]) => {
   let content
@@ -48,6 +49,7 @@ export const AllReferences = () => {
   const {ids, entities} = useSelector((state: RootState) => state.articles.articles)
   const isOpen = useSelector((state: RootState) => state.ui.rightSideBar.isSidebarOpen)
   const [articles, setArticles] = useState<ArticleIFace[]>()
+  const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setArticles(customDenormalize(ids, entities))
@@ -63,6 +65,27 @@ export const AllReferences = () => {
     dispatch(openSideBar({id: arg.id}))
     dispatch(setActiveTab(0))
   }
+
+  const display = () => {
+    dispatch(setActiveAllReferenceDragNDropField(true))
+  }
+
+  const hide = () => {
+    dispatch(setActiveAllReferenceDragNDropField(false))
+  }
+
+  useEffect(()=>{
+    if (ref.current) {
+      ref.current.addEventListener('dragover', display)
+      ref.current.addEventListener('dragend', hide)
+    }
+    return () => {
+      if (ref.current) {
+        ref.current.removeEventListener('dragover', display)
+        ref.current.removeEventListener('dragend', hide)
+      }
+    }
+  }, [])
 
   const columns: TableColumn<typeof articles[number]>[] = [
     {
@@ -102,7 +125,8 @@ export const AllReferences = () => {
   ];
   return (
     <Theme preset={presetGpnDefault}>
-      <div className='h-screen w-full'>
+      <div ref={ref} className='h-screen w-full relative'>
+        <DragLayout  />
         <div className={`flex items-center border-b border-slate-300 justify-items-stretch ${isOpen ? 'w-3/4' : 'w-full'}`}>
           <Text size={'l'} className='ms-5 font-light flex-grow whitespace-nowrap select-none tracking-tighter'>
             Все ссылки
