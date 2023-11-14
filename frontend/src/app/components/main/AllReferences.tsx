@@ -37,9 +37,9 @@ export const publicationDetailToString = (details: PublicationDetails | undefine
   }
   return (
     <Text size={'s'} fontStyle={'italic'} weight={'light'}>
-      <span>({details.year}),</span>
-      <span>{details.pages?.start} - {details.pages?.end},</span>
-      <span>{details.volume}</span>
+      {details.year && <span>({details.year})</span>}
+      {details.pages?.start && details.pages?.end && <span>, {details.pages?.start} - {details.pages?.end}</span>}
+      {details.volume && <span>, {details.volume}</span>}
     </Text>
   )
 }

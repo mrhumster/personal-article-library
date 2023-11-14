@@ -1,13 +1,14 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional, Annotated
+from typing import Optional
 
 from fastapi import Form
 from pydantic import BaseModel, Field, EmailStr
 
+
 class Pages(BaseModel):
-    start: Optional[int] = Field(gt=1, lt=999999)
-    end: Optional[int] = Field(gt=1, lt=999999)
+    start: Optional[int] = Field(gt=0, lt=999999)
+    end: Optional[int] = Field(gt=0, lt=999999)
 
 class PublicationDetails(BaseModel):
     year: Optional[int] = Field(gt=1900, lt=2100)

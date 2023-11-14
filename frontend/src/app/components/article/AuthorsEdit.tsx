@@ -8,6 +8,7 @@ import {AuthorIFace} from "../../types";
 import { Text } from '@consta/uikit/Text';
 import {authorsToString} from "../main";
 
+// TODO: Переделать компонент. Необходимо добавить отчество, как в редакторах
 
 export const AuthorsEdit = () => {
   const [active, setActive] = useState(false)
