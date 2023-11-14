@@ -5,11 +5,13 @@ import { Text } from '@consta/uikit/Text';
 
 export const AddNewCollection = () => {
   const [isClicked, setIsClicked] = useState<boolean>(false)
-  const inputRef = useRef(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
-  const handleClick = (event: MouseEvent) => {
-    if (inputRef.current && !inputRef.current.contains(event.target)) {
-      setIsClicked(false)
+  const handleClick = (event: TouchEvent | MouseEvent) => {
+    if (inputRef.current) {
+      if (!inputRef.current.contains(event.target as Node)) {
+        setIsClicked(false)
+      }
     }
   }
 

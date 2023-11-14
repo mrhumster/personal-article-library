@@ -1,4 +1,4 @@
-import React, {RefObject, useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useGetArticlesQuery} from "../../services/backend";
 import {Table, TableColumn} from '@consta/uikit/Table';
 import {IconSearchStroked} from '@consta/icons/IconSearchStroked'
@@ -87,6 +87,8 @@ export const AllReferences = () => {
     }
   }, [])
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const columns: TableColumn<typeof articles[number]>[] = [
     {
       title: 'Автор',

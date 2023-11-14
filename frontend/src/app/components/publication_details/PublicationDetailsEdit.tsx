@@ -38,23 +38,23 @@ const getTitleNameByReferenceType = (reference_type: number | undefined) => {
 export const PublicationDetailsEdit = () => {
   const [active, setActive] = useState<boolean>(false)
 
-  const [title, setTitle] = useState<string | null | undefined>(null);
-  const handleChangeTitle = ({ value }: { value: string | null }) => setTitle(value);
+  const [title, setTitle] = useState<string | undefined>(undefined);
+  const handleChangeTitle = (value: string | undefined ) => setTitle(value);
 
-  const [volume, setVolume] = useState<string | null | undefined>(null);
-  const handleChangeVolume = ({ value }: { value: string | null }) => setVolume(value);
+  const [volume, setVolume] = useState<string  | undefined>(undefined);
+  const handleChangeVolume = (value : string | undefined ) => setVolume(value);
 
-  const [issue, setIssue] = useState<string | null | undefined>(null);
-  const handleChangeIssue = ({ value }: { value: string | null }) => setIssue(value);
+  const [issue, setIssue] = useState<string | undefined>(undefined);
+  const handleChangeIssue = (value: string | undefined ) => setIssue(value);
 
-  const [pageStart, setPageStart] = useState<number | null | undefined>(null);
-  const handleChangePageStart = ({ value }: { value: number | null }) => setPageStart(value);
+  const [pageStart, setPageStart] = useState<string | undefined>(undefined);
+  const handleChangePageStart = (value : string | undefined ) => setPageStart(value);
 
-  const [pageEnd, setPageEnd] = useState<number | null | undefined>(null);
-  const handleChangePageEnd = ({ value }: { value: number | null }) => setPageEnd(value);
+  const [pageEnd, setPageEnd] = useState<string | undefined>(undefined);
+  const handleChangePageEnd = (value : string | undefined ) => setPageEnd(value);
 
-  const [year, setYear] = useState<number | null | undefined>(null);
-  const handleChangeYear = ({ value }: { value: number | null }) => setYear(value);
+  const [year, setYear] = useState<string | undefined>(undefined);
+  const handleChangeYear = (value: string | undefined ) => setYear(value);
 
   const [updateArticle] = useUpdateArticleMutation()
 
@@ -115,20 +115,32 @@ export const PublicationDetailsEdit = () => {
           <div className="border rounded border-sky-700" ref={myRef} onClick={handleClickInside}>
               <Grid className={'p-3'} cols={2} rowGap={'m'} colGap={'m'}>
                   <GridItem col={2}>
-                      <TextField size={'s'} width={'full'} label={getTitleNameByReferenceType(reference_type)} onChange={handleChangeTitle} value={title}/>
+                      <TextField size={'s'} width={'full'} label={getTitleNameByReferenceType(reference_type)}
+                                 onChange={({value}:{value: string | null})=> handleChangeTitle(value? value : undefined)} value={title}/>
                   </GridItem>
                   <GridItem>
-                      <TextField size={'s'} label={'Год'} type={'number'} max={2100} min={1800} incrementButtons={false} onChange={handleChangeYear} value={year}/>
+                      <TextField size={'s'} label={'Год'} type={'number'} max={2100} min={1800} incrementButtons={false}
+                                 onChange={({value}:{value: string | null})=> handleChangeYear(value? value : undefined)} value={year}/>
                   </GridItem>
                   <GridItem className={'flex items-end'}>
-                          <TextField size={'s'} className={'self-end me-1 w-24'} type={'number'} min={1} max={10000} incrementButtons={false} label={'Страницы'} onChange={handleChangePageStart} value={pageStart}/>
-                          <TextField size={'s'} className={'self-end ms-1 w-24'} type={'number'} min={1} max={10000} incrementButtons={false} onChange={handleChangePageEnd} value={pageEnd}/>
+                          <TextField size={'s'} className={'self-end me-1 w-24'} type={'number'} min={1} max={10000}
+                                     incrementButtons={false} label={'Страницы'}
+                                     onChange={({value}:{value: string | null})=> handleChangePageStart(value? value : undefined)}
+                                     value={pageStart}/>
+                          <TextField size={'s'} className={'self-end ms-1 w-24'} type={'number'} min={1} max={10000}
+                                     incrementButtons={false}
+                                     onChange={({value}:{value: string | null})=> handleChangePageEnd(value? value : undefined)}
+                                     value={pageEnd}/>
                   </GridItem>
                   <GridItem col={1}>
-                      <TextField size={'s'} width={'full'} label={'Том'} onChange={handleChangeVolume} value={volume}/>
+                      <TextField size={'s'} width={'full'} label={'Том'}
+                                 onChange={({value}:{value: string | null})=> handleChangeVolume(value? value : undefined)}
+                                 value={volume}/>
                   </GridItem>
                   <GridItem col={1}>
-                      <TextField size={'s'} width={'full'} label={'Выпуск'} onChange={handleChangeIssue} value={issue}/>
+                      <TextField size={'s'} width={'full'} label={'Выпуск'}
+                                 onChange={({value}:{value: string | null})=> handleChangeIssue(value? value : undefined)}
+                                 value={issue}/>
                   </GridItem>
               </Grid>
           </div>

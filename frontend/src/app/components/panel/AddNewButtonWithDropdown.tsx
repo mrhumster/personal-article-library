@@ -1,8 +1,7 @@
 import React, {useRef, useState} from "react";
-import {ContextMenu} from "@consta/uikit/ContextMenu";
+import {ContextMenu, ContextMenuItemDefault} from "@consta/uikit/ContextMenu";
 import {Button} from "@consta/uikit/Button";
 import {IconAdd} from "@consta/uikit/IconAdd";
-import {IconComponent} from "@consta/uikit/Icon";
 import {IconEdit} from "@consta/uikit/IconEdit";
 import {AddNewFileButton} from "./AddNewFileButton.tsx";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
@@ -10,23 +9,15 @@ import {IconDocAdd} from "@consta/uikit/IconDocAdd";
 import {Text} from "@consta/uikit/Text";
 
 
-type Item = {
-  label?: string,
-  imageLeft?: IconComponent,
-  imageRight?: IconComponent
-  leftSide?: React.ReactNode
-  rightSide?: React.ReactNode
-}
-
-const items: Item[] = [
+const items: ContextMenuItemDefault[] = [
   {
-    label: undefined,
-    imageLeft: undefined,
+    label: '',
+    leftIcon: undefined,
     rightSide: <AddNewFileButton text={<><IconDocAdd className="my-auto" size={'xs'}/><Text className="ms-2" size={"s"}>Добавить с ПК</Text></>} />
   },
   {
     label: 'Добавить вручную',
-    imageLeft: IconEdit
+    leftIcon: IconEdit
   }
 ]
 
@@ -47,13 +38,12 @@ export const AddNewButtonWithDropdown = () => {
         isOpen={isOpen}
         items={items}
         getItemLabel={(item) => item.label? item.label : ''}
-        getItemLeftIcon={(item) => item.imageLeft}
-        getItemRightIcon={(item) => item.imageRight}
+        getItemLeftIcon={(item) => item.leftIcon}
+        getItemRightIcon={(item) => item.rightIcon}
         onClickOutside={() => setIsOpen(false)}
         anchorRef={ref}
         direction={'downRight'}
         offset={5}
-        arrowOffset={58}
         size={'s'}
       />
         </Theme>

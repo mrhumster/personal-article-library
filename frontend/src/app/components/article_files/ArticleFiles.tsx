@@ -12,7 +12,7 @@ export const ArticleFiles = () => {
   const current_article = useSelector((state: RootState) => state.articles.current_article)
   return (
     <>
-      <div className='flex justify-start align-center items-center'>
+      <div className='flex justify-start align-center items-center mt-3'>
         <span className='ms-1 text-zinc-500'>Файлы</span>
         <AddNewFileButton article={current_article?.id} text={<IconHealth view={'link'} className="ms-2" size={'s'}/>} />
       </div>

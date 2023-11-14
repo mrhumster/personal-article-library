@@ -56,12 +56,12 @@ export type ReferenceTypeItem = {
 };
 
 export type PagesType = {
-  start: number
-  end: number
+  start?: string
+  end?: string
 };
 
 export type PublicationDetails = {
-  year?: number;
+  year?: string;
   title?: string; // book title, encyclopedia title, conference title
   pages?: PagesType
   volume?: string;

@@ -1,13 +1,12 @@
-import {SnackBar, SnackBarItemStatus} from '@consta/uikit/SnackBar';
+import {SnackBar, SnackBarItemDefault, SnackBarItemStatus} from '@consta/uikit/SnackBar';
 import React from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
-import {Item, removeMessage} from "../../features/alert";
+import {removeMessage} from "../../features/alert";
 import {IconAlert} from "@consta/uikit/IconAlert";
 import {IconRing} from "@consta/uikit/IconRing";
-import {IconComponent} from "@consta/uikit/Icon";
 
-const mapIconByStatus: Record<SnackBarItemStatus, IconComponent | undefined> = {
+const mapIconByStatus = {
   alert: IconAlert,
   normal: IconRing,
   system: undefined,
@@ -15,8 +14,16 @@ const mapIconByStatus: Record<SnackBarItemStatus, IconComponent | undefined> = {
   warning: undefined,
 };
 
-const getItemIcon = (item: Item): IconComponent | undefined => mapIconByStatus[item.status];
-const getItemShowProgress = (item: Item) => item.progressMode;
+const getIconByStatus = (status: SnackBarItemStatus | undefined) => {
+  if (!status) {
+    return undefined
+  } else {
+    return mapIconByStatus[status]
+  }
+}
+
+const getItemIcon = (item: SnackBarItemDefault) => getIconByStatus(item.status);
+const getItemShowProgress = (item: SnackBarItemDefault) => item.showProgress;
 
 
 export const SnackBarStatus: React.FC = () => {
