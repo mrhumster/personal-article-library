@@ -3,17 +3,13 @@ import os.path
 import uuid
 from typing import Optional
 
-from bson.errors import InvalidId
 from fastapi import APIRouter, UploadFile, Depends, HTTPException, Body, Form
-from pydantic import ValidationError
 from starlette import status
 from starlette.background import BackgroundTasks
-from uvicorn.main import logger
 
 from authorisation.auth import get_current_active_user
 from helpers.response import ResponseModel
 from requests.article import add_article, retrieve_articles, retrieve_article, update_article
-from requests.files import retrieve_file
 from schema.article import ArticleInDB, UpdateArticleModel, NewArticleSchema
 from schema.user import User
 from utils.environment import Config
@@ -114,7 +110,7 @@ async def create_article(article_data: NewArticleSchema, current_user: User = De
     data['added'] = datetime.datetime.now()
     article_data = ArticleInDB.parse_obj(data)
     article = await add_article(article_data)
-    return article if article else HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    return article if article else HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
 
 @router.get("/", response_description="Статьи")
 async def get_articles(current_user: User = Depends(get_current_active_user)):
@@ -139,7 +135,6 @@ async def get_article_data(article_id: str, current_user: User = Depends(get_cur
 async def update_article_data(article_id: str, req: UpdateArticleModel = Body(...), current_user: User = Depends(get_current_active_user)):
     article = await get_article_permission(article_id, current_user)
     req = {k: v for k, v in req.dict().items() if v is not None}
-    logger.info(req)
     updated_article = await update_article(article_id, req)
     if updated_article:
         return ResponseModel(updated_article, "Article updated successfully")

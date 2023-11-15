@@ -58,10 +58,18 @@ class ArticleInDB(BaseModel):
     reference_type: int = 0
     additional_information: Optional[AdditionalInformationBook]
 
+    @validator('files')
+    def unique_files_id(self, v):
+        return list(set(v))
+
 
 class NewArticleSchema(BaseModel):
     title: str = Field(max_length=200)
     files: Optional[list[str]]
+
+    @validator('files')
+    def unique_files_id(self, v):
+        return list(set(v))
 
 
 class UpdateArticleModel(BaseModel):
