@@ -3,9 +3,10 @@ from datetime import datetime
 from typing import Optional
 
 from fastapi import Form
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator, root_validator
+from uvicorn.server import logger
 
-from schema.files import FileScheme
+from requests.files import retrieve_file
 
 
 class Pages(BaseModel):
@@ -49,13 +50,18 @@ class AdditionalInformationBook(BaseModel):
 class ArticleInDB(BaseModel):
     owner: str = Field(...)
     added: datetime = Field(...)
-    files: Optional[list[FileScheme]]
+    files: Optional[list[str]]
     publication: Optional[PublicationDetails]
     title: Optional[str] = Field(max_length=300)
-    authors: list[AuthorSchema] = Field(max_items=5)
+    authors: Optional[list[AuthorSchema]] = Field(max_items=5)
     source: Optional[str] = Field(max_length=200)
     reference_type: int = 0
     additional_information: Optional[AdditionalInformationBook]
+
+
+class NewArticleSchema(BaseModel):
+    title: str = Field(max_length=200)
+    files: Optional[list[str]]
 
 
 class UpdateArticleModel(BaseModel):
@@ -65,4 +71,4 @@ class UpdateArticleModel(BaseModel):
     source: Optional[str]
     reference_type: Optional[str]
     additional_information: Optional[AdditionalInformationBook]
-    files: Optional[list[FileScheme]]
+    files: Optional[list[str]]

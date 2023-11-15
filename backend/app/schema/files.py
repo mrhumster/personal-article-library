@@ -7,3 +7,6 @@ class FileScheme(BaseModel):
     extension: str = Field(max_length=20)
     size: int = Field(lte=0)
     created: datetime
+
+class FileWithOwner(FileScheme):
+    owner: str = Field(max_length=100)

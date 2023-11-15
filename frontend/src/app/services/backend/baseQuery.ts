@@ -3,16 +3,9 @@ import {isErrorWithDetail, isErrorWithDetailList} from "../helpers.ts";
 import {addMessage} from "../../features/alert";
 import {getAccessToken} from "../../hooks";
 
-const token = getAccessToken()
-
 const baseQuery = fetchBaseQuery({
         baseUrl: `https://base/api/`,
-        prepareHeaders: (headers: Headers) => {
-          if (token) {
-            headers.set("Authorization", `Bearer ${token}`)
-          }
-          return headers
-        }
+        prepareHeaders: (headers: Headers) => headers.set("Authorization", `Bearer ${getAccessToken()}`)
     }
 )
 

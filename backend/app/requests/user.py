@@ -1,7 +1,7 @@
 import motor.motor_asyncio
 from bson import ObjectId
 
-from helpers.article import user_helper
+from helpers.user import user_helper
 from utils.environment import Config
 
 client = motor.motor_asyncio.AsyncIOMotorClient(Config.MONGO_URI)

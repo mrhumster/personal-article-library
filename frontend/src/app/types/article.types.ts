@@ -25,6 +25,7 @@ export interface FileScheme {
   extension?: string;
   size: number;
   created?: Date;
+  owner: string
 }
 
 export interface ArticleIFace {
@@ -35,7 +36,7 @@ export interface ArticleIFace {
   publication?: PublicationDetails
   title: string | null
   source?: string
-  files?: FileScheme[]
+  files?: string[]
   reference_type: number
   authors: AuthorIFace[]
   additional_information: AdditionalInformationIFace | null

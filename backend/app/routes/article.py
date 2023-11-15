@@ -3,7 +3,9 @@ import os.path
 import uuid
 from typing import Optional
 
+from bson.errors import InvalidId
 from fastapi import APIRouter, UploadFile, Depends, HTTPException, Body, Form
+from pydantic import ValidationError
 from starlette import status
 from starlette.background import BackgroundTasks
 from uvicorn.main import logger
@@ -11,9 +13,11 @@ from uvicorn.main import logger
 from authorisation.auth import get_current_active_user
 from helpers.response import ResponseModel
 from requests.article import add_article, retrieve_articles, retrieve_article, update_article
-from schema.article import ArticleInDB, UpdateArticleModel
+from requests.files import retrieve_file
+from schema.article import ArticleInDB, UpdateArticleModel, NewArticleSchema
 from schema.user import User
 from utils.environment import Config
+from utils.validators import validate_files
 
 router = APIRouter()
 
@@ -95,6 +99,22 @@ async def upload(attach: UploadFile, background_tasks: BackgroundTasks, article:
     background_tasks.add_task(analyzeFile, file_uuid=filename, user=current_user, meta=meta)
     attach.file.close()
     return {'meta': meta}
+
+@router.post("/")
+async def create_article(article_data: NewArticleSchema, current_user: User = Depends(get_current_active_user)):
+    data = article_data.dict()
+
+    if data['files']:
+        try:
+            await validate_files(file_ids=data['files'], user=current_user)
+        except ValueError as e:
+            return HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f'Files validate fails: {e}')
+
+    data['owner'] = current_user['username']
+    data['added'] = datetime.datetime.now()
+    article_data = ArticleInDB.parse_obj(data)
+    article = await add_article(article_data)
+    return article if article else HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @router.get("/", response_description="Статьи")
 async def get_articles(current_user: User = Depends(get_current_active_user)):

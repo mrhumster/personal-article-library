@@ -10,6 +10,19 @@ export const backendApi = createApi({
   reducerPath: 'backendApi',
   baseQuery: baseQueryWithErrorHandler,
   endpoints: (builder) => ({
+    getFile: builder.query({
+      query: (file_id) => `/files/${file_id}`
+    }),
+    addFile: builder.mutation({
+      query: (body) => {
+        return {
+          url: '/files/',
+          method: 'POST',
+          body: body,
+          formData: true
+        }
+      },
+    }),
     updateArticle: builder.mutation({
       query: (data) => {
         const { id, ...body } = data
@@ -94,5 +107,7 @@ export const {
   useAddArticleFileMutation,
   useGetArticlesQuery,
   useGetArticleQuery,
-  useUpdateArticleMutation
+  useUpdateArticleMutation,
+  useAddFileMutation,
+  useGetFileQuery
 } = backendApi
