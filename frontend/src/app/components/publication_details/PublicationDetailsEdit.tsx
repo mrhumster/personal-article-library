@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Text} from "@consta/uikit/Text";
-import {publicationDetailToString} from "../main";
+
 import {useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {Grid, GridItem} from "@consta/uikit/Grid";
@@ -8,6 +8,7 @@ import {TextField} from "@consta/uikit/TextField";
 import {useDebounce} from "@consta/uikit/useDebounce";
 import {PublicationDetails} from "../../types";
 import {useUpdateArticleMutation} from "../../services/backend";
+import {publicationDetailToString} from "../../utils";
 
 
 const getTitleNameByReferenceType = (reference_type: number | undefined) => {

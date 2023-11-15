@@ -11,7 +11,6 @@ export function getUser() {
 
 export function getAccessToken() {
     const auth:UserDataIFace = JSON.parse(localStorage.getItem("auth")!);
-    console.log('getAccessToken', auth)
     if (auth && auth.access_token) return auth.access_token;
     return;
 }

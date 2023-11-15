@@ -6,7 +6,8 @@ import {useDebounce} from "@consta/uikit/useDebounce";
 import {TextField} from "@consta/uikit/TextField";
 import {AuthorIFace} from "../../types";
 import { Text } from '@consta/uikit/Text';
-import {authorsToString} from "../main";
+import {authorsToString} from "../../utils";
+
 
 // TODO: Переделать компонент. Необходимо добавить отчество, как в редакторах
 
@@ -86,7 +87,7 @@ export const AuthorsEdit = () => {
       {!active &&
         <Text className="border rounded border-transparent hover:border-sky-700 hover:border-dotted py-1"
               onClick={() => setActive(true)}>
-          {authors && authorsToString(authors)}
+          {authors ? authorsToString(authors) : <span className='italic ms-1 font-light text-sm cursor-pointer'>Добавить информацию об авторе(ах)</span>}
         </Text>
       }
 

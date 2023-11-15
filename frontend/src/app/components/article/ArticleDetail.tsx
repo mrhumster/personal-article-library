@@ -11,9 +11,8 @@ import {ArticleFiles} from "../article_files";
 
 
 export const ArticleDetail = () => {
-  const selected_article = useSelector((state: RootState) => state.ui.rightSideBar.article)
-  const { isUninitialized, refetch } = useGetArticleQuery(selected_article?.id, {skip: !selected_article?.id })
-
+  const selected_article = useSelector((state: RootState) => state.ui.rightSideBar.article?.id)
+  const { isUninitialized, refetch } = useGetArticleQuery(selected_article, {skip: !selected_article })
   useEffect(() => {
     if (selected_article && !isUninitialized) {
       refetch()

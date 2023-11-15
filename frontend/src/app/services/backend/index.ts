@@ -8,6 +8,7 @@ export {
   useGetArticleQuery,
   useUpdateArticleMutation,
   useAddFileMutation,
-  useGetFileQuery
+  useGetFileQuery,
+  useCreateArticleMutation
 } from './backendApi.ts'
 export {baseQueryWithErrorHandler} from './baseQuery.ts'

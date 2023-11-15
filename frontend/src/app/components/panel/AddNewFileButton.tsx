@@ -1,25 +1,26 @@
 import {FileField} from "@consta/uikit/FileField";
 import React, {ChangeEvent, ReactNode, useEffect} from "react";
-import {useAddArticleFileMutation, useGetArticleQuery} from "../../services/backend";
+import {
+  useAddFileMutation,
+  useCreateArticleMutation,
+  useGetArticleQuery, useGetArticlesQuery, useUpdateArticleMutation
+} from "../../services/backend";
 import {useDispatch} from "react-redux";
 import {setError, setFileInProgress, setLoading, setSuccess, showUploadProgress} from "../../features/ui";
 import {filesize} from "filesize";
 import moment from 'moment';
 import 'moment-timezone';
 import 'moment/locale/ru';
+import {CreateArticleIFace} from "../../types";
 
 moment().locale('ru')
 
 export const AddNewFileButton = ({ text, article }:{text: ReactNode, article?: string}) => {
-  const [
-    addArticleFile,
-    { isUninitialized,
-      isLoading,
-      isError,
-      isSuccess
-    }] = useAddArticleFileMutation()
-
-  const { refetch } = useGetArticleQuery(article)
+  const [addFile, addFileResult] = useAddFileMutation()
+  const [addArticle, isSuccess] = useCreateArticleMutation()
+  const [updateArticle] = useUpdateArticleMutation()
+  const getArticles = useGetArticlesQuery({})
+  const { data } = useGetArticleQuery(article, {skip: !article})
 
   const dispatch = useDispatch()
 
@@ -28,8 +29,7 @@ export const AddNewFileButton = ({ text, article }:{text: ReactNode, article?: s
     const file: File = (target.files as FileList)[0];
     const form_data = new FormData()
     form_data.append('attach', file)
-    if (article) { form_data.append('article', article)}
-    addArticleFile(form_data)
+    addFile(form_data)
     const extension = file.name.slice((file.name.lastIndexOf(".") - 1 >>> 0) + 2)
     dispatch(setFileInProgress({
         name: file.name,
@@ -38,29 +38,50 @@ export const AddNewFileButton = ({ text, article }:{text: ReactNode, article?: s
       }))
   }
 
-
   useEffect(() => {
-    dispatch(setLoading(isLoading))
-  }, [isLoading])
-
-  useEffect(()=> {
-    dispatch(setSuccess(isSuccess))
-    refetch()
+    if (isSuccess) {
+      getArticles.refetch()
+    }
   }, [isSuccess])
 
   useEffect(() => {
-    dispatch(setError(isError))
-    if (isError) {
+    if (addFileResult.data) {
+      const newArticle: CreateArticleIFace = {
+        title: addFileResult.data.file_name,
+        files: [addFileResult.data.id]
+      }
+      if (article) {
+        if (data && data.files) {
+          updateArticle({id: data?.id, files: [...data.files, addFileResult.data.id]})
+        }
+      } else {
+        addArticle(newArticle)
+      }
+    }
+  }, [addFileResult.isSuccess, addFileResult.data])
+
+  useEffect(() => {
+    dispatch(setLoading(addFileResult.isLoading))
+  }, [addFileResult.isLoading])
+
+  useEffect(()=> {
+    dispatch(setSuccess(addFileResult.isSuccess))
+    // refetch()
+  }, [addFileResult.isSuccess])
+
+  useEffect(() => {
+    dispatch(setError(addFileResult.isError))
+    if (addFileResult.isError) {
       dispatch(showUploadProgress(false))
       dispatch(setFileInProgress(undefined))
     }
-  }, [isError])
+  }, [addFileResult.isError])
 
   useEffect(() => {
-    if (!isUninitialized) {
+    if (!addFileResult.isUninitialized) {
       dispatch(showUploadProgress(true))
     }
-  }, [isUninitialized])
+  }, [addFileResult.isUninitialized])
 
   return (
   <>

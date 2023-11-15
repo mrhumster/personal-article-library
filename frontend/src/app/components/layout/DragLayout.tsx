@@ -11,29 +11,32 @@ import {
 } from "../../features/ui";
 import {filesize} from "filesize";
 import moment from "moment/moment";
-import {useAddArticleFileMutation} from "../../services/backend";
+import {useAddFileMutation, useCreateArticleMutation, useGetArticlesQuery} from "../../services/backend";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
+import {CreateArticleIFace} from "../../types";
 
 export const DragLayout = () => {
   const visible = useSelector((state: RootState) => state.ui.dragndrop.activeAllReferenceDragNDropField)
   const [files, setFiles] = React.useState<File[]>();
+  const [addFile, addFileResult] = useAddFileMutation()
+  const [addArticle, isSuccess] = useCreateArticleMutation()
+  const { refetch } = useGetArticlesQuery(null)
 
-  const [
-    addArticleFile,
-    { isUninitialized,
-      isLoading,
-      isError,
-      isSuccess
-    }] = useAddArticleFileMutation()
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (isSuccess) {
+      refetch()
+    }
+  }, [isSuccess])
 
   useEffect(()=>{
     if (files) {
       const file = files[0]
       const form_data = new FormData()
       form_data.append('attach', file)
-      addArticleFile(form_data)
+      addFile(form_data)
       const extension = file.name.slice((file.name.lastIndexOf(".") - 1 >>> 0) + 2)
       dispatch(setFileInProgress({
         name: file.name,
@@ -45,26 +48,36 @@ export const DragLayout = () => {
   }, [files])
 
   useEffect(() => {
-    dispatch(setLoading(isLoading))
-  }, [isLoading])
-
-  useEffect(()=> {
-    dispatch(setSuccess(isSuccess))
-  }, [isSuccess])
+    if (addFileResult.data) {
+      const newArticle: CreateArticleIFace = {
+        title: addFileResult.data.file_name,
+        files: [addFileResult.data.id]
+      }
+      addArticle(newArticle)
+    }
+  }, [addFileResult.isSuccess, addFileResult.data])
 
   useEffect(() => {
-    dispatch(setError(isError))
-    if (isError) {
+    dispatch(setLoading(addFileResult.isLoading))
+  }, [addFileResult.isLoading])
+
+  useEffect(()=> {
+    dispatch(setSuccess(addFileResult.isSuccess))
+  }, [addFileResult.isSuccess])
+
+  useEffect(() => {
+    dispatch(setError(addFileResult.isError))
+    if (addFileResult.isError) {
       dispatch(showUploadProgress(false))
       dispatch(setFileInProgress(undefined))
     }
-  }, [isError])
+  }, [addFileResult.isError])
 
   useEffect(() => {
-    if (!isUninitialized) {
+    if (!addFileResult.isUninitialized) {
       dispatch(showUploadProgress(true))
     }
-  }, [isUninitialized])
+  }, [addFileResult.isUninitialized])
 
   if (visible) {
     return (

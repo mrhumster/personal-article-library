@@ -23,6 +23,15 @@ export const backendApi = createApi({
         }
       },
     }),
+    createArticle: builder.mutation({
+      query: (body) => {
+        return {
+          url: '/articles/',
+          method: 'POST',
+          body: body
+        }
+      }
+    }),
     updateArticle: builder.mutation({
       query: (data) => {
         const { id, ...body } = data
@@ -39,7 +48,12 @@ export const backendApi = createApi({
       },
     }),
     getArticle: builder.query({
-      query: (article_id) => `/articles/${article_id}`
+      query: (article_id) => `/articles/${article_id}`,
+      transformResponse: (response: ResponseWithArticle) => {
+        if (response) {
+          return response.data[0]
+        }
+      }
     }),
     getArticles: builder.query({
       query: () => '/articles/',
@@ -109,5 +123,6 @@ export const {
   useGetArticleQuery,
   useUpdateArticleMutation,
   useAddFileMutation,
-  useGetFileQuery
+  useGetFileQuery,
+  useCreateArticleMutation
 } = backendApi

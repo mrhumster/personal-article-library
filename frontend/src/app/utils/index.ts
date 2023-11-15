@@ -1,0 +1,1 @@
+export {publicationDetailToString, authorsToString} from './list2string.tsx'

@@ -20,6 +20,7 @@ export interface ArticleStateIFace {
 }
 
 export interface FileScheme {
+  id: string;
   file_name?: string;
   file_uuid?: string;
   extension?: string;
@@ -32,7 +33,6 @@ export interface ArticleIFace {
   id: string
   owner: string
   added: string
-  file?: string
   publication?: PublicationDetails
   title: string | null
   source?: string
@@ -40,6 +40,11 @@ export interface ArticleIFace {
   reference_type: number
   authors: AuthorIFace[]
   additional_information: AdditionalInformationIFace | null
+}
+
+export interface CreateArticleIFace {
+  title: string
+  files?: string[]
 }
 
 export interface AdditionalInformationIFace {

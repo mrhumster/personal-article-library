@@ -8,44 +8,15 @@ import {openSideBar, setActiveAllReferenceDragNDropField, setActiveTab} from "..
 import Moment from "react-moment";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
 import {Button} from "@consta/uikit/Button";
-import {ArticleIFace, AuthorIFace} from "../../types";
+import {ArticleIFace} from "../../types";
 import {customDenormalize} from "../../services/helpers.ts";
 import { Text } from '@consta/uikit/Text';
 import {IconFunnel} from "@consta/uikit/IconFunnel";
-import {PublicationDetails} from "../../types";
 import {DragLayout} from "../layout";
-
-export const authorsToString = (authors: AuthorIFace[]) => {
-  let content
-  if (authors.length > 0) {
-    const authorsList = authors.map(
-      ({first_name, last_name}) => `${last_name} ${first_name ? first_name[0] : ''}.`)
-    content = authorsList.map((author, index) => <span key={index} className="inline-block mx-1">{author}</span>)
-  } else {
-    content = <span className="ms-1">Добавить информацию об авторе(ах)</span>
-  }
-  return <Text className={'cursor-pointer select-none'} size={'s'} fontStyle={'italic'} weight={'light'}>{content}</Text>
-}
-
-export const publicationDetailToString = (details: PublicationDetails | undefined) => {
-  if ( !details?.year) {
-    return (
-    <Text size={'s'} fontStyle={'italic'} weight={'light'}>
-      <span className={'ms-1 cursor-pointer select-none'}>Добавить информации о публикации</span>
-    </Text>
-    )
-  }
-  return (
-    <Text size={'s'} fontStyle={'italic'} weight={'light'}>
-      {details.year && <span>({details.year})</span>}
-      {details.pages?.start && details.pages?.end && <span>, {details.pages?.start} - {details.pages?.end}</span>}
-      {details.volume && <span>, {details.volume}</span>}
-    </Text>
-  )
-}
+import {authorsToString} from '../../utils'
 
 export const AllReferences = () => {
-  const {refetch} = useGetArticlesQuery({},{pollingInterval: 3000})
+  const { refetch } = useGetArticlesQuery({},{pollingInterval: 10000})
   const {ids, entities} = useSelector((state: RootState) => state.articles.articles)
   const isOpen = useSelector((state: RootState) => state.ui.rightSideBar.isSidebarOpen)
   const [articles, setArticles] = useState<ArticleIFace[]>()

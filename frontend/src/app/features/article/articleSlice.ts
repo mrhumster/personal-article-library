@@ -61,7 +61,7 @@ export const articleSlice = createSlice({
       backendApi.endpoints.getArticle.matchFulfilled,
       (state: ArticleStateIFace, {payload}) => {
         if (payload) {
-          state.current_article = payload.data[0]
+          state.current_article = payload
         } else {
           state.current_article = undefined
         }
