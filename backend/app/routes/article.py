@@ -1,7 +1,7 @@
 import datetime
 import os.path
 import uuid
-from typing import Optional, Annotated
+from typing import Optional
 
 from fastapi import APIRouter, UploadFile, Depends, HTTPException, Body, Form
 from starlette import status
@@ -9,9 +9,11 @@ from starlette.background import BackgroundTasks
 from uvicorn.main import logger
 
 from authorisation.auth import get_current_active_user
-from utils.db import add_article, retrieve_articles, retrieve_article, update_article
+from helpers.response import ResponseModel
+from requests.article import add_article, retrieve_articles, retrieve_article, update_article
+from schema.article import ArticleInDB, UpdateArticleModel
+from schema.user import User
 from utils.environment import Config
-from utils.schema import ResponseModel, User, ArticleSchema, ArticleInDB, UpdateArticleModel
 
 router = APIRouter()
 
@@ -32,7 +34,6 @@ async def analyzeFile(file_uuid, user, meta):
     """
     Create
     """
-    logger.info(meta)
     if meta['article'] is None:
         article = ArticleInDB.parse_obj({
             'owner': user['username'],
@@ -118,6 +119,7 @@ async def get_article_data(article_id: str, current_user: User = Depends(get_cur
 async def update_article_data(article_id: str, req: UpdateArticleModel = Body(...), current_user: User = Depends(get_current_active_user)):
     article = await get_article_permission(article_id, current_user)
     req = {k: v for k, v in req.dict().items() if v is not None}
+    logger.info(req)
     updated_article = await update_article(article_id, req)
     if updated_article:
         return ResponseModel(updated_article, "Article updated successfully")

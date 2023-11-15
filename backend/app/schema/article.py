@@ -3,7 +3,9 @@ from datetime import datetime
 from typing import Optional
 
 from fastapi import Form
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field
+
+from schema.files import FileScheme
 
 
 class Pages(BaseModel):
@@ -44,13 +46,6 @@ class AdditionalInformationBook(BaseModel):
     month: Optional[int] = Field(gt=0, lt=13)
     day: Optional[int] = Field(gt=0, lt=32)
 
-class FileScheme(BaseModel):
-    file_name: str = Field(...)
-    file_uuid: str = Field(...)
-    extension: str = Field(max_length=20)
-    size: int = Field(lte=0)
-    created: datetime
-
 class ArticleInDB(BaseModel):
     owner: str = Field(...)
     added: datetime = Field(...)
@@ -70,60 +65,4 @@ class UpdateArticleModel(BaseModel):
     source: Optional[str]
     reference_type: Optional[str]
     additional_information: Optional[AdditionalInformationBook]
-
-class UserSchema(BaseModel):
-    username: str = Field(...)
-    email: EmailStr = Field(...)
-    disabled: bool = Field(...)
-    fullName: str = Field(...)
-    theme: str
-
-class UpdateUserModel(BaseModel):
-    theme: Optional[str]
-    email: Optional[EmailStr]
-
-def ResponseModel(data: dict, message: str) -> dict:
-    return {
-        "data": [data],
-        "code": 200,
-        "message": message
-    }
-
-
-def ErrorResponseModel(error: str, code: int, message: str) -> dict:
-    return {
-        "error": error,
-        "code": code,
-        "message": message
-    }
-
-class User(BaseModel):
-    username: str
-    first_name: Optional[str] = None
-    last_name: Optional[str] = None
-    joined: Optional[datetime] = None
-    disabled: Optional[bool] = None
-    theme: Optional[str] = 'light'
-
-class UserInDB(UserSchema):
-    hashed_password: str = Field(...)
-
-
-class TokenData(BaseModel):
-    username: Optional[str] = None
-
-class Token(BaseModel):
-    access_token: str
-    refresh: str
-    user: UserSchema
-    token_type: str
-
-
-class UserRegister(BaseModel):
-    username: str
-    password: str
-    email: str
-    fullName: str
-    disabled: Optional[bool] = None
-    theme: Optional[str] = 'light'
-
+    files: Optional[list[FileScheme]]

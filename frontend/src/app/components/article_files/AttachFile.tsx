@@ -7,16 +7,13 @@ import {IconKebab} from "@consta/uikit/IconKebab";
 import React, {useRef, useState} from "react";
 import {ContextMenu, ContextMenuItemDefault} from "@consta/uikit/ContextMenu";
 import {FileScheme} from "../../types";
+import {useSelector} from "react-redux";
+import {RootState} from "../../store";
+import {useUpdateArticleMutation} from "../../services/backend";
 
 
-const items: ContextMenuItemDefault[] = [
-  {
-    label: 'Удалить'
-  },
-  {
-    label: 'Скачать'
-  }
-]
+
+
 
 const getFileDescription = (file: FileScheme) => {
   return `${file.extension} | ${filesize(file.size, {standard: "jedec"})} | ${moment(file.created).format('DD MMMM YYYY')}`
@@ -25,6 +22,26 @@ const getFileDescription = (file: FileScheme) => {
 export const AttachFile = ({file}:{file: FileScheme}) => {
   const ref = useRef<HTMLButtonElement>(null)
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  const current_article = useSelector((state: RootState) => state.articles.current_article)
+  const [updateArticle, {isLoading}] = useUpdateArticleMutation()
+
+  const removeFile = (file: FileScheme) => {
+    if (current_article) {
+      const article_files = current_article.files?.filter((f: FileScheme) => f.file_uuid !== file.file_uuid)
+      updateArticle({id: current_article.id, files: article_files })
+    }
+  }
+
+  const items: ContextMenuItemDefault[] = [
+    {
+      label: 'Удалить',
+      onClick: () => removeFile(file)
+    },
+    {
+      label: 'Скачать'
+    }
+  ]
+
   return (
     <div className={'flex items-center border rounded my-2'}>
       <Attachment
@@ -41,6 +58,7 @@ export const AttachFile = ({file}:{file: FileScheme}) => {
               view={'clear'}
               onClick={() => setIsOpen(!isOpen)}
               onlyIcon
+              loading={isLoading}
       />
       <ContextMenu
         isOpen={isOpen}
