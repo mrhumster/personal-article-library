@@ -7,7 +7,10 @@ export type RightSideBarTabsItem = {
 };
 
 export interface uiState {
-  checked?: number,
+  checked: {
+    id: string,
+    group: number
+  },
   rightSideBar: {
     isSidebarOpen: boolean
     article?: {

@@ -34,6 +34,11 @@ export const articleSlice = createSlice({
       if (state.current_article && payload) {
         state.current_article.additional_information = {...state.current_article.additional_information,  ...payload}
       }
+    },
+    setCurrentArticle: (state: ArticleStateIFace, {payload}) => {
+      if (payload) {
+        state.current_article = payload
+      }
     }
   },
   extraReducers: (builder) => {
@@ -55,16 +60,6 @@ export const articleSlice = createSlice({
       (state: ArticleStateIFace) => {
         state.articles.entities = {}
         state.articles.ids = []
-      }
-    )
-    builder.addMatcher(
-      backendApi.endpoints.getArticle.matchFulfilled,
-      (state: ArticleStateIFace, {payload}) => {
-        if (payload) {
-          state.current_article = payload
-        } else {
-          state.current_article = undefined
-        }
       }
     )
     builder.addMatcher(
@@ -99,5 +94,6 @@ export const {
   addArticle,
   removeArticle,
   setCurrentReferenceType,
-  setAdditionalInformation
+  setAdditionalInformation,
+  setCurrentArticle
 } = articleSlice.actions

@@ -2,9 +2,11 @@ import {createApi} from "@reduxjs/toolkit/dist/query/react";
 import {ArticleIFace, ErrorResponse, UserResponse} from "../../types";
 import {baseQueryWithErrorHandler} from "./baseQuery.ts";
 import {normalize, schema} from "normalizr";
-import {ResponseWithArticle} from "../../types/api.types.ts";
+import {ResponseWithArticle} from "../../types";
+import {CollectionIFace} from "../../types";
 
 export const articleEntity = new schema.Entity('articles')
+export const collectionsEntity = new schema.Entity('collections')
 
 export const backendApi = createApi({
   reducerPath: 'backendApi',
@@ -66,6 +68,7 @@ export const backendApi = createApi({
       transformErrorResponse: (response: ErrorResponse) => response.data
     }),
     addArticleFile: builder.mutation({
+      // TODO: Надо убирать
       query: (body) => {
         return {
           url: '/articles/upload',
@@ -74,8 +77,7 @@ export const backendApi = createApi({
           formData: true
         }
       },
-      transformErrorResponse: (response: ErrorResponse) => {response.data},
-      transformResponse: (response: any) => {return response}
+      transformErrorResponse: (response: ErrorResponse) => {response.data}
     }),
     checkUsername: builder.query({
       query: (username) => `/users/${username}`,
@@ -110,6 +112,34 @@ export const backendApi = createApi({
           body: JSON.stringify(args)
         }
       }
+    }),
+    getMyCollections: builder.query({
+      query: () => '/collections/',
+      transformResponse: (response: CollectionIFace[]) => {
+        if (response) {
+          const normalized = normalize(response, [collectionsEntity])
+          return normalized.entities
+        }
+      },
+    }),
+    createMyCollection: builder.mutation({
+      query: (body: CollectionIFace) => {
+        return {
+          url: '/collections/',
+          method: 'POST',
+          body: body
+        }
+      }
+    }),
+    updateMyCollection: builder.mutation({
+      query: (body: {collection_id: string, data: CollectionIFace}) => {
+        const {collection_id, data} = body
+        return {
+          url: `/collections/${collection_id}`,
+          method: 'PUT',
+          body: data
+        }
+      }
     })
   }),
 })
@@ -124,5 +154,8 @@ export const {
   useUpdateArticleMutation,
   useAddFileMutation,
   useGetFileQuery,
-  useCreateArticleMutation
+  useCreateArticleMutation,
+  useCreateMyCollectionMutation,
+  useGetMyCollectionsQuery,
+  useUpdateMyCollectionMutation
 } = backendApi

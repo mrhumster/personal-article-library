@@ -7,7 +7,7 @@ class CollectionsSchema(BaseModel):
     articles: Optional[list[str]] = []
 
     @validator('articles')
-    def unique_articles_id(self, v):
+    def unique_articles_id(cls, v):
         return list(set(v))
 
 class CollectionsSchemaWithOwner(CollectionsSchema):

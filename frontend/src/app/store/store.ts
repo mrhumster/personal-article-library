@@ -5,7 +5,7 @@ import {snackBarSlice} from "../features/alert";
 import {uiSlice} from "../features/ui";
 import {backendApi} from "../services/backend";
 import {articleSlice} from "../features/article";
-
+import {collectionSlice} from "../features/collections";
 
 
 export const store = configureStore({
@@ -14,7 +14,8 @@ export const store = configureStore({
         auth: authSlice.reducer,
         snackBar: snackBarSlice.reducer,
         ui: uiSlice.reducer,
-        articles: articleSlice.reducer
+        articles: articleSlice.reducer,
+        collections: collectionSlice.reducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()

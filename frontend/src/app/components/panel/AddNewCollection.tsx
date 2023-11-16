@@ -1,11 +1,16 @@
 import React, {useEffect, useRef, useState} from "react";
 import {TextField} from "@consta/uikit/TextField";
 import { Text } from '@consta/uikit/Text';
+import {useCreateMyCollectionMutation} from "../../services/backend";
+import {CollectionIFace} from "../../types";
+import {useDebounce} from "@consta/uikit/useDebounce";
 
 
 export const AddNewCollection = () => {
   const [isClicked, setIsClicked] = useState<boolean>(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const [collectionName, setCollectionName] = useState<string | null>(null)
+  const [ createMyCollection ] = useCreateMyCollectionMutation()
 
   const handleClick = (event: TouchEvent | MouseEvent) => {
     if (inputRef.current) {
@@ -15,6 +20,23 @@ export const AddNewCollection = () => {
     }
   }
 
+  const handleChange = ({value}:{value: string | null}) => {
+    setCollectionName(value)
+  }
+
+  const createCollectionOnBackend = (body: CollectionIFace) => {
+    createMyCollection(body)
+  }
+
+  const debouncedCreate = useDebounce(createCollectionOnBackend, 300)
+
+  useEffect(()=>{
+    if (!isClicked && collectionName) {
+      console.log('Похоже надо создать коллекцию', collectionName)
+      debouncedCreate({title: collectionName, articles: []})
+    }
+  }, [isClicked, collectionName])
+
   useEffect(() => {
     document.addEventListener('mousedown', handleClick)
     return () => {
@@ -22,7 +44,7 @@ export const AddNewCollection = () => {
     }
   }, [])
 
-  if (isClicked) return <TextField className="ms-4 me-4" size={'s'} ref={inputRef} placeholder={'Имя коллекции'}/>
-  if (!isClicked) return <Text className="ms-4 italic text-stone-500" onClick={() => setIsClicked(true)}>Новая коллекция</Text>
+  if (isClicked) return <TextField className="ms-4 me-4" size={'s'} ref={inputRef} value={collectionName} onChange={handleChange} placeholder={'Имя коллекции'}/>
+  if (!isClicked) return <Text className="ms-4 my-2 cursor-pointer hover:underline italic text-stone-500" onClick={() => setIsClicked(true)}>Новая коллекция</Text>
 
 }

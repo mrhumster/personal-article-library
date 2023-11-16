@@ -1,12 +1,12 @@
 import React, {useEffect, useRef, useState} from "react";
 import { Tooltip } from '@consta/uikit/Tooltip';
 import { Button } from '@consta/uikit/Button';
-import {IconComponent} from "@consta/uikit/Icon";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
+import {IconComponent} from "@consta/uikit/Icon";
 
 interface HeaderButtonPropsIFace {
   text: string
-  icon: IconComponent | undefined
+  icon: IconComponent
   active: boolean
   callback: () => void
 }
@@ -29,6 +29,7 @@ export const HeaderButton = (props: HeaderButtonPropsIFace) => {
     }
 
   }, [buttonRef])
+
   return (
     <div>
       <Button view={active ? "primary" : "secondary"} className="w-20" iconRight={icon} onlyIcon onClick={callback}

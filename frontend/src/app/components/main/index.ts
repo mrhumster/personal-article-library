@@ -1,1 +1,1 @@
-export {AllReferences} from './AllReferences.tsx'
+export {TableArticles} from './TableArticles.tsx'

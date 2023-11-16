@@ -3,5 +3,6 @@ export {
   removeArticle,
   setCurrentReferenceType,
   setAdditionalInformation,
+  setCurrentArticle,
   articleSlice
 } from './articleSlice.ts'

@@ -3,20 +3,12 @@ import { Tooltip } from '@consta/uikit/Tooltip';
 import { Avatar } from '@consta/uikit/Avatar';
 import { IconExit } from '@consta/icons/IconExit';
 import { IconSettings } from '@consta/icons/IconSettings';
-import {ContextMenu} from '@consta/uikit/ContextMenu';
+import {ContextMenu, ContextMenuItemDefault} from '@consta/uikit/ContextMenu';
 import {logout} from "../../hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {clearAuthData} from "../../features/auth";
-import {IconComponent} from "@consta/uikit/Icon";
 import {RootState} from "../../store";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
-
-type Item = {
-  label: string,
-  imageLeft?:  IconComponent,
-  accent?:  "alert" | "success" | "warning" | undefined,
-  onClick?: () => void
-};
 
 
 export const UserMenu = () => {
@@ -29,14 +21,14 @@ export const UserMenu = () => {
     dispatch(clearAuthData())
     logout()
   }
-  const items: Item[] = [
+  const items: ContextMenuItemDefault[] = [
     {
       label: 'Настройки',
-      imageLeft: IconSettings
+      leftIcon: IconSettings
     },
     {
       label: 'Выйти',
-      imageLeft: IconExit,
+      leftIcon: IconExit,
       onClick: handleClickExit
     },
   ];
@@ -54,6 +46,7 @@ export const UserMenu = () => {
     }
 
   }, [buttonRef])
+
 
 
   return (
@@ -76,12 +69,14 @@ export const UserMenu = () => {
         isOpen={isOpen}
         items={items}
         onClickOutside={() => setIsOpen(false)}
-        getItemStatus={(item) => item.accent}
-        getItemLeftIcon={(item) => item.imageLeft}
+        getItemStatus={(item) => item.status}
+        getItemLeftIcon={(item) => item.leftIcon}
         size={'s'}
         anchorRef={buttonRef}
         direction={"upRight"}
         offset={-40}
+        /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
+        // @ts-ignore
         arrowOffset={-45}
       />
       </Theme>

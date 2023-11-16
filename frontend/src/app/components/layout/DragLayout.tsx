@@ -83,7 +83,7 @@ export const DragLayout = () => {
     return (
         <div id='dragndrop' className='p-3 absolute w-full h-full left-0 top-0 bg-opacity-75 bg-zinc-200 z-40'>
           <DragNDropField className='w-full h-full' onDropFiles={setFiles}>
-            <Text>Здесь просто текст</Text>
+            <Text>Поле для файлов</Text>
           </DragNDropField>
         </div>
     )

@@ -3,7 +3,10 @@ import {uiState} from "../../types";
 import {backendApi} from "../../services/backend";
 
 export const initialState: uiState = {
-  checked: 0,
+  checked: {
+    id: '0',
+    group: 1
+  },
   rightSideBar: {
     activeTab: 0,
     isSidebarOpen: false,

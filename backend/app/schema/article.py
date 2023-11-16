@@ -59,7 +59,7 @@ class ArticleInDB(BaseModel):
     additional_information: Optional[AdditionalInformationBook]
 
     @validator('files')
-    def unique_files_id(self, v):
+    def unique_files_id(cls, v):
         return list(set(v))
 
 
@@ -68,7 +68,7 @@ class NewArticleSchema(BaseModel):
     files: Optional[list[str]]
 
     @validator('files')
-    def unique_files_id(self, v):
+    def unique_files_id(cls, v):
         return list(set(v))
 
 
