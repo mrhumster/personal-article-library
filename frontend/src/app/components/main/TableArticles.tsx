@@ -15,6 +15,12 @@ import {IconFunnel} from "@consta/uikit/IconFunnel";
 import {DragLayout} from "../layout";
 import {authorsToString} from '../../utils'
 
+
+function drag(e) {
+  console.log('event target', e.target)
+  e.dataTransfer.setData("article_id", e.target.id);
+}
+
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 export const columns: TableColumn<typeof articles[number]>[] = [
@@ -24,18 +30,19 @@ export const columns: TableColumn<typeof articles[number]>[] = [
     align: 'center',
     sortable: true,
     width: 200,
-    renderCell: (row: ArticleIFace) => <div>{row.authors ? authorsToString(row.authors) : <div className={"italic"}>Пусто</div>}</div>
+    renderCell: (row: ArticleIFace) => <div draggable="true">{row.authors ? authorsToString(row.authors) : <div className={"italic"}>Пусто</div>}</div>
   },
   {
     title: 'Год',
     accessor: 'year',
     sortable: true,
-    renderCell: (row: ArticleIFace) => <div>{row.publication?.year}</div>
+    renderCell: (row: ArticleIFace) => <div draggable="true">{row.publication?.year}</div>
   },
   {
     title: 'Название',
     accessor: 'title',
-    sortable: true
+    sortable: true,
+    renderCell: (row: ArticleIFace) => <div draggable="true" onDragStart={drag} id={row.id}>{row.title}</div>
   },
   {
     title: 'Источник',
@@ -120,7 +127,8 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
             columns={columns}
             onRowClick={handleRowClick}
             getCellWrap={() => 'break'}
-            isResizable={false}/>}
+            isResizable={false}
+        />}
       </div>
     </Theme>
   )

@@ -3,7 +3,7 @@ from pydantic import BaseModel, validator
 
 
 class CollectionsSchema(BaseModel):
-    title: str
+    title: Optional[str]
     articles: Optional[list[str]] = []
 
     @validator('articles')

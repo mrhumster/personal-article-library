@@ -132,12 +132,12 @@ export const backendApi = createApi({
       }
     }),
     updateMyCollection: builder.mutation({
-      query: (body: {collection_id: string, data: CollectionIFace}) => {
-        const {collection_id, data} = body
+      query: (data) => {
+        const { collection_id, ...body } = data
         return {
           url: `/collections/${collection_id}`,
           method: 'PUT',
-          body: data
+          body: body
         }
       }
     })

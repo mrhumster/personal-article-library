@@ -24,11 +24,18 @@ export const collectionSlice = createSlice({
       builder.addMatcher(
         backendApi.endpoints.createMyCollection.matchFulfilled,
         (state: CollectionStateIFace, action) => {
-          console.log('***', action.payload)
           if (action.payload) {
             if (state.ids.indexOf(action.payload.id) === -1) {
               state.ids.push(action.payload.id)
             }
+            state.entities[action.payload.id] = action.payload
+          }
+        }
+      )
+      builder.addMatcher(
+        backendApi.endpoints.updateMyCollection.matchFulfilled,
+        (state: CollectionStateIFace, action) => {
+          if (action.payload) {
             state.entities[action.payload.id] = action.payload
           }
         }
