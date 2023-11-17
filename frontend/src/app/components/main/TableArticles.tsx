@@ -137,6 +137,7 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
             onRowClick={handleRowClick}
             getCellWrap={() => 'break'}
             isResizable={false}
+            emptyRowsPlaceholder={<Text>Здесь пока нет данных</Text>}
         />}
       </div>
     </Theme>

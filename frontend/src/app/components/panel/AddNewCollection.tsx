@@ -24,15 +24,21 @@ export const AddNewCollection = () => {
     setCollectionName(value)
   }
 
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && collectionName) {
+      debouncedCreate({title: collectionName, articles: []})
+    }
+  }
+
   const createCollectionOnBackend = (body: CollectionIFace) => {
     createMyCollection(body)
+    setCollectionName(null)
   }
 
   const debouncedCreate = useDebounce(createCollectionOnBackend, 300)
 
   useEffect(()=>{
     if (!isClicked && collectionName) {
-      console.log('Похоже надо создать коллекцию', collectionName)
       debouncedCreate({title: collectionName, articles: []})
     }
   }, [isClicked, collectionName])
@@ -44,7 +50,13 @@ export const AddNewCollection = () => {
     }
   }, [])
 
-  if (isClicked) return <TextField className="ms-4 me-4" size={'s'} ref={inputRef} value={collectionName} onChange={handleChange} placeholder={'Имя коллекции'}/>
+  if (isClicked) return <TextField className="ms-4 me-4"
+                                   size={'s'}
+                                   ref={inputRef}
+                                   value={collectionName}
+                                   onChange={handleChange}
+                                   onKeyPress={handleKeyPress}
+                                   placeholder={'Имя коллекции'}/>
   if (!isClicked) return <Text className="ms-4 my-2 cursor-pointer hover:underline italic text-stone-500" onClick={() => setIsClicked(true)}>Новая коллекция</Text>
 
 }

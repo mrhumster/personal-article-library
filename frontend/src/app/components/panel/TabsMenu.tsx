@@ -100,7 +100,7 @@ const items: Item[] = [
 ];
 
 export const TabsMenu = () => {
-  const {refetch, isLoading, isSuccess} = useGetMyCollectionsQuery({pollingInterval: 3000})
+  const {refetch, isLoading, isSuccess} = useGetMyCollectionsQuery({ pollingInterval: 3000 })
   const collections: CollectionStateIFace = useSelector((state: RootState) => state.collections)
   const [itemsWithCollections, setItemsWithCollections] = useState<Item[]>(items)
 
@@ -127,14 +127,15 @@ export const TabsMenu = () => {
   return (
     <Theme preset={presetGpnDefault}>
       <div className="ms-0 me-0 font-light  whitespace-nowrap select-none tracking-tighter">
-        <List size={'m'} items={itemsWithCollections} groups={groups} renderItem={(item) => <MenuItem item={item} refetch={refetch} />}/>
+        <List size={'m'} items={itemsWithCollections} groups={groups}
+              renderItem={(item) => <MenuItem item={item} refetch={refetch}/>}/>
 
         {isLoading &&
-            <>
-                <div className={'Text Text_lineHeight_xs Text_size_xs Text_spacing_xs Text_transform_uppercase Text_view_secondary ListGroupLabel ListItemGrid MixSpace MixSpace_pT_m MixSpace_pB_xs MixSpace_mL_s MixSpace_mR_s'}>КОЛЛЕКЦИИ</div>
-                <div className={'m-2'}><SkeletonBrick height={25}/></div>
-                <div className={'m-2'}><SkeletonBrick height={25}/></div>
-            </>
+          <>
+            <div className={'Text Text_lineHeight_xs Text_size_xs Text_spacing_xs Text_transform_uppercase Text_view_secondary ListGroupLabel ListItemGrid MixSpace MixSpace_pT_m MixSpace_pB_xs MixSpace_mL_s MixSpace_mR_s'}>КОЛЛЕКЦИИ</div>
+            <div className={'m-2'}><SkeletonBrick height={25}/></div>
+            <div className={'m-2'}><SkeletonBrick height={25}/></div>
+          </>
         }
 
         <AddNewCollection/>

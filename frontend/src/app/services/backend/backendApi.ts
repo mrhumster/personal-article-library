@@ -140,6 +140,14 @@ export const backendApi = createApi({
           body: body
         }
       }
+    }),
+    deleteMyCollection: builder.mutation({
+      query: (collection_id) => {
+       return {
+         url: `/collections/${collection_id}`,
+         method: 'DELETE'
+       }
+      }
     })
   }),
 })
@@ -157,5 +165,6 @@ export const {
   useCreateArticleMutation,
   useCreateMyCollectionMutation,
   useGetMyCollectionsQuery,
-  useUpdateMyCollectionMutation
+  useUpdateMyCollectionMutation,
+  useDeleteMyCollectionMutation,
 } = backendApi

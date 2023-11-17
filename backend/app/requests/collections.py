@@ -26,6 +26,8 @@ async def delete_collection(collection_id: str):
     if collection:
         await collections.delete_one({"_id": ObjectId(collection_id)})
         return True
+    return False
+
 
 async def update_collection(collection_id: str, data: dict):
     if len(data) < 1:

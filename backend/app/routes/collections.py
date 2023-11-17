@@ -1,9 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, Body
 from starlette import status
+from starlette.responses import JSONResponse
 
 from authorisation.auth import get_current_active_user
 from helpers.response import ResponseModel
-from requests.collections import retrieve_my_collections, add_collection, retrieve_collection, update_collection
+from requests.collections import retrieve_my_collections, add_collection, retrieve_collection, update_collection, \
+    delete_collection
 from schema.collections import CollectionsSchema, CollectionsSchemaWithOwner
 from schema.user import User
 from utils.environment import Config
@@ -67,3 +69,16 @@ async def update_my_collection(collection_id: str, data: CollectionsSchema = Bod
             status_code=status.HTTP_204_NO_CONTENT,
             headers={'WWW-Authenticate': 'Bearer'}
         )
+
+@router.delete("/{collection_id}")
+async def delete_my_collection(collection_id: str, user: User = Depends(get_current_active_user)):
+    await get_collection_permission(collection_id, user)
+    if await delete_collection(collection_id):
+        return JSONResponse({
+            'message': f'Collection {collection_id} delete successfully',
+            'collection_id': collection_id
+        }, status_code=status.HTTP_200_OK)
+    return JSONResponse({
+        'message': f'Collection {collection_id} not found',
+        'collection_id': collection_id
+    }, status_code=status.HTTP_400_BAD_REQUEST)
