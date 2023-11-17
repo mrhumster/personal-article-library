@@ -30,6 +30,8 @@ export interface uiState {
     } | undefined
   },
   dragndrop: {
-    activeAllReferenceDragNDropField: boolean
+    isActive: boolean
+    type?: string
+    kind?: string
   }
 }

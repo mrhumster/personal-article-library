@@ -1,19 +1,20 @@
 import React, {useEffect, useState} from "react";
+import {useSelector} from "react-redux";
+
 import {IconComponent} from "@consta/uikit/Icon";
 import {List} from "@consta/uikit/ListCanary";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
 import {IconBookmarkStroked} from "@consta/uikit/IconBookmarkStroked";
+import {IconList} from "@consta/uikit/IconList";
+
 import {IconBook, IconClock, IconCopyFile, IconOpenBook, IconStar, IconTrash} from "./Icons.ts";
-import {useDispatch, useSelector} from "react-redux";
-import {setSelectedMenuItem} from "../../features/ui";
 import {RootState} from "../../store";
 import {AddNewCollection} from "./AddNewCollection.tsx";
-import {useGetMyCollectionsQuery, useUpdateMyCollectionMutation} from "../../services/backend";
-import {Loader} from "@consta/uikit/Loader";
+import {useGetMyCollectionsQuery} from "../../services/backend";
 import {CollectionStateIFace} from "../../types";
-import {IconList} from "@consta/uikit/IconList";
-import {Button} from "@consta/uikit/Button";
-import {IconKebab} from "@consta/uikit/IconKebab";
+
+import {MenuItem} from "./MenuItem.tsx";
+import {SkeletonBrick} from "@consta/uikit/Skeleton";
 
 type Group = {
   label: string;
@@ -99,32 +100,16 @@ const items: Item[] = [
 ];
 
 export const TabsMenu = () => {
-  const dispatch = useDispatch()
-  const checked = useSelector((state: RootState) => state.ui.checked.id)
-  const handleItemClick = (item: Item) => dispatch(setSelectedMenuItem({id: item.key, group: item.groupId}))
-  const {refetch, isLoading, isSuccess } = useGetMyCollectionsQuery({pollingInterval: 3000})
+  const {refetch, isLoading, isSuccess} = useGetMyCollectionsQuery({pollingInterval: 3000})
   const collections: CollectionStateIFace = useSelector((state: RootState) => state.collections)
   const [itemsWithCollections, setItemsWithCollections] = useState<Item[]>(items)
-  const visible = useSelector((state: RootState) => state.ui.dragndrop.activeAllReferenceDragNDropField)
-  const [updateMyCollection] = useUpdateMyCollectionMutation()
 
-  const handleOnDrop = (event) => {
-    event.preventDefault();
-    const data = event.dataTransfer.getData("article_id");
-    const collection = event.currentTarget.id
-    const articles = collections.entities[collection].articles
-    updateMyCollection({collection_id: collection, articles: [...articles, data]})
-    refetch()
-  }
-
-
-  const handleOnDragOver = (event) => {
-    // console.log(event)
-  }
 
   useEffect(() => {
+    // Создание пунктов меню для Коллекций
     if (collections && isSuccess) {
       const collectionItems: Item[] = []
+
       collections.ids.map((id: string) => {
         const item: Item = {
           key: id,
@@ -142,27 +127,17 @@ export const TabsMenu = () => {
   return (
     <Theme preset={presetGpnDefault}>
       <div className="ms-0 me-0 font-light  whitespace-nowrap select-none tracking-tighter">
-        <List
-          size={'m'}
-          items={itemsWithCollections}
-          groups={groups}
-          renderItem={(item) => {
+        <List size={'m'} items={itemsWithCollections} groups={groups} renderItem={(item) => <MenuItem item={item} refetch={refetch} />}/>
 
-            return (
-              <div className={`${item.key === checked ? 'border-s-2 border-sky-600' : ''} ${visible && item.availableForDrop && 'border-sky-500 border rounded'} cursor-pointer my-1 flex items-center align-center`}
-                onClick={() => handleItemClick(item)}
-                onDrop={handleOnDrop}
-                onDragOver={handleOnDragOver}
-                id={item.key}
-              >
-                {item.leftIcon && <item.leftIcon size={'s'} className={'m-2'} />}<span className={'grow'}>{item.label}</span>
-                {item.groupId === 2 ? <Button view={'clear'} size={'s'} iconLeft={IconKebab} onlyIcon /> : <></>}
-              </div>
-            )
-          }}
-        />
-        {isLoading && <Loader className={'m-3'} size="s" />}
-        <AddNewCollection />
+        {isLoading &&
+            <>
+                <div className={'Text Text_lineHeight_xs Text_size_xs Text_spacing_xs Text_transform_uppercase Text_view_secondary ListGroupLabel ListItemGrid MixSpace MixSpace_pT_m MixSpace_pB_xs MixSpace_mL_s MixSpace_mR_s'}>КОЛЛЕКЦИИ</div>
+                <div className={'m-2'}><SkeletonBrick height={25}/></div>
+                <div className={'m-2'}><SkeletonBrick height={25}/></div>
+            </>
+        }
+
+        <AddNewCollection/>
       </div>
     </Theme>
   );

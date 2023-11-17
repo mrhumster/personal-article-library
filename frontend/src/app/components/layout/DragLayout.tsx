@@ -2,7 +2,7 @@ import {DragNDropField} from "@consta/uikit/DragNDropField";
 import {Text} from "@consta/uikit/Text";
 import React, {useEffect} from "react";
 import {
-  setActiveAllReferenceDragNDropField,
+  setDragEvent,
   setError,
   setFileInProgress,
   setLoading,
@@ -17,7 +17,7 @@ import {RootState} from "../../store";
 import {CreateArticleIFace} from "../../types";
 
 export const DragLayout = () => {
-  const visible = useSelector((state: RootState) => state.ui.dragndrop.activeAllReferenceDragNDropField)
+  const {isActive, kind, type} = useSelector((state: RootState) => state.ui.dragndrop)
   const [files, setFiles] = React.useState<File[]>();
   const [addFile, addFileResult] = useAddFileMutation()
   const [addArticle, isSuccess] = useCreateArticleMutation()
@@ -43,7 +43,7 @@ export const DragLayout = () => {
         extension: extension,
         description: `${extension} | ${filesize(file.size, {standard: "jedec"})} | ${moment(file.lastModified).format('DD MMMM YYYY')}`
       }))
-      dispatch(setActiveAllReferenceDragNDropField(false))
+      dispatch(setDragEvent({isActive: false}))
     }
   }, [files])
 
@@ -79,7 +79,7 @@ export const DragLayout = () => {
     }
   }, [addFileResult.isUninitialized])
 
-  if (visible) {
+  if (isActive && kind === 'file' && type === 'application/pdf') {
     return (
         <div id='dragndrop' className='p-3 absolute w-full h-full left-0 top-0 bg-opacity-75 bg-zinc-200 z-40'>
           <DragNDropField className='w-full h-full' onDropFiles={setFiles}>

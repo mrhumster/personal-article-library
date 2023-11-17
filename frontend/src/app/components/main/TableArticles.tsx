@@ -4,7 +4,7 @@ import {Table, TableColumn} from '@consta/uikit/Table';
 import {IconSearchStroked} from '@consta/icons/IconSearchStroked'
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
-import {openSideBar, setActiveAllReferenceDragNDropField, setActiveTab} from "../../features/ui";
+import {openSideBar, setActiveTab, setDragEvent} from "../../features/ui";
 import Moment from "react-moment";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
 import {Button} from "@consta/uikit/Button";
@@ -16,9 +16,9 @@ import {DragLayout} from "../layout";
 import {authorsToString} from '../../utils'
 
 
-function drag(e) {
+function drag(e: React.DragEvent<HTMLDivElement>) {
   console.log('event target', e.target)
-  e.dataTransfer.setData("article_id", e.target.id);
+  e.dataTransfer.setData("article_id", (e.target as HTMLElement).id);
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -74,30 +74,39 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
   }, [ids, entities])
 
 
-  useEffect(() => {
-    refetch()
-  }, [])
+  useEffect(() => {refetch()}, [])
 
   const handleRowClick = (arg: { id: string; e: React.MouseEvent }) => {
     dispatch(openSideBar({id: arg.id}))
     dispatch(setActiveTab(0))
   }
 
-  const display = () => {
-    dispatch(setActiveAllReferenceDragNDropField(true))
+  const display = (event: DragEvent) => {
+    dispatch(setDragEvent({
+      isActive: true,
+      kind: event.dataTransfer?.items[0].kind,
+      type: event.dataTransfer?.items[0].type
+    }))
+
   }
 
   const hide = () => {
-    dispatch(setActiveAllReferenceDragNDropField(false))
+    dispatch(setDragEvent({isActive: false}))
+  }
+
+  const handlerDragStart = (event: DragEvent) => {
+    event.dataTransfer?.setData('object', 'article')
   }
 
   useEffect(()=>{
     if (ref.current) {
+      ref.current.addEventListener('dragstart', handlerDragStart)
       ref.current.addEventListener('dragover', display)
       ref.current.addEventListener('dragend', hide)
     }
     return () => {
       if (ref.current) {
+        ref.current.removeEventListener('dragstart', handlerDragStart)
         ref.current.removeEventListener('dragover', display)
         ref.current.removeEventListener('dragend', hide)
       }

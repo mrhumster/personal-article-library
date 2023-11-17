@@ -19,7 +19,9 @@ export const initialState: uiState = {
     file: undefined
   },
   dragndrop: {
-    activeAllReferenceDragNDropField: false
+    isActive: false,
+    kind: undefined,
+    type: undefined,
   }
 }
 
@@ -59,8 +61,11 @@ export const uiSlice = createSlice({
     setActiveTab: (state: uiState, action) => {
       state.rightSideBar.activeTab = action.payload
     },
-    setActiveAllReferenceDragNDropField: (state: uiState, action) => {
-      state.dragndrop.activeAllReferenceDragNDropField = action.payload
+    setDragEvent: (state: uiState, action) => {
+      const {isActive, kind, type} = action.payload
+      state.dragndrop.isActive = isActive
+      state.dragndrop.kind = kind
+      state.dragndrop.type = type
     }
   },
   extraReducers: (builder) => {
@@ -85,5 +90,5 @@ export const {
   openSideBar,
   closeSideBar,
   setActiveTab,
-  setActiveAllReferenceDragNDropField
+  setDragEvent
 } = uiSlice.actions
