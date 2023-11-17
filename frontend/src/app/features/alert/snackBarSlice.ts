@@ -24,4 +24,7 @@ export const snackBarSlice = createSlice({
   }
 })
 
-export const {addMessage, removeMessage} = snackBarSlice.actions
+export const {
+  addMessage,
+  removeMessage
+} = snackBarSlice.actions

@@ -14,6 +14,7 @@ import { Text } from '@consta/uikit/Text';
 import {IconFunnel} from "@consta/uikit/IconFunnel";
 import {DragLayout} from "../layout";
 import {authorsToString} from '../../utils'
+import openBook from '../../../assets/icons/open_book/open_book_m.svg'
 
 
 function drag(e: React.DragEvent<HTMLDivElement>) {
@@ -95,7 +96,10 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
   }
 
   const handlerDragStart = (event: DragEvent) => {
-    event.dataTransfer?.setData('object', 'article')
+    const img = new Image()
+    img.src = openBook
+    event.dataTransfer?.setData('text/plain', 'article')
+    event.dataTransfer?.setDragImage(img, 24, 24)
   }
 
   useEffect(()=>{
@@ -131,14 +135,16 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
             </div>
           </div>
         </div>
-        {articles && <Table
-            rows={filter ? articles.filter((value) => filter.includes(value.id)) : articles}
-            columns={columns}
-            onRowClick={handleRowClick}
-            getCellWrap={() => 'break'}
-            isResizable={false}
-            emptyRowsPlaceholder={<Text>Здесь пока нет данных</Text>}
-        />}
+        {articles &&
+            <Table
+              rows={filter ? articles.filter((value) => filter.includes(value.id)) : articles}
+              columns={columns}
+              onRowClick={handleRowClick}
+              getCellWrap={() => 'break'}
+              isResizable={false}
+              emptyRowsPlaceholder={<Text>Здесь пока нет данных</Text>}
+          />
+        }
       </div>
     </Theme>
   )

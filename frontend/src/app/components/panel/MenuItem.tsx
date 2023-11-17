@@ -8,10 +8,12 @@ import {setSelectedMenuItem} from "../../features/ui";
 import {useDeleteMyCollectionMutation, useUpdateMyCollectionMutation} from "../../services/backend";
 import {CollectionStateIFace} from "../../types";
 import {ContextMenu, ContextMenuItemDefault} from "@consta/uikit/ContextMenu";
+import {ProgressSpin} from "@consta/uikit/ProgressSpin";
+import {addMessage} from "../../features/alert";
 
 interface MenuItemPropsIFace {
   item: Item
-  refetch: any
+  refetch: () => void
 
 }
 
@@ -37,7 +39,12 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
     const article_id = event.dataTransfer.getData("article_id");
     const collection_id = event.currentTarget.id
     const articles = collections.entities[collection_id].articles
-    updateMyCollection({collection_id: collection_id, articles: [...articles, article_id]})
+    if (articles.includes(article_id)) {
+      dispatch(addMessage({message: 'Ссылка уже добавлена в коллекцию', status: 'normal', progressMode: 'timer'}))
+    } else {
+      updateMyCollection({collection_id: collection_id, articles: [...articles, article_id]})
+      dispatch(addMessage({message: 'Ссылка добавлена в коллекцию', status: 'success', progressMode: 'timer'}))
+    }
   }
 
   const handleKebabClick = (event: React.MouseEvent<Element, MouseEvent>) => {
@@ -74,10 +81,12 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
          onDragOver={handleOnDragOver}
          id={item.key}
     >
-      {Icon && <Icon size={'s'} className={'m-2'}/>}<span
-      className={'grow'}>{item.label}</span>
+      {Icon && <Icon size={'s'} className={'m-2'}/>}
+      <span className={'grow'}>{item.label}</span>
       {item.groupId === 2 &&
           <>
+            {!data.isLoading ?
+              <>
               <Button
                   ref={kebabRef}
                   view={'clear'}
@@ -95,6 +104,11 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
                   onClickOutside={handleClickOutside}
                   offset={'m'}
               />
+              </> :
+              <div className={'me-2'}>
+                <ProgressSpin size="s"/>
+              </div>
+            }
           </>
       }
     </div>

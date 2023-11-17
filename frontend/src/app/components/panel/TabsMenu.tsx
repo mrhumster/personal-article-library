@@ -124,6 +124,8 @@ export const TabsMenu = () => {
     }
   }, [collections.ids, isSuccess])
 
+  const collGroupTitle = <div className={'Text Text_lineHeight_xs Text_size_xs Text_spacing_xs Text_transform_uppercase Text_view_secondary ListGroupLabel ListItemGrid MixSpace MixSpace_pT_m MixSpace_pB_xs MixSpace_mL_s MixSpace_mR_s'}>КОЛЛЕКЦИИ</div>
+
   return (
     <Theme preset={presetGpnDefault}>
       <div className="ms-0 me-0 font-light  whitespace-nowrap select-none tracking-tighter">
@@ -132,12 +134,12 @@ export const TabsMenu = () => {
 
         {isLoading &&
           <>
-            <div className={'Text Text_lineHeight_xs Text_size_xs Text_spacing_xs Text_transform_uppercase Text_view_secondary ListGroupLabel ListItemGrid MixSpace MixSpace_pT_m MixSpace_pB_xs MixSpace_mL_s MixSpace_mR_s'}>КОЛЛЕКЦИИ</div>
+            {collGroupTitle}
             <div className={'m-2'}><SkeletonBrick height={25}/></div>
             <div className={'m-2'}><SkeletonBrick height={25}/></div>
           </>
         }
-
+        {collections.ids.length === 0 && collGroupTitle}
         <AddNewCollection/>
       </div>
     </Theme>
