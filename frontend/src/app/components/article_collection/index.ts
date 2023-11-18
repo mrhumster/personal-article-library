@@ -1,0 +1,1 @@
+export {ArticleCollectionsEdit} from './ArticleCollectionsEdit.tsx'

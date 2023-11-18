@@ -9,6 +9,7 @@ import {PublicationDetailsEdit} from "../publication_details/PublicationDetailsE
 import {AdditionalInformationEdit} from "../additional_information/AdditionalInformationEdit.tsx";
 import {ArticleFiles} from "../article_files";
 import {setCurrentArticle} from "../../features/article";
+import {ArticleCollectionsEdit} from "../article_collection";
 
 
 export const ArticleDetail = () => {
@@ -28,6 +29,7 @@ export const ArticleDetail = () => {
       <PublicationDetailsEdit />
       <AdditionalInformationEdit />
       <ArticleFiles />
+      <ArticleCollectionsEdit />
     </div>
   )
 }
