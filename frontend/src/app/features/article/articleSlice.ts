@@ -21,7 +21,7 @@ export const articleSlice = createSlice({
       state.articles.entities[action.payload.id] = action.payload
     },
     removeArticle: (state: ArticleStateIFace, action) => {
-      // TODO: Не реализовано
+      // TODO: Надо реализовать удаление ссылок
       console.log(state)
       console.log(action.payload)
     },

@@ -139,7 +139,9 @@ export const backendApi = createApi({
           method: 'PUT',
           body: body
         }
-      }
+      },
+      transformResponse: (response : { data: CollectionIFace[] }) => response.data[0],
+      transformErrorResponse: (response: ErrorResponse) => response.data.detail
     }),
     deleteMyCollection: builder.mutation({
       query: (collection_id) => {

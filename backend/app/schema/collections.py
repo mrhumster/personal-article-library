@@ -1,9 +1,9 @@
 from typing import Optional
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, validator, Field
 
 
 class CollectionsSchema(BaseModel):
-    title: Optional[str]
+    title: Optional[str] = Field(max_length=100)
     articles: Optional[list[str]] = []
 
     @validator('articles')
@@ -11,4 +11,4 @@ class CollectionsSchema(BaseModel):
         return list(set(v))
 
 class CollectionsSchemaWithOwner(CollectionsSchema):
-    owner: str
+    owner: str = Field(max_length=100)

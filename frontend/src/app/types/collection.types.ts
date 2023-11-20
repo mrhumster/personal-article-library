@@ -1,5 +1,5 @@
 export interface CollectionIFace {
-  id: string,
+  id?: string,
   title: string
   articles: string[]
 }

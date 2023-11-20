@@ -10,11 +10,11 @@ import {CollectionStateIFace} from "../../types";
 import {ContextMenu, ContextMenuItemDefault} from "@consta/uikit/ContextMenu";
 import {ProgressSpin} from "@consta/uikit/ProgressSpin";
 import {addMessage} from "../../features/alert";
+import {TextField} from "@consta/uikit/TextField";
 
 interface MenuItemPropsIFace {
   item: Item
   refetch: () => void
-
 }
 
 export const MenuItem = (props: MenuItemPropsIFace) => {
@@ -25,10 +25,13 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
   const collections: CollectionStateIFace = useSelector((state: RootState) => state.collections)
   const [updateMyCollection, data] = useUpdateMyCollectionMutation()
   const [deleteMyCollection] = useDeleteMyCollectionMutation()
+  const [openRenameField, setOpenRenameField] = useState<boolean>(false)
+  const [changeCollectionName, setChangeCollectionName] = useState<string | null>(null)
+  const [isOpenContextMenu, setIsOpenContextMenu] = useState<boolean>(false)
+
   const dispatch = useDispatch()
 
   const kebabRef = useRef<HTMLButtonElement>(null)
-  const [isOpenContextMenu, setIsOpenContextMenu] = useState<boolean>(false)
 
   const handleItemClick = (item: Item) => dispatch(setSelectedMenuItem({id: item.key, group: item.groupId}))
 
@@ -59,11 +62,44 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
     deleteMyCollection(item.key)
   }
 
+  const handleKeyPressTitleEdit = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      if (!changeCollectionName) {
+        dispatch(addMessage({
+          message: 'Имя коллекции не может быть пустым',
+          status: 'alert',
+          progressMode: 'line'
+        }))
+      } else {
+        if (item.key) {
+          const articles = collections.entities[item.key].articles
+          updateMyCollection({collection_id: item.key, title: changeCollectionName, articles: articles})
+        }
+        setOpenRenameField(false)
+      }
+    }
+  }
+
+  const handleChangeCollectionName = ({value}: { value: string | null }) => {
+    setChangeCollectionName(value)
+  }
+
+
+  const handleRename = () => {
+    setIsOpenContextMenu(false)
+    setOpenRenameField(true)
+    setChangeCollectionName(item.label)
+  }
+
   useEffect(() => {
     if (data.isSuccess && !data.isError) refetch()
   }, [data.isSuccess, data.isError])
 
   const items: ContextMenuItemDefault[] = [
+    {
+      label: 'Переименовать',
+      onClick: handleRename
+    },
     {
       label: 'Удалить',
       onClick: handleDelete
@@ -81,21 +117,21 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
          onDragOver={handleOnDragOver}
          id={item.key}
     >
-      {Icon && <Icon size={'s'} className={'m-2'}/>}
-      <span className={'grow'}>{item.label}</span>
-      {item.groupId === 2 &&
+      {Icon && !openRenameField && <><Icon size={'s'} className={'m-2'}/><span
+          className={'grow w-24 truncate'} title={item.label}>{item.label}</span></>}
+      {item.groupId === 2 && !openRenameField &&
           <>
             {!data.isLoading ?
               <>
-              <Button
+                <Button
                   ref={kebabRef}
                   view={'clear'}
                   size={'s'}
                   iconLeft={IconKebab}
                   onClick={handleKebabClick}
                   onlyIcon
-              />
-              <ContextMenu
+                />
+                <ContextMenu
                   size={'s'}
                   items={items}
                   direction={'rightCenter'}
@@ -103,13 +139,25 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
                   isOpen={isOpenContextMenu}
                   onClickOutside={handleClickOutside}
                   offset={'m'}
-              />
+                />
               </> :
               <div className={'me-2'}>
                 <ProgressSpin size="s"/>
               </div>
             }
           </>
+      }
+      {/* Article Collection rename dialog */}
+      {openRenameField &&
+          <TextField status={changeCollectionName ? 'success' : 'alert'}
+                     placeholder={'Введите имя коллекции'}
+                     onChange={handleChangeCollectionName}
+                     onKeyPress={handleKeyPressTitleEdit}
+                     value={changeCollectionName}
+                     className={'mx-2'}
+                     required={true}
+                     size={'s'}
+          />
       }
     </div>
   )

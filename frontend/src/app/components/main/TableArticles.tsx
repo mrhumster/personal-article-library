@@ -123,7 +123,7 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
       <div ref={ref} className='h-screen w-full relative'>
         <DragLayout  />
         <div className={`flex items-center border-b border-slate-300 justify-items-stretch ${isOpen ? 'w-3/4' : 'w-full'}`}>
-          <Text size={'l'} className='ms-5 font-light flex-grow whitespace-nowrap select-none tracking-tighter'>
+          <Text size={'l'} className='ms-5 font-light flex-grow whitespace-nowrap select-none tracking-tighter truncate w-64'>
             {title}
           </Text>
           <div id='buttons' className={`flex ${isOpen ? 'me-20' : 'me-2'}`}>

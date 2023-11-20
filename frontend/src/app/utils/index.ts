@@ -1,1 +1,1 @@
-export {publicationDetailToString, authorsToString} from './list2string.tsx'
+export {publicationDetailToString, authorsToString, truncateString} from './utils.tsx'

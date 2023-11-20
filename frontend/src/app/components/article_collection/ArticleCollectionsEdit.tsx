@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store";
-import {CollectionBadge} from "./CollectionBadge.tsx";
+import {ArticleCollectionBadge} from "./ArticleCollectionBadge.tsx";
 
 export const ArticleCollectionsEdit = () => {
   const { ids, entities } = useSelector((state: RootState) => state.collections)
@@ -18,7 +18,6 @@ export const ArticleCollectionsEdit = () => {
         }
 
       })
-      console.log(filtered_ids)
       setColIds(filtered_ids)
     }
   }, [ids, entities, article_id])
@@ -27,8 +26,8 @@ export const ArticleCollectionsEdit = () => {
     <div id="article_collections" className="my-4">
       <div className='ms-1 text-zinc-500'>Коллекции</div>
       {colIds?.length === 0 ?
-        <div className="text-sm ms-1 text-zinc-400 italic">Ссылка не находится ни в одной коллекции</div> :
-        colIds && colIds.map((id) => <CollectionBadge key={id} collection={entities[id]} />)
+        <div className="text-sm ms-1 text-zinc-400 italic">Не найдено коллекций</div> :
+        colIds && colIds.map((id) => <ArticleCollectionBadge key={id} collection={entities[id]} />)
       }
     </div>
   )

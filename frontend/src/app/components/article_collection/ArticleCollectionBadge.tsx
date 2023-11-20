@@ -4,8 +4,9 @@ import {Badge} from "@consta/uikit/Badge";
 import {IconList} from "@consta/uikit/IconList";
 import {setSelectedMenuItem} from "../../features/ui";
 import {useDispatch} from "react-redux";
+import {truncateString} from "../../utils";
 
-export const CollectionBadge = ({collection}:{collection: CollectionIFace}) => {
+export const ArticleCollectionBadge = ({collection}:{collection: CollectionIFace}) => {
   const dispatch = useDispatch()
 
   const handleClick = () => {
@@ -15,7 +16,7 @@ export const CollectionBadge = ({collection}:{collection: CollectionIFace}) => {
       <Badge className={'m-1 cursor-pointer hover:shadow hover:border hover:border-sky-500'}
              iconLeft={IconList}
              status={'normal'}
-             label={collection.title}
+             label={truncateString(collection.title, 20)}
              size={'s'}
              view={'stroked'}
              form={'round'}
