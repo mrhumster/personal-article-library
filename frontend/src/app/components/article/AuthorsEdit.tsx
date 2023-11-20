@@ -9,11 +9,11 @@ import { Text } from '@consta/uikit/Text';
 import {authorsToString} from "../../utils";
 
 
-// TODO: Переделать компонент. Необходимо добавить отчество, как в редакторах
+// TODO: Переделать компонент. Необходимо добавить отчество, как в редакторах !!! Чета не правильно
 
 export const AuthorsEdit = () => {
   const [active, setActive] = useState(false)
-  const [value, setValue] = useState<string | null>('')
+  const [value, setValue] = useState<string | null>(null)
   const authors = useSelector((state: RootState) => state.articles.current_article?.authors)
   const id = useSelector((state: RootState) => state.articles.current_article?.id)
   const [updateArticle] = useUpdateArticleMutation()
@@ -29,10 +29,11 @@ export const AuthorsEdit = () => {
         if (authorsList) {
           authorsList.map((name) => {
             if (name.length > 1) {
-              const [first_name, last_name] = name.replace(/\s+/g, ' ').split(' ', 2)
+              const [ last_name, first_name, sur_name] = name.replace(/\s+/g, ' ').split(' ', 3)
               const author: AuthorIFace = {
                 first_name: first_name,
-                last_name: last_name
+                last_name: last_name,
+                sur_name: sur_name
               }
               authors.push(author)
             }
@@ -60,7 +61,8 @@ export const AuthorsEdit = () => {
 
   useEffect(() => {
     if (authors) {
-      const a = authors.map(({first_name, last_name}) => `${first_name} ${last_name}`)
+      const a = authors.map(({first_name, last_name, sur_name}) =>
+        `${last_name}${first_name ? ` ${first_name}` : ''}${sur_name ? ` ${sur_name}` : ''}`)
       setValue(a.join('\n'))
     }
   }, [authors])
@@ -104,7 +106,7 @@ export const AuthorsEdit = () => {
           value={value}
           ref={myRef}
           onClick={handleClickInside}
-          caption={'Имя и фамилия авторов разделенных новой строкой'}
+          caption={'Фамилия имя и отчество. Персоны можно разделить новой строкой.'}
           onChange={change}
         />
       }

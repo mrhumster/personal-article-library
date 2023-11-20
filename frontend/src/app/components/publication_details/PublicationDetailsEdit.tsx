@@ -117,26 +117,34 @@ export const PublicationDetailsEdit = () => {
               <Grid className={'p-3'} cols={2} rowGap={'m'} colGap={'m'}>
                   <GridItem col={2}>
                       <TextField size={'s'} width={'full'} label={getTitleNameByReferenceType(reference_type)}
+                                 placeholder={getTitleNameByReferenceType(reference_type)}
                                  onChange={({value}:{value: string | null})=> handleChangeTitle(value? value : undefined)} value={title}/>
                   </GridItem>
                   <GridItem>
                       <TextField size={'s'} label={'Год'} type={'number'} max={2100} min={1800} incrementButtons={false}
+                                 placeholder={'Год публикации'}
                                  onChange={({value}:{value: string | null})=> handleChangeYear(value? value : undefined)} value={year}/>
                   </GridItem>
                   <GridItem className={'flex items-end'}>
                           <TextField size={'s'} className={'self-end me-1 w-24'} type={'number'} min={1} max={10000}
                                      incrementButtons={false} label={'Страницы'}
                                      onChange={({value}:{value: string | null})=> handleChangePageStart(value? value : undefined)}
-                                     value={pageStart}/>
+                                     value={pageStart}
+                                     placeholder={'c'}
+                          />
                           <TextField size={'s'} className={'self-end ms-1 w-24'} type={'number'} min={1} max={10000}
                                      incrementButtons={false}
                                      onChange={({value}:{value: string | null})=> handleChangePageEnd(value? value : undefined)}
-                                     value={pageEnd}/>
+                                     value={pageEnd}
+                                     placeholder={'по'}
+                          />
                   </GridItem>
                   <GridItem col={1}>
                       <TextField size={'s'} width={'full'} label={'Том'}
                                  onChange={({value}:{value: string | null})=> handleChangeVolume(value? value : undefined)}
-                                 value={volume}/>
+                                 value={volume}
+                                 placeholder={'Номер тома'}
+                      />
                   </GridItem>
                   <GridItem col={1}>
                       <TextField size={'s'} width={'full'} label={'Выпуск'}

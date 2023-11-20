@@ -28,8 +28,8 @@ export const ArticleDetail = () => {
       <AuthorsEdit />
       <PublicationDetailsEdit />
       <AdditionalInformationEdit />
-      <ArticleFiles />
       <ArticleCollectionsEdit />
+      <ArticleFiles />
     </div>
   )
 }

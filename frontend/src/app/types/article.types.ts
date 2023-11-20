@@ -1,6 +1,7 @@
 export interface AuthorIFace {
   first_name?: string
   last_name?: string
+  sur_name?: string
 }
 
 export interface EditorsIFace {

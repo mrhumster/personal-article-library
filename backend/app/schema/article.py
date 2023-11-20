@@ -3,10 +3,7 @@ from datetime import datetime
 from typing import Optional
 
 from fastapi import Form
-from pydantic import BaseModel, Field, validator, root_validator
-from uvicorn.server import logger
-
-from requests.files import retrieve_file
+from pydantic import BaseModel, Field, validator
 
 
 class Pages(BaseModel):
@@ -21,8 +18,9 @@ class PublicationDetails(BaseModel):
     issue: Optional[str] = Field(max_length=200)
 
 class AuthorSchema(BaseModel):
-    first_name: str
-    last_name: str
+    first_name: Optional[str] = Field(max_length=100)
+    last_name: Optional[str] = Field(max_length=100)
+    sur_name: Optional[str] = Field(max_length=100)
 
 @dataclass
 class ArticleSchema:

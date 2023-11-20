@@ -1,10 +1,12 @@
-import {TextField} from "@consta/uikit/TextField";
-import {GridItem} from "@consta/uikit/Grid";
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../store";
+
 import {useDebounce} from "@consta/uikit/useDebounce";
-import {EditorsIFace} from "../../../types/article.types.ts";
+import {TextField} from "@consta/uikit/TextField";
+import {GridItem} from "@consta/uikit/Grid";
+
+import {RootState} from "../../../store";
+import {EditorsIFace} from "../../../types";
 import {setAdditionalInformation} from "../../../features/article";
 
 export const EditorsField = () => {
@@ -13,7 +15,6 @@ export const EditorsField = () => {
   const dispatch = useDispatch()
 
   const handleChange = () => {
-    console.log(value)
     const editorsList = value?.split('\n')
     const editors: EditorsIFace[] = []
     if (editorsList) {
@@ -29,7 +30,6 @@ export const EditorsField = () => {
         }
       })
     }
-    console.log(editors)
     dispatch(setAdditionalInformation({editors: editors}))
   }
 
@@ -37,7 +37,7 @@ export const EditorsField = () => {
 
   useEffect(()=> {
     if (editors) {
-      const a = editors.map(({first_name, last_name, sur_name}) => `${last_name} ${first_name} ${sur_name}`)
+      const a = editors.map(({ last_name, first_name, sur_name}) => `${last_name} ${first_name} ${sur_name}`)
       setValue(a.join('\n'))
     }
   }, [])
@@ -57,7 +57,7 @@ export const EditorsField = () => {
           maxRows={5}
           value={value}
           label={'Редактор(ы)'}
-          caption={'Фамилия имя отчество авторов разделенных новой строкой'}
+          caption={'Фамилия имя и отчество. Персоны можно разделить новой строкой.'}
           onChange={({value}:{value: string | null}) => setValue(value)}
         />
     </GridItem>

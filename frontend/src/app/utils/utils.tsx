@@ -6,7 +6,7 @@ export const authorsToString = (authors: AuthorIFace[] | null) => {
   let content
   if (authors && authors.length > 0) {
     const authorsList = authors?.map(
-      ({first_name, last_name}) => `${last_name} ${first_name ? first_name[0] : ''}.`)
+      ({first_name, last_name}) => `${last_name} ${first_name ? `${first_name[0]}.` : ''}`)
     content = authorsList?.map((author, index) => <span key={index} className="inline-block mx-1">{author}</span>)
   } else {
     content = <span className="ms-1">Добавить информацию об авторе(ах)</span>
