@@ -15,5 +15,6 @@ def article_helper(article) -> dict:
         "authors": article["authors"],
         "source": article["source"],
         "reference_type": int(article["reference_type"]),
-        "additional_information": article["additional_information"]
+        "additional_information": article["additional_information"],
+        "urls": article["urls"]
     }

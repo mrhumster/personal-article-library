@@ -10,6 +10,7 @@ import {AdditionalInformationEdit} from "../additional_information/AdditionalInf
 import {ArticleFiles} from "../article_files";
 import {setCurrentArticle} from "../../features/article";
 import {ArticleCollectionsEdit} from "../article_collection";
+import {ArticleUrls} from "../article_urls";
 
 
 export const ArticleDetail = () => {
@@ -30,6 +31,7 @@ export const ArticleDetail = () => {
       <AdditionalInformationEdit />
       <ArticleCollectionsEdit />
       <ArticleFiles />
+      <ArticleUrls />
     </div>
   )
 }

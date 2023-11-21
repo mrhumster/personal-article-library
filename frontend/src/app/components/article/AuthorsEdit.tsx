@@ -64,6 +64,8 @@ export const AuthorsEdit = () => {
       const a = authors.map(({first_name, last_name, sur_name}) =>
         `${last_name}${first_name ? ` ${first_name}` : ''}${sur_name ? ` ${sur_name}` : ''}`)
       setValue(a.join('\n'))
+    } else {
+      setValue(null)
     }
   }, [authors])
 

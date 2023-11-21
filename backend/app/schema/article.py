@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, date
 from typing import Optional
 
 from fastapi import Form
@@ -21,6 +21,14 @@ class AuthorSchema(BaseModel):
     first_name: Optional[str] = Field(max_length=100)
     last_name: Optional[str] = Field(max_length=100)
     sur_name: Optional[str] = Field(max_length=100)
+
+class ArticleURLs(BaseModel):
+    date_accessed: Optional[datetime]
+    urls: Optional[list[str]] = Field(max_items=100)
+
+    @validator('urls')
+    def unique_url(cls, v):
+        return list(set(v))
 
 @dataclass
 class ArticleSchema:
@@ -55,6 +63,7 @@ class ArticleInDB(BaseModel):
     source: Optional[str] = Field(max_length=200)
     reference_type: int = 0
     additional_information: Optional[AdditionalInformationBook]
+    urls: Optional[ArticleURLs]
 
     @validator('files')
     def unique_files_id(cls, v):
@@ -78,3 +87,4 @@ class UpdateArticleModel(BaseModel):
     reference_type: Optional[str]
     additional_information: Optional[AdditionalInformationBook]
     files: Optional[list[str]]
+    urls: Optional[ArticleURLs]

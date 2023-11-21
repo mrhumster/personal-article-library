@@ -30,6 +30,11 @@ export interface FileScheme {
   owner: string
 }
 
+export interface ArticleURLs {
+  date_accessed?: Date
+  urls: string[]
+}
+
 export interface ArticleIFace {
   id: string
   owner: string
@@ -41,6 +46,7 @@ export interface ArticleIFace {
   reference_type: number
   authors: AuthorIFace[]
   additional_information: AdditionalInformationIFace | null
+  urls: ArticleURLs
 }
 
 export interface CreateArticleIFace {
