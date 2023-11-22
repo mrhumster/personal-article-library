@@ -28,6 +28,7 @@ export const ArticleUrlsExpanded = (props: ArticleUrlsExpandedPropsIFace) => {
   } = props
 
   const [dateError, setDateError] = useState<string[]>([])
+  const [urlError, setUrlError] = useState<{[key: number]:string}>({})
 
   const current_timezone = useSelector((state: RootState) => state.ui.timezone)
 
@@ -58,6 +59,7 @@ export const ArticleUrlsExpanded = (props: ArticleUrlsExpandedPropsIFace) => {
   }
 
   useEffect(()=>{
+    // Валидация даты посещения
     if (dateAccessed) {
       setDateError([])
       const d = moment.tz(dateAccessed, 'DD.MM.YYYY', current_timezone)
@@ -69,6 +71,17 @@ export const ArticleUrlsExpanded = (props: ArticleUrlsExpandedPropsIFace) => {
       }
     }
   }, [dateAccessed])
+
+  useEffect(() => {
+    // Валидация URLs
+    urls.map((url, index) => {
+      if (url) {
+        if (!/^(http|https):\/\//.test(url)) {
+          setUrlError(prev => ({...prev, [index]: 'Рабочая ссылка должна начинаться с http(s)://'}))
+        }
+      }
+    })
+  }, [urls])
 
   return (
     <div ref={expandedRef} className={"border border-sky-700 rounded p-4"}>
@@ -89,6 +102,8 @@ export const ArticleUrlsExpanded = (props: ArticleUrlsExpandedPropsIFace) => {
                      className={'my-2'}
                      size={'s'}
                      label={`${index + 1}. URL`}
+                     status={urlError[index] ? 'alert' : 'success'}
+                     caption={urlError[index] ? urlError[index] : undefined}
                      value={url}
                      width={'full'}
           />
