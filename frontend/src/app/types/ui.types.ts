@@ -7,6 +7,7 @@ export type RightSideBarTabsItem = {
 };
 
 export interface uiState {
+  timezone:  string,
   checked: {
     id: string,
     group: number

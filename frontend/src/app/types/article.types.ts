@@ -31,7 +31,7 @@ export interface FileScheme {
 }
 
 export interface ArticleURLs {
-  date_accessed?: Date
+  date_accessed?: string
   urls: string[]
 }
 

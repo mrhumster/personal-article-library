@@ -3,6 +3,7 @@ import {uiState} from "../../types";
 import {backendApi} from "../../services/backend";
 
 export const initialState: uiState = {
+  timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
   checked: {
     id: '0',
     group: 1

@@ -12,6 +12,8 @@ export const ArticleUrlsNoExpandedWithUrls = ({setIsExpanded}:{setIsExpanded: Re
   const urls = useSelector((state: RootState) => state.articles.current_article?.urls)
   const [updateArticle] = useUpdateArticleMutation()
 
+  const current_timezone = useSelector((state: RootState) => state.ui.timezone)
+
   const openInNewTab = (url: string) => {
     const win = window.open(url, '_blank');
     win?.focus();
@@ -35,7 +37,7 @@ export const ArticleUrlsNoExpandedWithUrls = ({setIsExpanded}:{setIsExpanded: Re
     >
       <div className={"text-zinc-700 text-sm text-light m-1"}>Дата посещения:
         <span className={"ms-1"}>
-          {urls?.date_accessed && <Moment date={urls.date_accessed} format="DD.MM.YYYY"/>}
+          {urls?.date_accessed && <Moment utc date={urls.date_accessed} tz={current_timezone} format="DD.MM.YYYY"/>}
         </span>
         {urls?.urls.map((url, key) => (
           <div key={key} className={"flex items-center my-1"}>

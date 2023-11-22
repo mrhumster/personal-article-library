@@ -1,6 +1,5 @@
 import React from "react";
-import {DatePicker} from "@consta/uikit/DatePicker";
-import {TextField} from "@consta/uikit/TextField";
+import {TextField, useIMask} from "@consta/uikit/TextField";
 import {Button} from "@consta/uikit/Button";
 import {IconAdd} from "@consta/uikit/IconAdd";
 import {IconClose} from "@consta/uikit/IconClose";
@@ -9,8 +8,8 @@ import {IconClose} from "@consta/uikit/IconClose";
 interface ArticleUrlsExpandedPropsIFace {
   expandedRef : React.RefObject<HTMLDivElement>,
   datePickerRef : React.RefObject<HTMLDivElement>
-  dateAccessed: Date | null,
-  setDateAccessed: React.Dispatch<React.SetStateAction<Date | null>>,
+  dateAccessed: string | null,
+  setDateAccessed: React.Dispatch<React.SetStateAction<string | null>>,
   urls: (string | null)[],
   setUrls: React.Dispatch<React.SetStateAction<(string | null)[]>>
 }
@@ -24,7 +23,6 @@ export const ArticleUrlsExpanded = (props: ArticleUrlsExpandedPropsIFace) => {
     urls,
     setUrls
   } = props
-  const now = new Date()
 
   const handleClickAddURL = () => {
     // Добавляет строчку с пустым URL
@@ -52,16 +50,21 @@ export const ArticleUrlsExpanded = (props: ArticleUrlsExpandedPropsIFace) => {
     setUrls(mutateUrls)
   }
 
+  const { inputRef } = useIMask({
+    dateAccessed,
+    onChange: setDateAccessed,
+    maskOptions: '00.00.0000',
+  });
+
   return (
     <div ref={expandedRef} className={"border border-sky-700 rounded p-4"}>
-      <DatePicker onChange={({value}) => setDateAccessed(value)}
-                  ignoreOutsideClicksRefs={[expandedRef]}
-                  label={'Дата доступа'}
-                  maxDate={now}
-                  value={dateAccessed}
-                  ref={datePickerRef}
-                  width={'full'}
-                  size={'s'}
+      <TextField onChange={({value}) => setDateAccessed(value)}
+                 inputRef={inputRef}
+                 placeholder={'ДД.ММ.ГГГГ'}
+                 label={'Дата доступа'}
+                 value={dateAccessed}
+                 width={'full'}
+                 size={'s'}
       />
       {urls.map((url, index) => (
         <div key={index} className={'relative'}>
@@ -73,7 +76,7 @@ export const ArticleUrlsExpanded = (props: ArticleUrlsExpandedPropsIFace) => {
                      width={'full'}
           />
           {index !== 0 &&
-              <div className={'absolute top-0 right-0 p-2'}>
+              <div className={'absolute top-0 right-0 mt-2'}>
                   <Button onlyIcon iconLeft={IconClose} view={'clear'} form={'round'} size={'xs'}
                           onClick={() => handleClickDeleteURL(index)}/>
               </div>
