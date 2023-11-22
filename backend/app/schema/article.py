@@ -1,3 +1,4 @@
+import re
 from dataclasses import dataclass
 from datetime import datetime, date, timezone
 from typing import Optional
@@ -29,10 +30,16 @@ class ArticleURLs(BaseModel):
 
     @validator('urls')
     def unique_url(cls, v):
+        pattern = re.compile("^(http|https)://")
+        for url in v:
+            if not pattern.match(url):
+                raise ValueError(f"Строчка '{url}' не похожа на ссылку")
         return list(set(v))
 
     @validator('date_accessed')
     def validate_date(cls, v: datetime):
+        if not v:
+            raise ValueError("Не корректная дата")
         if v > datetime.now(timezone.utc):
             raise ValueError("Дата посещения не может быть в будущем")
         return v
