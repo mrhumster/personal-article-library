@@ -7,3 +7,4 @@ python-dotenv~=1.0.0
 python-jose
 passlib[bcrypt]
 motor
+python-dateutil

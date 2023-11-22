@@ -1,9 +1,10 @@
 from dataclasses import dataclass
-from datetime import datetime, date
+from datetime import datetime, date, timezone
 from typing import Optional
 
 from fastapi import Form
 from pydantic import BaseModel, Field, validator
+from uvicorn.main import logger
 
 
 class Pages(BaseModel):
@@ -29,6 +30,12 @@ class ArticleURLs(BaseModel):
     @validator('urls')
     def unique_url(cls, v):
         return list(set(v))
+
+    @validator('date_accessed')
+    def validate_date(cls, v: datetime):
+        if v > datetime.now(timezone.utc):
+            raise ValueError("Дата посещения не может быть в будущем")
+        return v
 
 @dataclass
 class ArticleSchema:
