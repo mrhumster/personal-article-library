@@ -1,5 +1,6 @@
 import motor.motor_asyncio
 from bson import ObjectId
+from uvicorn.server import logger
 
 from helpers.article import article_helper
 from schema.article import ArticleInDB
@@ -28,6 +29,7 @@ async def retrieve_article(article_id: str) -> dict | bool:
     return False
 
 async def update_article(article_id: str, data: dict):
+    logger.info(f'*** {data} ***')
     if len(data) < 1:
         return False
     article = await article_collection.find_one({"_id": ObjectId(article_id)})

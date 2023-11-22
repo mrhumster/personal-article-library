@@ -38,6 +38,7 @@ class ArticleURLs(BaseModel):
 
     @validator('date_accessed')
     def validate_date(cls, v: datetime):
+        logger.info(v)
         if not v:
             raise ValueError("Не корректная дата")
         if v > datetime.now(timezone.utc):

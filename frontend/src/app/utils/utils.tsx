@@ -23,7 +23,7 @@ export const publicationDetailToString = (details: PublicationDetails | undefine
     )
   }
   return (
-    <Text size={'s'} fontStyle={'italic'} weight={'light'}>
+    <Text size={'s'} fontStyle={'italic'} weight={'light'} className={'ms-1 cursor-pointer select-none'}>
       {details.year && <span>({details.year})</span>}
       {details.pages?.start && details.pages?.end && <span>, {details.pages?.start} - {details.pages?.end}</span>}
       {details.volume && <span>, {details.volume}</span>}

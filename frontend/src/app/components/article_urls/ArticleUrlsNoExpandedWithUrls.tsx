@@ -41,8 +41,8 @@ export const ArticleUrlsNoExpandedWithUrls = ({setIsExpanded}:{setIsExpanded: Re
         </span>
         {urls?.urls.map((url, key) => (
           <div key={key} className={"flex items-center my-1"}>
-            <IconLink size={'s'} view={'brand'}/>
-            <span className={'grow ms-1 truncate hover:text-sky-700 hover:underline cursor-pointer'}
+            <IconLink size={'xs'} view={'brand'}/>
+            <span className={'grow ms-1 truncate hover:text-sky-700 hover:underline cursor-pointer'} title={url}
                   onClick={(e) => handleClickUrl(e, url)}>
               {url}
             </span>

@@ -13,37 +13,34 @@ const items: RightSideBarTabsItem[] = [
   {
     key: 0,
     label: 'Инфо',
-    image: IconInfo,
+    icon: IconInfo,
   },
   {
     key: 1,
     label: 'Аннотации',
-    image: IconCommentFilled,
+    icon: IconCommentFilled,
   },
   {
     key: 2,
     label: 'Блокнот',
-    image: IconDocFilled,
+    icon: IconDocFilled,
   },
 ];
 
-const getItemIcon = (item: RightSideBarTabsItem) => item.image;
 
 export const RightSideBarTabs = () => {
   const selectedTab = useSelector((state: RootState) => state.ui.rightSideBar.activeTab)
   const dispatch = useDispatch()
   const handleTabClick = (value: RightSideBarTabsItem) => {
-    console.log(value)
     dispatch(setActiveTab(value.key))
   }
   return (
-    <div className='px-1'>
+    <div className='px-2'>
       <Tabs value={items[selectedTab]}
             className={'mt-2'}
             onChange={({ value}) => handleTabClick(value)}
             items={items}
-            view={"bordered"}
-            getItemLeftIcon={getItemIcon}/>
+            view={"bordered"}/>
     </div>
   )
 }

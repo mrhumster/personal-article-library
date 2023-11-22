@@ -23,14 +23,14 @@ export const AdditionalInformationEdit = () => {
       if (!formRef.current.contains(e.target as Node)) {
         setActive(false);
         setMoreInfo(false)
-        updateArticle(current_article)
+        updateArticle({id: current_article?.id, additional_information: current_article?.additional_information})
       }
     }
     if (moreInfoRef.current) {
       if (!moreInfoRef.current.contains(e.target as Node)) {
         setActive(false);
         setMoreInfo(false)
-        updateArticle(current_article)
+        updateArticle({id: current_article?.id, additional_information: current_article?.additional_information})
       }
     }
   }
@@ -73,7 +73,7 @@ export const AdditionalInformationEdit = () => {
           { !moreInfo && current_article?.additional_information &&
             <div ref={lessInfoRef}>
               <Text size={'s'} weight={'light'} cursor={'pointer'} fontStyle={'italic'}>
-                <span ref={showMoreInfoRef} className={'ms-1 text-sky-500 hover:underline select-none'}>Показать дополнительную информацию</span>
+                <span ref={showMoreInfoRef} className={'ms-1 select-none'}>Показать дополнительную информацию</span>
               </Text>
             </div>
           }

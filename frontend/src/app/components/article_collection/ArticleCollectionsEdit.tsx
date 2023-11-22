@@ -11,19 +11,16 @@ export const ArticleCollectionsEdit = () => {
   useEffect(()=>{
     if (ids && article_id) {
       const filtered_ids =  ids.filter((id) => {
-        console.log('DEBUG', article_id, entities[id].articles)
-
         if (entities[id].articles.includes(article_id)) {
           return id
         }
-
       })
       setColIds(filtered_ids)
     }
   }, [ids, entities, article_id])
 
   return (
-    <div id="article_collections" className="my-4">
+    <div id="article_collections" className="my-3">
       <div className='ms-1 text-zinc-500'>Коллекции</div>
       {colIds?.length === 0 ?
         <div className="text-sm ms-1 text-zinc-400 italic">Не найдено коллекций</div> :

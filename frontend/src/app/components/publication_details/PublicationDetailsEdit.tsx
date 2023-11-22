@@ -107,13 +107,13 @@ export const PublicationDetailsEdit = () => {
   return (
     <>
       {!active &&
-          <Text className="border rounded border-transparent hover:border-sky-700 hover:border-dotted py-1"
+          <Text className="border rounded border-transparent hover:border-sky-700 hover:border-dotted py-1 mb-1"
                 onClick={() => setActive(true)}>
             {publicationDetailToString(pubDetails)}
           </Text>
       }
       {active &&
-          <div className="border rounded border-sky-700" ref={myRef} onClick={handleClickInside}>
+          <div className="border rounded border-sky-700 mb-1" ref={myRef} onClick={handleClickInside}>
               <Grid className={'p-3'} cols={2} rowGap={'m'} colGap={'m'}>
                   <GridItem col={2}>
                       <TextField size={'s'} width={'full'} label={getTitleNameByReferenceType(reference_type)}
@@ -123,6 +123,7 @@ export const PublicationDetailsEdit = () => {
                   <GridItem>
                       <TextField size={'s'} label={'Год'} type={'number'} max={2100} min={1800} incrementButtons={false}
                                  placeholder={'Год публикации'}
+                                 width={'full'}
                                  onChange={({value}:{value: string | null})=> handleChangeYear(value? value : undefined)} value={year}/>
                   </GridItem>
                   <GridItem className={'flex items-end'}>

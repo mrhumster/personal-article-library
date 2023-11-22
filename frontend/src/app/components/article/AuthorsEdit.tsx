@@ -74,7 +74,7 @@ export const AuthorsEdit = () => {
   }
 
 
-  const defaultClasses = 'mt-1 p-1 pt-0'
+  const defaultClasses = 'mt-1 mb-1 p-1 pt-0'
   const activeClasses = 'border rounded border-sky-700'
   const passiveClasses = 'border rounded border-transparent hover:border-sky-700 hover:border-dotted'
 

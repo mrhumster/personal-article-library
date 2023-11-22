@@ -29,7 +29,6 @@ export const ArticleUrls = () => {
 
   const handleClickOutside = (e: TouchEvent | MouseEvent) => {
     e.preventDefault()
-    console.log(e.target)
     // if (datePickerRef.current && !datePickerRef.current.contains(e.target as Node)) {return;}
     if (expandedRef.current) {
       if (!expandedRef.current.contains(e.target as Node)) {
