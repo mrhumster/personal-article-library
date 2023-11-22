@@ -31,7 +31,9 @@ export const TitleEdit = () => {
     if (titleRef.current) {
       if (!titleRef.current.contains(e.target as Node)) {
         setActive(false)
-        debouncedSetValue(value ? value : undefined)
+        if (value !== article?.title) {
+          debouncedSetValue(value ? value : undefined)
+        }
         inputRef.current?.blur()  // Потеря фокуса на исходном элементе ввода
       }
     }

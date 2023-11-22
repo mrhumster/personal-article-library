@@ -29,7 +29,7 @@ export const AdditionalInformationEdit = () => {
     if (moreInfoRef.current) {
       if (!moreInfoRef.current.contains(e.target as Node)) {
         setActive(false);
-        setMoreInfo(false)
+        // setMoreInfo(false)
         updateArticle({id: current_article?.id, additional_information: current_article?.additional_information})
       }
     }
@@ -72,16 +72,16 @@ export const AdditionalInformationEdit = () => {
           }
           { !moreInfo && current_article?.additional_information &&
             <div ref={lessInfoRef}>
-              <Text size={'s'} weight={'light'} cursor={'pointer'} fontStyle={'italic'}>
-                <span ref={showMoreInfoRef} className={'ms-1 select-none'}>Показать дополнительную информацию</span>
+              <Text size={'s'} weight={'light'} cursor={'pointer'}>
+                <span ref={showMoreInfoRef} className={'ms-1 select-none text-sky-500 hover:underline'}>Показать дополнительную информацию</span>
               </Text>
             </div>
           }
           { moreInfo &&
               <div ref={moreInfoRef} className={'select-none'}>
                 {getAdditionInformationTableByType(reference_type)}
-                <Text size={'s'} cursor={'pointer'} weight={'light'} fontStyle={'italic'}>
-                  <span ref={showLessInfoRef} className={'ms-1 text-sky-500 hover:underline'}>Скрыть</span>
+                <Text size={'s'} cursor={'pointer'} weight={'light'}>
+                  <span ref={showLessInfoRef} className={'ms-1 text-sky-500 hover:underline'}>Спрятать дополнительную информацию</span>
                 </Text>
               </div>
           }

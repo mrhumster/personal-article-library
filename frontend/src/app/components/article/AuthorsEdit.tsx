@@ -108,8 +108,9 @@ export const AuthorsEdit = () => {
           value={value}
           ref={myRef}
           onClick={handleClickInside}
-          caption={'Фамилия имя и отчество. Персоны можно разделить новой строкой.'}
+          caption={'Фамилия имя и отчество. Авторов можно разделить новой строкой.'}
           onChange={change}
+          size={'s'}
         />
       }
     </>

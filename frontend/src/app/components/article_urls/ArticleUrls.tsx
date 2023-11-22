@@ -63,7 +63,7 @@ export const ArticleUrls = () => {
 
   return (
     <div>
-      <span className={'ms-1 text-zinc-500'}>URLs</span>
+      <span className={'ms-1 text-zinc-500/90 uppercase text-xs font-semibold tracking-[.1em]'}>URLs</span>
       {isExpanded ?
         <ArticleUrlsExpanded expandedRef={expandedRef}
                              datePickerRef={datePickerRef}
