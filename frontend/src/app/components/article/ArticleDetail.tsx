@@ -11,6 +11,7 @@ import {ArticleFiles} from "../article_files";
 import {setCurrentArticle} from "../../features/article";
 import {ArticleCollectionsEdit} from "../article_collection";
 import {ArticleUrls} from "../article_urls";
+import {Identifiers} from "../identifiers";
 
 
 export const ArticleDetail = () => {
@@ -32,6 +33,7 @@ export const ArticleDetail = () => {
       <ArticleCollectionsEdit />
       <ArticleFiles />
       <ArticleUrls />
+      <Identifiers />
     </div>
   )
 }
