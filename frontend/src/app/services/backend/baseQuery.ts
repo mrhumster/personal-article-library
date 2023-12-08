@@ -4,7 +4,7 @@ import {addMessage} from "../../features/alert";
 import {getAccessToken} from "../../hooks";
 
 const baseQuery = fetchBaseQuery({
-        baseUrl: `https://base/api/`,
+        baseUrl: `/api/`,
         prepareHeaders: (headers: Headers) => headers.set("Authorization", `Bearer ${getAccessToken()}`)
     }
 )
