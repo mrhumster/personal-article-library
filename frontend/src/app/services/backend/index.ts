@@ -15,4 +15,8 @@ export {
   useUpdateMyCollectionMutation,
   useDeleteMyCollectionMutation
 } from './backendApi.ts'
+export {
+  useGetMetaQuery
+} from './googleBookApi.ts'
+
 export {baseQueryWithErrorHandler} from './baseQuery.ts'

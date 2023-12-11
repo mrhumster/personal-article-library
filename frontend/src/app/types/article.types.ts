@@ -35,6 +35,25 @@ export interface ArticleURLs {
   urls: string[]
 }
 
+export interface MetaIFace {
+  title?: string
+  authors?: string
+  publisher?: string
+  year?: string
+  language?: string
+}
+
+
+export interface ISBN {
+  isbn13?: string
+  isbn10?: string
+  meta: MetaIFace
+}
+
+export interface Identifiers {
+  isbn: ISBN
+}
+
 export interface ArticleIFace {
   id: string
   owner: string
@@ -47,6 +66,7 @@ export interface ArticleIFace {
   authors: AuthorIFace[]
   additional_information: AdditionalInformationIFace | null
   urls: ArticleURLs
+  identifiers?: Identifiers
 }
 
 export interface CreateArticleIFace {

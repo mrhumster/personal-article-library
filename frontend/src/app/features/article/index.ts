@@ -4,5 +4,6 @@ export {
   setCurrentReferenceType,
   setAdditionalInformation,
   setCurrentArticle,
+  setIdentifiers,
   articleSlice
 } from './articleSlice.ts'

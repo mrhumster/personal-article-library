@@ -16,5 +16,15 @@ def article_helper(article) -> dict:
         "source": article["source"],
         "reference_type": int(article["reference_type"]),
         "additional_information": article["additional_information"],
-        "urls": article["urls"]
+        "urls": article["urls"],
+        "identifiers": article["identifiers"]
+    }
+
+def isbn_meta_helper(meta) -> dict:
+    return {
+        'title': meta['Title'],
+        'authors': meta['Authors'],
+        'publisher': meta['Publisher'],
+        'year': meta['Year'],
+        'language': meta['Language']
     }

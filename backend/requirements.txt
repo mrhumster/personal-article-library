@@ -8,3 +8,4 @@ python-jose
 passlib[bcrypt]
 motor
 python-dateutil
+isbnlib

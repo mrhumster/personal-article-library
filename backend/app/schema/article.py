@@ -1,4 +1,5 @@
 import re
+from isbnlib import canonical, is_isbn10, is_isbn13, meta
 from dataclasses import dataclass
 from datetime import datetime, date, timezone
 from typing import Optional
@@ -6,6 +7,8 @@ from typing import Optional
 from fastapi import Form
 from pydantic import BaseModel, Field, validator
 from uvicorn.main import logger
+
+from helpers.article import isbn_meta_helper
 
 
 class Pages(BaseModel):
@@ -38,7 +41,6 @@ class ArticleURLs(BaseModel):
 
     @validator('date_accessed')
     def validate_date(cls, v: datetime):
-        logger.info(v)
         if not v:
             raise ValueError("Не корректная дата")
         if v > datetime.now(timezone.utc):
@@ -68,6 +70,30 @@ class AdditionalInformationBook(BaseModel):
     month: Optional[int] = Field(gt=0, lt=13)
     day: Optional[int] = Field(gt=0, lt=32)
 
+class MetaScheme(BaseModel):
+    title: Optional[str] = Field(max_length=1000)
+    authors: Optional[list[str]] = Field(max_items=10)
+    publisher: Optional[str] = Field(max_length=200)
+    year: Optional[str] = Field(max_length=4, min_length=4)
+    language: Optional[str] = Field(max_length=10)
+
+class ISBN(BaseModel):
+    isbn13: Optional[str] = Field(max_length=13, min_length=13)
+    isbn10: Optional[str] = Field(max_length=10, min_length=10)
+    meta: Optional[MetaScheme]
+
+    @validator('isbn13')
+    def isbn13_validate(cls, v):
+        isbn = canonical(v)
+        if not is_isbn13(isbn):
+            raise ValueError('Не верный формат ISBN')
+        data = meta(isbn)
+        logger.info(isbn_meta_helper(data))
+        return v
+
+class Identifiers(BaseModel):
+    isbn: ISBN
+
 class ArticleInDB(BaseModel):
     owner: str = Field(...)
     added: datetime = Field(...)
@@ -79,6 +105,7 @@ class ArticleInDB(BaseModel):
     reference_type: int = 0
     additional_information: Optional[AdditionalInformationBook]
     urls: Optional[ArticleURLs]
+    identifiers: Optional[Identifiers]
 
     @validator('files')
     def unique_files_id(cls, v):
@@ -103,3 +130,4 @@ class UpdateArticleModel(BaseModel):
     additional_information: Optional[AdditionalInformationBook]
     files: Optional[list[str]]
     urls: Optional[ArticleURLs]
+    identifiers: Optional[Identifiers]

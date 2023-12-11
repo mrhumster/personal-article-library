@@ -6,11 +6,13 @@ import {uiSlice} from "../features/ui";
 import {backendApi} from "../services/backend";
 import {articleSlice} from "../features/article";
 import {collectionSlice} from "../features/collections";
+import {googleBookApi} from "../services/backend/googleBookApi.ts";
 
 
 export const store = configureStore({
     reducer: {
         [backendApi.reducerPath]: backendApi.reducer,
+        [googleBookApi.reducerPath]: googleBookApi.reducer,
         auth: authSlice.reducer,
         snackBar: snackBarSlice.reducer,
         ui: uiSlice.reducer,
@@ -20,6 +22,7 @@ export const store = configureStore({
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()
             .concat(backendApi.middleware)
+            .concat(googleBookApi.middleware)
 })
 
 setupListeners(store.dispatch)

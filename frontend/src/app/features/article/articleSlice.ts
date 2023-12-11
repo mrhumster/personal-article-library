@@ -35,6 +35,11 @@ export const articleSlice = createSlice({
         state.current_article.additional_information = {...state.current_article.additional_information,  ...payload}
       }
     },
+    setIdentifiers: (state : ArticleStateIFace, { payload }) => {
+      if (state.current_article && payload) {
+        state.current_article.identifiers = {...state.current_article.identifiers, ...payload}
+      }
+    },
     setCurrentArticle: (state: ArticleStateIFace, {payload}) => {
       if (payload) {
         state.current_article = payload
@@ -78,6 +83,14 @@ export const articleSlice = createSlice({
       }
     )
     builder.addMatcher(
+      // Если обновление на бэке не прошло валидацию, то перевыбрать изначальные данные из коллекции
+      backendApi.endpoints.updateArticle.matchRejected,
+      (state: ArticleStateIFace) => {
+        const id = state.current_article?.id
+        if (id) state.current_article = state.articles.entities[id]
+      }
+    )
+    builder.addMatcher(
       backendApi.endpoints.addArticleFile.matchFulfilled,
       (state: ArticleStateIFace, action) => {
         const updatedArticleId = action.meta.arg.originalArgs.get('article')
@@ -95,5 +108,6 @@ export const {
   removeArticle,
   setCurrentReferenceType,
   setAdditionalInformation,
-  setCurrentArticle
+  setCurrentArticle,
+  setIdentifiers
 } = articleSlice.actions
