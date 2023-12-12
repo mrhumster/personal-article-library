@@ -45,8 +45,7 @@ export interface MetaIFace {
 
 
 export interface ISBN {
-  isbn13?: string
-  isbn10?: string
+  value: string
   meta: MetaIFace
 }
 

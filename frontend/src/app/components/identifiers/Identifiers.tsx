@@ -12,6 +12,7 @@ export const Identifiers = () => {
   const current_article = useSelector((state: RootState) => state.articles.current_article)
   const [updateArticle] = useUpdateArticleMutation()
   const debounceUpdateArticle = useDebounce(updateArticle, 300)
+
   const handleClickOutside = (e: TouchEvent | MouseEvent) => {
     e.preventDefault()
     if (expandedRef.current) {

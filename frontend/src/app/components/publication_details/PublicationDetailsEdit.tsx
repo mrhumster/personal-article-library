@@ -148,7 +148,8 @@ export const PublicationDetailsEdit = () => {
                       />
                   </GridItem>
                   <GridItem col={1}>
-                      <TextField size={'s'} width={'full'} label={'Выпуск'}
+                      <TextField size={'s'} width={'full'} label={'Издание'}
+                                 placeholder={'Введите издание'}
                                  onChange={({value}:{value: string | null})=> handleChangeIssue(value? value : undefined)}
                                  value={issue}/>
                   </GridItem>

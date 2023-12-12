@@ -12,3 +12,24 @@ export interface ResponseWithArticle {
   message: string,
   data: ArticleIFace[]
 }
+
+export interface IndustryIdentifiersIFace {
+  type: string
+  identifier: string
+}
+
+export interface VolumeIFace {
+  volumeInfo: {
+    title: string
+    authors: string[]
+    imageLinks: {
+      thumbnail: string
+    }
+    publisher: string
+    publishedDate: string
+    pageCount: string
+    categories: string[]
+    language: string
+    industryIdentifiers: IndustryIdentifiersIFace[]
+  }
+}

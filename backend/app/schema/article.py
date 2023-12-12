@@ -1,5 +1,5 @@
 import re
-from isbnlib import canonical, is_isbn10, is_isbn13, meta
+from isbnlib import canonical, is_isbn10, is_isbn13, meta, mask
 from dataclasses import dataclass
 from datetime import datetime, date, timezone
 from typing import Optional
@@ -78,18 +78,16 @@ class MetaScheme(BaseModel):
     language: Optional[str] = Field(max_length=10)
 
 class ISBN(BaseModel):
-    isbn13: Optional[str] = Field(max_length=13, min_length=13)
-    isbn10: Optional[str] = Field(max_length=10, min_length=10)
+    value: Optional[str] = Field(min_length=10, max_length=17)
     meta: Optional[MetaScheme]
 
-    @validator('isbn13')
-    def isbn13_validate(cls, v):
+    @validator('value')
+    def isbn_validate(cls, v):
         isbn = canonical(v)
-        if not is_isbn13(isbn):
-            raise ValueError('Не верный формат ISBN')
-        data = meta(isbn)
-        logger.info(isbn_meta_helper(data))
-        return v
+        if is_isbn13(isbn) or is_isbn10(isbn):
+            return mask(isbn, separator='-')
+        raise ValueError('Не верный формат ISBN')
+
 
 class Identifiers(BaseModel):
     isbn: ISBN
