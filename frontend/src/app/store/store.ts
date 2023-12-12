@@ -6,7 +6,7 @@ import {uiSlice} from "../features/ui";
 import {backendApi} from "../services/backend";
 import {articleSlice} from "../features/article";
 import {collectionSlice} from "../features/collections";
-import {googleBookApi} from "../services/backend/googleBookApi.ts";
+import {googleBookApi} from "../services/googleBookApi.ts";
 
 
 export const store = configureStore({

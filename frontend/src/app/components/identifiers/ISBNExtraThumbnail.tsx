@@ -11,7 +11,7 @@ export const ISBNExtraThumbnail = (props: ISBNExtraThumbnailIFace) => {
 
   return (
     <div>
-      <img className='w-32 ms-auto me-auto mt-2 mb-2 shadow-xl ' src={props.imageLinks.thumbnail} alt='Thumbnail'/>
+      <img className='w-32 ms-auto me-auto mt-2 mb-2 shadow-xl ' src={props.imageLinks?.thumbnail} alt='Thumbnail'/>
     </div>
   )
 }

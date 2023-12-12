@@ -5,7 +5,7 @@ export const googleBookApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: 'https://www.googleapis.com/books/v1/'}),
   endpoints: (builder) => ({
     getMeta: builder.query({
-      query: (isbn) => `volumes?q=isbn:${isbn}`
+      query: (isbn) => `volumes?q=isbn:${isbn.replace('-', '')}`
     })
   })
 })

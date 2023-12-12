@@ -7,9 +7,11 @@ import {IconKebab} from "@consta/uikit/IconKebab";
 import React, {useRef, useState} from "react";
 import {ContextMenu, ContextMenuItemDefault} from "@consta/uikit/ContextMenu";
 import {FileScheme} from "../../types";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {useGetFileQuery, useUpdateArticleMutation} from "../../services/backend";
+import {openReader} from "../../features/ui";
+import {openFile} from "../../features/ui/uiSlice.ts";
 
 
 
@@ -24,6 +26,7 @@ export const AttachFile = ({file_id}:{file_id: string}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const current_article = useSelector((state: RootState) => state.articles.current_article)
   const [updateArticle, {isLoading}] = useUpdateArticleMutation()
+  const dispatch = useDispatch()
   const {data} = useGetFileQuery(file_id)
 
   const removeFile = (file: FileScheme) => {
@@ -43,18 +46,25 @@ export const AttachFile = ({file_id}:{file_id: string}) => {
     }
   ]
 
+  const handleClickAttachment = () => {
+    dispatch(openReader())
+    dispatch(openFile(file_id))
+  }
 
   return (
     <div className={'flex items-center border rounded my-2'}>
       {data && <>
-          <Attachment
-              withAction={true}
-              buttonIcon={IconHealth}
-              size={'xs'}
-              fileExtension={data.extension}
-              fileName={data.file_name}
-              fileDescription={getFileDescription(data)}
-          />
+          <div className='w-[92%]'>
+            <Attachment
+                withAction={true}
+                buttonIcon={IconHealth}
+                size={'xs'}
+                fileExtension={data.extension}
+                fileName={data.file_name}
+                fileDescription={getFileDescription(data)}
+                onClick={handleClickAttachment}
+            />
+          </div>
           <Button ref={ref} label="Больше действий"
                   iconRight={IconKebab}
                   form={'brick'} size={'s'}

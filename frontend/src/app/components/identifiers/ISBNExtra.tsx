@@ -60,17 +60,26 @@ export const ISBNExtra = (props: ISBNExtraPropsIFace) => {
     })
   }
 
+  const handleClickCopyDescription = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    await updateArticle({
+      id: current_article?.id,
+      description: volumeItem.volumeInfo.description
+    })
+  }
+
   return (
     <div className='border border-dotted rounded bg-zinc-100'>
       <ISBNExtraThumbnail imageLinks={volumeItem.volumeInfo.imageLinks} />
       <div className='grid grid-cols-[25%_55%_20%] gap-1 text-sm py-1 ps-1 pb-1'>
         <ISBNExtraRow label='Название' content={volumeItem.volumeInfo.title} callback={handleClickCopyTitle}/>
         <ISBNExtraRow label='Автор(ы)' content={volumeItem.volumeInfo.authors} callback={handleClickCopyAuthors}/>
+        <ISBNExtraRow label='Описание' content={volumeItem.volumeInfo.description} callback={handleClickCopyDescription}/>
         <ISBNExtraRow label='Издатель' content={volumeItem.volumeInfo.publisher} callback={handleClickCopyPublisher}/>
         <ISBNExtraRow label='Дата публикации'
                       content={moment(new Date(volumeItem.volumeInfo.publishedDate)).format('DD.MM.YYYY')}
                       callback={handleClickCopyPublishedDate}/>
-        <ISBNExtraRow label='Количество страниц' content={volumeItem.volumeInfo.pageCount}/>
+        <ISBNExtraRow label='Количество страниц' content={volumeItem.volumeInfo.pageCount.toString()}/>
         <ISBNExtraRow label='Категория' content={volumeItem.volumeInfo.categories}/>
         <ISBNExtraRow label='Язык' content={volumeItem.volumeInfo.language}/>
         <ISBNExtraRow label='ISBN 13' content={getISBNFromData('ISBN_13', volumeItem)}/>

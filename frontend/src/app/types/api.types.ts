@@ -30,6 +30,7 @@ export interface VolumeIFace {
     pageCount: string
     categories: string[]
     language: string
+    description: string
     industryIdentifiers: IndustryIdentifiersIFace[]
   }
 }

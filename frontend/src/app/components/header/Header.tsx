@@ -6,14 +6,15 @@ import {HeaderButton} from "./HeaderButton.tsx";
 import {UserMenu} from "./UserMenu.tsx";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
-import {openSideBar, setActiveTab} from "../../features/ui";
+import {closeReader, openSideBar, setActiveTab} from "../../features/ui";
 
 
 export const Header = () => {
   const rightSideBar = useSelector((state: RootState) => state.ui.rightSideBar)
+  const isReaderOpen = useSelector((state: RootState) => state.ui.reader.isReaderOpen)
   const dispatch = useDispatch()
   const handlerClickLibButton = () => {
-    console.log('click')
+    dispatch(closeReader())
   }
 
   const handlerClickOpenNotebook = () => {
@@ -32,7 +33,7 @@ export const Header = () => {
           <div className="flex flex-col items-center grow">
             <button id="mobile-open-button" className="text-3x1 sm:hidden focus:outline-none">&#9776;</button>
             <nav className="hidden sm:block space-y-2 text-xl flex flex-col justify-center grow" aria-label="main">
-              <HeaderButton text="Библиотека" icon={IconBook} active={true} callback={handlerClickLibButton}/>
+              <HeaderButton text="Библиотека" icon={IconBook} active={!isReaderOpen} callback={handlerClickLibButton}/>
               <HeaderButton text="Блокнот"
                             icon={IconDocFilled}
                             active={rightSideBar.isSidebarOpen && rightSideBar.activeTab === 2}

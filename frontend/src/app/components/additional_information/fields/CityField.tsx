@@ -15,7 +15,7 @@ export const CityField = () => {
 
   return (
     <GridItem col={1}>
-      <TextField size={'s'} width={'full'} label={'Город'} onChange={handleChange} value={value}/>
+      <TextField size={'s'} width={'full'} label={'Город'} onChange={handleChange} placeholder={'Введите название города'} value={value}/>
     </GridItem>
   )
 }

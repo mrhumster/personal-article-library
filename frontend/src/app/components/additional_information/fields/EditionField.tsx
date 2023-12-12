@@ -14,7 +14,7 @@ export const EditionField = () => {
 
   return (
     <GridItem col={2}>
-      <TextField size={'s'} width={'full'} label={'Издание'} onChange={handleChange} value={value}/>
+      <TextField size={'s'} width={'full'} label={'Издание'} onChange={handleChange} placeholder={'Введите название издания'} value={value}/>
     </GridItem>
   )
 }

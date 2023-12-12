@@ -4,6 +4,11 @@ import {backendApi} from "../../services/backend";
 
 export const initialState: uiState = {
   timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  reader: {
+    isReaderOpen: false,
+    activeTab: undefined,
+    files: []
+  },
   checked: {
     id: '0',
     group: 1
@@ -67,6 +72,21 @@ export const uiSlice = createSlice({
       state.dragndrop.isActive = isActive
       state.dragndrop.kind = kind
       state.dragndrop.type = type
+    },
+    openReader: (state: uiState) => {
+      state.reader.isReaderOpen = true
+    },
+    closeReader: (state: uiState) => {
+      state.reader.isReaderOpen = false
+    },
+    openFile: (state: uiState, action) => {
+      state.reader.files = [...state.reader.files, action.payload]
+    },
+    closeFile: (state: uiState, action) => {
+      state.reader.files = state.reader.files.filter((id) => id !== action.payload)
+    },
+    setActiveReaderTab: (state: uiState, action) => {
+      state.reader.activeTab = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -91,5 +111,10 @@ export const {
   openSideBar,
   closeSideBar,
   setActiveTab,
-  setDragEvent
+  setDragEvent,
+  openReader,
+  closeReader,
+  openFile,
+  closeFile,
+  setActiveReaderTab
 } = uiSlice.actions

@@ -66,6 +66,7 @@ export interface ArticleIFace {
   additional_information: AdditionalInformationIFace | null
   urls: ArticleURLs
   identifiers?: Identifiers
+  description?: string
 }
 
 export interface CreateArticleIFace {

@@ -32,7 +32,7 @@ export const HeaderButton = (props: HeaderButtonPropsIFace) => {
 
   return (
     <div>
-      <Button view={active ? "primary" : "secondary"} className="w-20" iconRight={icon} onlyIcon onClick={callback}
+      <Button view={active ? "primary" : "secondary"} className="w-20" iconLeft={icon} onlyIcon onClick={callback}
               ref={buttonRef}/>
       <Theme preset={presetGpnDefault}>
         <Tooltip className={showTooltip ? 'z-40' : 'hidden z-40'}

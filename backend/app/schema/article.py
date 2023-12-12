@@ -1,14 +1,13 @@
 import re
-from isbnlib import canonical, is_isbn10, is_isbn13, meta, mask
 from dataclasses import dataclass
-from datetime import datetime, date, timezone
+from datetime import datetime, timezone
 from typing import Optional
 
 from fastapi import Form
+from isbnlib import canonical, is_isbn10, is_isbn13, mask, meta
+from isbnlib.registry import bibformatters
 from pydantic import BaseModel, Field, validator
 from uvicorn.main import logger
-
-from helpers.article import isbn_meta_helper
 
 
 class Pages(BaseModel):
@@ -85,7 +84,7 @@ class ISBN(BaseModel):
     def isbn_validate(cls, v):
         isbn = canonical(v)
         if is_isbn13(isbn) or is_isbn10(isbn):
-            return mask(isbn, separator='-')
+            return isbn
         raise ValueError('Не верный формат ISBN')
 
 
@@ -104,6 +103,7 @@ class ArticleInDB(BaseModel):
     additional_information: Optional[AdditionalInformationBook]
     urls: Optional[ArticleURLs]
     identifiers: Optional[Identifiers]
+    description: Optional[str] = Field(max_length=2999)
 
     @validator('files')
     def unique_files_id(cls, v):
@@ -129,3 +129,4 @@ class UpdateArticleModel(BaseModel):
     files: Optional[list[str]]
     urls: Optional[ArticleURLs]
     identifiers: Optional[Identifiers]
+    description: Optional[str] = Field(max_length=2999)

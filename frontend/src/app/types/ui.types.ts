@@ -8,6 +8,11 @@ export type RightSideBarTabsItem = {
 
 export interface uiState {
   timezone:  string,
+  reader: {
+    isReaderOpen: boolean
+    activeTab?: string
+    files: string[]
+  },
   checked: {
     id: string,
     group: number

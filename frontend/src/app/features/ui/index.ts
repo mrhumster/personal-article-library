@@ -10,5 +10,8 @@ export {
   openSideBar,
   closeSideBar,
   setActiveTab,
-  setDragEvent
+  setDragEvent,
+  closeReader,
+  openReader,
+  setActiveReaderTab
 } from './uiSlice.ts'

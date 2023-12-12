@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {Button} from "@consta/uikit/Button";
-import {useGetMetaQuery} from "../../services/backend";
+import {useGetMetaQuery} from "../../services/googleBookApi.ts";
 import {IconArrowDown} from "@consta/icons/IconArrowDown";
 import {IconArrowUp} from "@consta/icons/IconArrowUp";
 import {ISBNExtra} from "./ISBNExtra.tsx";
@@ -10,14 +10,13 @@ import {ISBNExtra} from "./ISBNExtra.tsx";
 export const IdentifiersCollapse = ({setIsExpanded}:{setIsExpanded: React.Dispatch<React.SetStateAction<boolean>>}) => {
   const identifiers = useSelector((state: RootState) => state.articles.current_article?.identifiers)
   const isbn = identifiers?.isbn.value
-  const {data, error, isLoading, isSuccess} = useGetMetaQuery(isbn, {skip: !isbn})
+  const {data, isLoading, isSuccess} = useGetMetaQuery(isbn, {skip: !isbn})
   const [showMeta, setShowMeta] = useState<boolean>(false)
 
   const handleClickISBN = (e: React.MouseEvent<Element, MouseEvent>) => {
     e.stopPropagation()
     setShowMeta(!showMeta)
   }
-
 
   return (
     <div className={"cursor-pointer border border-dotted border-transparent hover:border-sky-700 rounded p-1"}
@@ -29,7 +28,7 @@ export const IdentifiersCollapse = ({setIsExpanded}:{setIsExpanded: React.Dispat
                   <div className='my-auto'>{identifiers?.isbn.value}</div>
                   <Button className='ms-auto me-4'
                           loading={isLoading}
-                          disabled={!!error}
+                          disabled={isSuccess && data.totalItems === 0}
                           iconLeft={showMeta ? IconArrowUp : IconArrowDown}
                           size='s'
                           view='clear'
