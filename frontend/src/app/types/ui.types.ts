@@ -1,4 +1,5 @@
 import {IconComponent} from "@consta/uikit/Icon";
+import {FileScheme} from "./article.types.ts";
 
 export type RightSideBarTabsItem = {
   key: number;
@@ -10,8 +11,8 @@ export interface uiState {
   timezone:  string,
   reader: {
     isReaderOpen: boolean
-    activeTab?: string
-    files: string[]
+    activeTab?: FileScheme
+    files: FileScheme[]
   },
   checked: {
     id: string,

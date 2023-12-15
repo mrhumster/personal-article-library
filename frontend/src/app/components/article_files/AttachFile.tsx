@@ -48,7 +48,7 @@ export const AttachFile = ({file_id}:{file_id: string}) => {
 
   const handleClickAttachment = () => {
     dispatch(openReader())
-    dispatch(openFile(file_id))
+    dispatch(openFile(data))
   }
 
   return (
