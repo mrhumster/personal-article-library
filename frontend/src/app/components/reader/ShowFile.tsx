@@ -14,26 +14,32 @@ export const ShowFile = () => {
   const file = useSelector((state: RootState) => state.ui.reader.activeTab)
 
   const {data} = useGetFileQuery(file?.id, {skip: !file})
-  const [numPages, setNumPages] = useState(null);
-  const [pageNumber, setPageNumber] = useState(1);
+  const [numPages, setNumPages] = useState<number | null>(null);
+  const [pageNumber, setPageNumber] = useState<number>(1);
 
-  function onDocumentLoadSuccess({ numPages }) {
+  function onDocumentLoadSuccess({numPages}: { numPages: number }) {
     setNumPages(numPages);
   }
 
   return (
-    <div>
-      <Document
-        file={`/media/${data.file_uuid}`}
-        onLoadSuccess={onDocumentLoadSuccess}
-      >
-        <Page pageNumber={pageNumber} />
-      </Document>
-      <p>Page {pageNumber} of {numPages}</p>
-      <div>
-        <Button label='Назад' disabled={pageNumber === 1} onClick={()=>{setPageNumber(pageNumber-1)}}/>
-        <Button label='Вперед' disabled={pageNumber === numPages} onClick={()=>{setPageNumber(pageNumber+1)}}/>
+    <div className='flex flex-col bg-zinc-700'>
+      <div className={'bg-zinc-800'}>
+        <Button className={'m-1'} label='Назад' size='xs' disabled={pageNumber === 1} onClick={() => {
+          setPageNumber(pageNumber - 1)
+        }}/>
+        <Button label='Вперед' size='xs'  disabled={pageNumber === numPages} onClick={() => {
+          setPageNumber(pageNumber + 1)
+        }}/>
       </div>
+      <Document className='reader ms-auto me-auto h-screen'
+                file={`/media/${data.file_uuid}`}
+                onLoadSuccess={onDocumentLoadSuccess}
+      >
+        {numPages && [...Array(numPages).keys()].map((page) => {
+           return <Page key={page + 1} pageNumber={page + 1}/>
+          }
+        )}
+      </Document>
     </div>
   );
 }
