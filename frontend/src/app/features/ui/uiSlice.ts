@@ -88,6 +88,12 @@ export const uiSlice = createSlice({
     },
     closeFile: (state: uiState, action) => {
       state.reader.files = state.reader.files.filter((file) => file.id !== action.payload.id)
+      if (state.reader.activeTab?.id === action.payload.id) {
+        state.reader.activeTab = state.reader.files[0]
+      }
+      if (state.reader.files.length === 0) {
+        state.reader.isReaderOpen = false
+      }
     },
     setActiveReaderTab: (state: uiState, action) => {
       state.reader.activeTab = action.payload

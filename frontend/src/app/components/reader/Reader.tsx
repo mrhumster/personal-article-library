@@ -8,7 +8,6 @@ import {FileScheme} from "../../types";
 import {IconDocFilled} from "@consta/uikit/IconDocFilled";
 import {Button} from "@consta/uikit/Button";
 import {IconClose} from "@consta/uikit/IconClose";
-import {IconRestart} from "@consta/uikit/IconRestart";
 import {closeFile} from "../../features/ui/uiSlice.ts";
 
 export const Reader = () => {
@@ -26,11 +25,8 @@ export const Reader = () => {
 
   const getItemIcon = () => IconDocFilled
 
-  const handleClickCloseFile = ({ item }:{item: FileScheme}) => {
-    console.log(item)
-  }
 
-  const getItemRightSide = ({ item }:{item: FileScheme}) =>
+  const getItemRightSide = (item: FileScheme) =>
       <Button
         tabIndex={0}
         as="span"
@@ -40,7 +36,7 @@ export const Reader = () => {
         view="clear"
         size="xs"
         onlyIcon
-        onClick={() => {console.log(item)}}
+        onClick={() => {dispatch(closeFile(item))}}
       />
 
   return (

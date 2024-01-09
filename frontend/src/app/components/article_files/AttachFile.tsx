@@ -10,7 +10,7 @@ import {FileScheme} from "../../types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {useGetFileQuery, useUpdateArticleMutation} from "../../services/backend";
-import {openReader} from "../../features/ui";
+import {closeSideBar, openReader} from "../../features/ui";
 import {openFile} from "../../features/ui/uiSlice.ts";
 
 
@@ -49,6 +49,7 @@ export const AttachFile = ({file_id}:{file_id: string}) => {
   const handleClickAttachment = () => {
     dispatch(openReader())
     dispatch(openFile(data))
+    dispatch(closeSideBar())
   }
 
   return (

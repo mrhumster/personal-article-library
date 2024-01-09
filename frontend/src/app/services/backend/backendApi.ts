@@ -15,6 +15,9 @@ export const backendApi = createApi({
     getFile: builder.query({
       query: (file_id) => `/files/${file_id}`
     }),
+    getDocument: builder.query({
+      query: (file_uuid) => `../media/${file_uuid}`
+    }),
     addFile: builder.mutation({
       query: (body) => {
         return {
@@ -169,4 +172,5 @@ export const {
   useGetMyCollectionsQuery,
   useUpdateMyCollectionMutation,
   useDeleteMyCollectionMutation,
+  useGetDocumentQuery,
 } = backendApi

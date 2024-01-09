@@ -1,7 +1,7 @@
 import {BaseQueryFn, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {isErrorWithDetail, isErrorWithDetailList} from "../helpers.ts";
 import {addMessage} from "../../features/alert";
-import {getAccessToken} from "../../hooks";
+import {getAccessToken, logout} from "../../hooks";
 
 const baseQuery = fetchBaseQuery({
         baseUrl: `/api/`,
@@ -26,6 +26,8 @@ export const baseQueryWithErrorHandler: BaseQueryFn = async (args, api, extraOpt
       })
     }
     if (isErrorWithDetail(result.error.data)) {
+      // TODO:  если 401 сделать навигацию на логин
+      if (result.error.status === 401) logout()
       api.dispatch(addMessage({message: result.error.data.detail, status: 'alert', progressMode: 'line'}))
     }
   }

@@ -13,7 +13,8 @@ export {
   useCreateMyCollectionMutation,
   useGetMyCollectionsQuery,
   useUpdateMyCollectionMutation,
-  useDeleteMyCollectionMutation
+  useDeleteMyCollectionMutation,
+  useGetDocumentQuery
 } from './backendApi.ts'
 
 export {baseQueryWithErrorHandler} from './baseQuery.ts'
