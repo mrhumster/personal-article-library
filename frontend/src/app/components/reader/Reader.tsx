@@ -3,12 +3,13 @@ import { Tabs } from '@consta/uikit/Tabs';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {setActiveReaderTab} from "../../features/ui";
-import {ShowFile} from "./ShowFile.tsx";
 import {FileScheme} from "../../types";
 import {IconDocFilled} from "@consta/uikit/IconDocFilled";
 import {Button} from "@consta/uikit/Button";
 import {IconClose} from "@consta/uikit/IconClose";
 import {closeFile} from "../../features/ui/uiSlice.ts";
+import {PDFViewer} from "./PDFViewer.tsx";
+
 
 export const Reader = () => {
   const files = useSelector((state: RootState) => state.ui.reader.files)
@@ -50,7 +51,8 @@ export const Reader = () => {
         getItemLeftIcon={getItemIcon}
         getItemRightSide={getItemRightSide}
       />
-      <ShowFile />
+      {/*<ShowFile />  -- react-pdf -- experiment */}
+      <PDFViewer />
     </div>
   )
 }
