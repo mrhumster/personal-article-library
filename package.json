@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@react-pdf-viewer/locales": "^1.0.0"
+  }
+}
