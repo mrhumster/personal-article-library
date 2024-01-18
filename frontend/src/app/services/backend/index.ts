@@ -14,7 +14,8 @@ export {
   useGetMyCollectionsQuery,
   useUpdateMyCollectionMutation,
   useDeleteMyCollectionMutation,
-  useGetDocumentQuery
+  useGetDocumentQuery,
+  useDeleteArticleMutation
 } from './backendApi.ts'
 
 export {baseQueryWithErrorHandler} from './baseQuery.ts'

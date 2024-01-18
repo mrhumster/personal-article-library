@@ -51,7 +51,6 @@ export const Reader = () => {
         getItemLeftIcon={getItemIcon}
         getItemRightSide={getItemRightSide}
       />
-      {/*<ShowFile />  -- react-pdf -- experiment */}
       <PDFViewer />
     </div>
   )

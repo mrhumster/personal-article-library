@@ -104,6 +104,8 @@ class ArticleInDB(BaseModel):
     urls: Optional[ArticleURLs]
     identifiers: Optional[Identifiers]
     description: Optional[str] = Field(max_length=2999)
+    deleted: Optional[bool]
+    delete_date: Optional[datetime]
 
     @validator('files')
     def unique_files_id(cls, v):
@@ -130,3 +132,5 @@ class UpdateArticleModel(BaseModel):
     urls: Optional[ArticleURLs]
     identifiers: Optional[Identifiers]
     description: Optional[str] = Field(max_length=2999)
+    deleted: Optional[bool]
+    delete_date: Optional[datetime]

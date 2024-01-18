@@ -83,6 +83,14 @@ export const articleSlice = createSlice({
       }
     )
     builder.addMatcher(
+      backendApi.endpoints.deleteArticle.matchFulfilled,
+      (state: ArticleStateIFace, action) => {
+        if (action.payload) {
+          state.articles.entities[action.payload.id] = action.payload
+        }
+      }
+    )
+    builder.addMatcher(
       // Если обновление на бэке не прошло валидацию, то перевыбрать изначальные данные из коллекции
       backendApi.endpoints.updateArticle.matchRejected,
       (state: ArticleStateIFace) => {

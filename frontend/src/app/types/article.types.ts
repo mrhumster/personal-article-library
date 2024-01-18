@@ -67,6 +67,8 @@ export interface ArticleIFace {
   urls: ArticleURLs
   identifiers?: Identifiers
   description?: string
+  deleted?: boolean
+  delete_date?: string
 }
 
 export interface CreateArticleIFace {

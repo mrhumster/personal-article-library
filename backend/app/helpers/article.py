@@ -17,7 +17,9 @@ def article_helper(article) -> dict:
         "reference_type": int(article["reference_type"]),
         "additional_information": article["additional_information"],
         "urls": article["urls"],
-        "identifiers": article["identifiers"]
+        "identifiers": article["identifiers"],
+        "deleted": article["deleted"],
+        "delete_date": article["delete_date"],
     }
 
 def isbn_meta_helper(meta) -> dict:

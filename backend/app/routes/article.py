@@ -142,3 +142,16 @@ async def update_article_data(article_id: str, req: UpdateArticleModel = Body(..
         raise HTTPException(
             status_code=status.HTTP_204_NO_CONTENT,
             headers={'WWW-Authenticate': 'Bearer'})
+
+
+@router.delete("/{article_id}")
+async def delete_article(article_id: str, user: User = Depends(get_current_active_user)):
+    await get_article_permission(article_id, user)
+    mark_article_as_deleted = await update_article(article_id, {'deleted': True, 'delete_date': datetime.datetime.now()})
+    if mark_article_as_deleted:
+        return ResponseModel(mark_article_as_deleted, "Article mark as deleted")
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_204_NO_CONTENT,
+            headers={'WWW-Authenticate': 'Bearer'}
+        )

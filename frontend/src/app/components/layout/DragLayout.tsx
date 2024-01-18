@@ -1,5 +1,4 @@
 import {DragNDropField} from "@consta/uikit/DragNDropField";
-import {Text} from "@consta/uikit/Text";
 import React, {useEffect} from "react";
 import {
   setDragEvent,
@@ -83,7 +82,6 @@ export const DragLayout = () => {
     return (
         <div id='dragndrop' className='p-3 absolute w-full h-full left-0 top-0 bg-opacity-75 bg-zinc-200 z-40'>
           <DragNDropField className='w-full h-full' onDropFiles={setFiles}>
-            <Text>Поле для файлов</Text>
           </DragNDropField>
         </div>
     )

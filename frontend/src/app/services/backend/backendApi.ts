@@ -37,6 +37,14 @@ export const backendApi = createApi({
         }
       }
     }),
+    deleteArticle: builder.mutation({
+      query: (id: string) => {
+        return {
+          url: `/articles/${id}`,
+          method: 'DELETE'
+        }
+      }
+    }),
     updateArticle: builder.mutation({
       query: (data) => {
         const { id, ...body } = data
@@ -152,7 +160,9 @@ export const backendApi = createApi({
          url: `/collections/${collection_id}`,
          method: 'DELETE'
        }
-      }
+      },
+      transformResponse: (response : { data: CollectionIFace[] }) => response.data[0],
+      transformErrorResponse: (response: ErrorResponse) => response.data.detail
     })
   }),
 })
@@ -173,4 +183,5 @@ export const {
   useUpdateMyCollectionMutation,
   useDeleteMyCollectionMutation,
   useGetDocumentQuery,
+  useDeleteArticleMutation
 } = backendApi
