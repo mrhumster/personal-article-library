@@ -1,6 +1,7 @@
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 import {ResponseWithArticle} from "../types/api.types.ts";
 import {ErrorDetailSchema} from "./backend/baseQuery.ts";
+import {ArticleIFace} from "../types";
 
 /**
  * Type predicate to narrow an unknown error to `FetchBaseQueryError`
@@ -39,7 +40,7 @@ export function isResponseWithData(response: ResponseWithArticle) {
   )
 }
 
-export const customDenormalize = (ids: string[], entities: { [key:  string]: object }) => {
+export const customDenormalize = (ids: string[], entities: { [key:  string]: ArticleIFace }) => {
   const _: [] = []
   ids.map(id => {
     const article = entities[id]

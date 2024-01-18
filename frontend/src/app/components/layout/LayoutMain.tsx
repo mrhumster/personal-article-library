@@ -2,6 +2,7 @@ import React from "react";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {TableArticles} from "../main";
+import {TrashView} from "../main/TrashView.tsx";
 
 export const LayoutMain = () => {
   const item_selected = useSelector((state: RootState) => state.ui.checked)
@@ -11,6 +12,14 @@ export const LayoutMain = () => {
     switch (item_selected.id) {
       case '0':
         content = <TableArticles title={'Все ссылки'}/>
+        break
+      case '1':
+        content = <div>Недавно добавленные</div>
+        break
+      case '6':
+        // TODO: Надо представление допилить
+        content = <TrashView />
+        break
     }
   }
   if (item_selected.group === 2) {

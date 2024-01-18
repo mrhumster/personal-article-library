@@ -1,46 +1,31 @@
 import React, {useEffect, useRef, useState} from "react";
 import {useDeleteArticleMutation, useGetArticlesQuery} from "../../services/backend";
 import {Table, TableColumn} from '@consta/uikit/Table';
-import {IconSearchStroked} from '@consta/icons/IconSearchStroked'
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {RootState} from "../../store";
-import {openSideBar, setActiveTab, setDragEvent} from "../../features/ui";
 import Moment from "react-moment";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
-import {Button} from "@consta/uikit/Button";
 import {ArticleIFace} from "../../types";
 import {customDenormalize} from "../../services/helpers.ts";
 import { Text } from '@consta/uikit/Text';
-import {IconFunnel} from "@consta/uikit/IconFunnel";
-import {DragLayout} from "../layout";
 import {authorsToString} from '../../utils'
-import openBook from '../../../assets/icons/open_book/open_book_m.svg'
 import {ContextMenu, ContextMenuItemDefault} from "@consta/uikit/ContextMenu";
 import {IconTrash} from "@consta/uikit/IconTrash";
 import {IconPaste} from "@consta/uikit/IconPaste";
-import {IconDocExport} from "@consta/uikit/IconDocExport"
 import {TableTitle} from "./TableTitle.tsx";
-import {addMessage, Item} from "../../features/alert";
-import {SnackBarItemDefault} from "@consta/uikit/SnackBar";
 
 
-export const TableArticles = ({filter, title}:{filter? : string[], title?: string}) => {
+export const TrashView = () => {
   const {refetch} = useGetArticlesQuery({}, {pollingInterval: 10000})
   const {ids, entities} = useSelector((state: RootState) => state.articles.articles)
   const isOpen = useSelector((state: RootState) => state.ui.rightSideBar.isSidebarOpen)
   const [articles, setArticles] = useState<ArticleIFace[]>()
   const ref = useRef<HTMLDivElement>(null)
-  const dispatch = useDispatch()
 
   const [isOpenContextMenu, setIsOpenContextMenu] = useState<boolean>(false)
   const [contextMenuPosition, setContextMenuPosition] = useState<{x: number, y: number} | undefined >(undefined)
   const [contextMenuArticleId, setContextMenuArticleId] = useState<string | null>(null)
   const [ deleteArticle ] = useDeleteArticleMutation()
-
-  function drag(e: React.DragEvent<HTMLDivElement>) {
-    const article_id = (e.target as HTMLElement).getAttribute('data-article-id')
-    if (article_id) e.dataTransfer.setData("article_id", article_id);
-  }
 
   const showContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -53,13 +38,6 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
   const deleteArticleHandler = () => {
     if (contextMenuArticleId) deleteArticle(contextMenuArticleId)
     setIsOpenContextMenu(false)
-    const alert: Item = {
-      message: 'Ссылка перемещена в корзину',
-      status: "normal",
-      progressMode: 'timer',
-    }
-    refetch()
-    dispatch(addMessage(alert))
   }
 
   const contextMenuItems: ContextMenuItemDefault[] = [
@@ -84,25 +62,22 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
       align: 'center',
       sortable: true,
       width: 200,
-      renderCell: (row: ArticleIFace) => <div draggable="true">{row.authors ? authorsToString(row.authors) :
+      renderCell: (row: ArticleIFace) => <div>{row.authors ? authorsToString(row.authors) :
         <div className={"italic"}>Пусто</div>}</div>
     },
     {
       title: 'Год',
       accessor: 'year',
       sortable: true,
-      renderCell: (row: ArticleIFace) => <div draggable="true">{row.publication?.year}</div>
+      renderCell: (row: ArticleIFace) => <div>{row.publication?.year}</div>
     },
     {
       title: 'Название',
       accessor: 'title',
       sortable: true,
       renderCell: (row: ArticleIFace) =>
-        <div className="w-full p-0"
-          draggable="true"
-          onDragStart={drag}
-          onContextMenu={showContextMenu}
-          data-article-id={row.id}
+        <div onContextMenu={showContextMenu}
+             data-article-id={row.id}
         >
           {row.title}
         </div>
@@ -116,11 +91,6 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
       accessor: "added",
       sortable: true,
       renderCell: (row: ArticleIFace) => <div><Moment date={row.added} format="DD.MM.YYYY"/></div>
-    },
-    {
-      title: 'Файл',
-      accessor: "file_name",
-      renderCell: (row: ArticleIFace) => <div>{row.files ? <IconDocExport /> : <></>}</div>
     }
   ];
 
@@ -129,63 +99,22 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
   }, [ids, entities])
 
 
-  useEffect(() => {
-    refetch()
-  }, [])
-
-  const handleRowClick = (arg: { id: string; e: React.MouseEvent }) => {
-    dispatch(openSideBar({id: arg.id}))
-    dispatch(setActiveTab(0))
-  }
-
-  const display = (event: DragEvent) => {
-    dispatch(setDragEvent({
-      isActive: true,
-      kind: event.dataTransfer?.items[0].kind,
-      type: event.dataTransfer?.items[0].type
-    }))
-  }
-
-  const hide = () => {
-    dispatch(setDragEvent({isActive: false}))
-  }
-
-  const handlerDragStart = (event: DragEvent) => {
-    const img = new Image()
-    img.src = openBook
-    event.dataTransfer?.setData('text/plain', 'article')
-    event.dataTransfer?.setDragImage(img, 12, 12)
-  }
+  useEffect(() => {refetch()}, [])
 
 
   return (
     <Theme preset={presetGpnDefault}>
-      <div ref={ref} onDragStart={handlerDragStart} onDragOver={display} onDragEnd={hide} className='h-screen w-full relative'>
-        <DragLayout/>
+      <div ref={ref} className='h-screen w-full relative'>
         <div
           className={`flex items-center border-b border-slate-300 justify-items-stretch ${isOpen ? 'w-3/4' : 'w-full'}`}>
-          <TableTitle title={title} />
-          <div id='buttons' className={`flex ${isOpen ? 'me-20' : 'me-2'}`}>
-            <div className='p-1'>
-              <Button label='Поиск' size={'m'} view={'clear'} iconLeft={IconSearchStroked}/>
-            </div>
-            <div className='p-1'>
-              <Button label='Фильтр' size={'m'} view={'clear'} iconLeft={IconFunnel}/>
-            </div>
-          </div>
+          <TableTitle title='Корзина' />
         </div>
         {articles &&
             <Table
-                rows={filter ? articles.filter((value) =>
-                  // Фильтр по коллекции и не удаленные
-                  filter.includes(value.id)).filter((value) => !value.deleted) :
-                  // Фильтр по ну удаленным
-                  articles.filter((value) => !value.deleted)}
+                rows={ articles.filter((value) => value.deleted)}
                 columns={columns}
-                onRowClick={handleRowClick}
                 getCellWrap={() => 'break'}
                 isResizable={false}
-                stickyHeader
                 emptyRowsPlaceholder={<Text>Здесь пока нет данных</Text>}
             />
         }
