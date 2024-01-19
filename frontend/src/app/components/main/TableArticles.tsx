@@ -21,23 +21,30 @@ import {IconPaste} from "@consta/uikit/IconPaste";
 import {IconDocExport} from "@consta/uikit/IconDocExport"
 import {TableTitle} from "./TableTitle.tsx";
 import {addMessage, Item} from "../../features/alert";
-import {SnackBarItemDefault} from "@consta/uikit/SnackBar";
 
 
 export const TableArticles = ({filter, title}:{filter? : string[], title?: string}) => {
-  const {refetch} = useGetArticlesQuery({}, {pollingInterval: 10000})
-  const {ids, entities} = useSelector((state: RootState) => state.articles.articles)
+  const { refetch } = useGetArticlesQuery({}, {pollingInterval: 5000})
+  const { ids, entities} = useSelector((state: RootState) => state.articles.articles)
+
   const isOpen = useSelector((state: RootState) => state.ui.rightSideBar.isSidebarOpen)
-  const [articles, setArticles] = useState<ArticleIFace[]>()
   const ref = useRef<HTMLDivElement>(null)
+
+  const [ rows, setRows] = useState<ArticleIFace[]>()
+  const [ isOpenContextMenu, setIsOpenContextMenu] = useState<boolean>(false)
+  const [ contextMenuPosition, setContextMenuPosition] = useState<{x: number, y: number} | undefined >(undefined)
+  const [ contextMenuArticleId, setContextMenuArticleId] = useState<string | null>(null)
+  const [ deleteArticle ] = useDeleteArticleMutation()
+  const [ selected, setSelected ] = useState<string[]>([])
+
+  const headerCheckBox = useRef(null)
   const dispatch = useDispatch()
 
-  const [isOpenContextMenu, setIsOpenContextMenu] = useState<boolean>(false)
-  const [contextMenuPosition, setContextMenuPosition] = useState<{x: number, y: number} | undefined >(undefined)
-  const [contextMenuArticleId, setContextMenuArticleId] = useState<string | null>(null)
-  const [ deleteArticle ] = useDeleteArticleMutation()
+  useEffect(() => {refetch()}, [])
 
-  function drag(e: React.DragEvent<HTMLDivElement>) {
+  useEffect(()=>{setSelected([])}, [filter])
+
+  const drag = (e: React.DragEvent<HTMLDivElement>) => {
     const article_id = (e.target as HTMLElement).getAttribute('data-article-id')
     if (article_id) e.dataTransfer.setData("article_id", article_id);
   }
@@ -62,6 +69,43 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
     dispatch(addMessage(alert))
   }
 
+  useEffect(() => {
+    if (headerCheckBox.current && rows) {
+      if (selected.length > 0 && selected.length < rows.length) {
+        (headerCheckBox.current as HTMLInputElement).indeterminate = true;
+      }
+      if (selected.length === rows.length) {
+        (headerCheckBox.current as HTMLInputElement).indeterminate = false;
+        (headerCheckBox.current as HTMLInputElement).checked = true;
+      }
+      if (selected.length === 0) {
+        (headerCheckBox.current as HTMLInputElement).indeterminate = false;
+        (headerCheckBox.current as HTMLInputElement).checked = false;
+      }
+    }
+  }, [selected])
+
+  const checkBoxChangeHandler = (e: React.ChangeEvent) => {
+    e.stopPropagation();
+    const article_id = (e.target as HTMLInputElement).getAttribute('data-article-id')
+    if (article_id) {
+      if (selected.includes(article_id)) {
+        setSelected(selected.filter((value: string) => value !== article_id))
+      } else {
+        setSelected([...selected, article_id])
+      }
+    }
+  }
+
+  const headerCheckBoxHandler = (e: React.ChangeEvent) => {
+    if ((e.target as HTMLInputElement).checked && rows) {
+      setSelected(rows.map((row: ArticleIFace) => row.id))
+    }
+    if (!(e.target as HTMLInputElement).checked && rows) {
+      setSelected([])
+    }
+  }
+
   const contextMenuItems: ContextMenuItemDefault[] = [
     {
       label: 'Скопировать цитату',
@@ -77,7 +121,21 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const columns: TableColumn<typeof articles[number]>[] = [
+  const columns: TableColumn<typeof rows[number]>[] = [
+    {
+      title: <input ref={headerCheckBox}
+                    type='checkbox'
+                    onChange={headerCheckBoxHandler}
+                    id='selectedCheckBoxHeader'
+      />,
+      renderCell: (row: ArticleIFace) =>
+        <input type='checkbox'
+               checked={selected.includes(row.id)}
+               onChange={checkBoxChangeHandler}
+               onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
+               data-article-id={row.id}
+        />
+    },
     {
       title: 'Автор',
       accessor: 'authors',
@@ -125,13 +183,11 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
   ];
 
   useEffect(() => {
-    setArticles(customDenormalize(ids, entities))
-  }, [ids, entities])
+    const allArticles = customDenormalize(ids, entities)
+    if (filter) setRows(allArticles.filter((value: ArticleIFace) => filter.includes(value.id)).filter((value: ArticleIFace) => !value.deleted))
+    if (!filter) setRows(allArticles.filter((value: ArticleIFace) => !value.deleted))
+  }, [ids, entities, filter])
 
-
-  useEffect(() => {
-    refetch()
-  }, [])
 
   const handleRowClick = (arg: { id: string; e: React.MouseEvent }) => {
     dispatch(openSideBar({id: arg.id}))
@@ -174,13 +230,9 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
             </div>
           </div>
         </div>
-        {articles &&
+        {rows &&
             <Table
-                rows={filter ? articles.filter((value) =>
-                  // Фильтр по коллекции и не удаленные
-                  filter.includes(value.id)).filter((value) => !value.deleted) :
-                  // Фильтр по ну удаленным
-                  articles.filter((value) => !value.deleted)}
+                rows={rows}
                 columns={columns}
                 onRowClick={handleRowClick}
                 getCellWrap={() => 'break'}
