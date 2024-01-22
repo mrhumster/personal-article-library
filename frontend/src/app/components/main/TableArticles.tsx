@@ -21,28 +21,35 @@ import {IconPaste} from "@consta/uikit/IconPaste";
 import {IconDocExport} from "@consta/uikit/IconDocExport"
 import {TableTitle} from "./TableTitle.tsx";
 import {addMessage, Item} from "../../features/alert";
+import { Checkbox } from '@consta/uikit/Checkbox';
+import {SelectedPanel} from "./SelectedPanel.tsx";
+
 
 
 export const TableArticles = ({filter, title}:{filter? : string[], title?: string}) => {
   const { refetch } = useGetArticlesQuery({}, {pollingInterval: 5000})
-  const { ids, entities} = useSelector((state: RootState) => state.articles.articles)
+  const {ids, entities} = useSelector((state: RootState) => state.articles.articles)
 
   const isOpen = useSelector((state: RootState) => state.ui.rightSideBar.isSidebarOpen)
   const ref = useRef<HTMLDivElement>(null)
 
-  const [ rows, setRows] = useState<ArticleIFace[]>()
-  const [ isOpenContextMenu, setIsOpenContextMenu] = useState<boolean>(false)
-  const [ contextMenuPosition, setContextMenuPosition] = useState<{x: number, y: number} | undefined >(undefined)
-  const [ contextMenuArticleId, setContextMenuArticleId] = useState<string | null>(null)
-  const [ deleteArticle ] = useDeleteArticleMutation()
-  const [ selected, setSelected ] = useState<string[]>([])
+  const [rows, setRows] = useState<ArticleIFace[]>()
+  const [isOpenContextMenu, setIsOpenContextMenu] = useState<boolean>(false)
+  const [contextMenuPosition, setContextMenuPosition] = useState<{ x: number, y: number } | undefined>(undefined)
+  const [contextMenuArticleId, setContextMenuArticleId] = useState<string | null>(null)
+  const [deleteArticle] = useDeleteArticleMutation()
+  const [selected, setSelected] = useState<string[]>([])
 
   const headerCheckBox = useRef(null)
   const dispatch = useDispatch()
 
-  useEffect(() => {refetch()}, [])
+  useEffect(() => {
+    refetch()
+  }, [])
 
-  useEffect(()=>{setSelected([])}, [filter])
+  useEffect(() => {
+    setSelected([])
+  }, [filter])
 
   const drag = (e: React.DragEvent<HTMLDivElement>) => {
     const article_id = (e.target as HTMLElement).getAttribute('data-article-id')
@@ -53,7 +60,7 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
     e.preventDefault();
     const article_id = (e.target as HTMLElement).getAttribute('data-article-id')
     setContextMenuArticleId(article_id)
-    setContextMenuPosition({ x: e.pageX, y: e.pageY })
+    setContextMenuPosition({x: e.pageX, y: e.pageY})
     setIsOpenContextMenu(true)
   }
 
@@ -158,10 +165,10 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
       sortable: true,
       renderCell: (row: ArticleIFace) =>
         <div className="w-full p-0"
-          draggable="true"
-          onDragStart={drag}
-          onContextMenu={showContextMenu}
-          data-article-id={row.id}
+             draggable="true"
+             onDragStart={drag}
+             onContextMenu={showContextMenu}
+             data-article-id={row.id}
         >
           {row.title}
         </div>
@@ -179,7 +186,7 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
     {
       title: 'Файл',
       accessor: "file_name",
-      renderCell: (row: ArticleIFace) => <div>{row.files ? <IconDocExport /> : <></>}</div>
+      renderCell: (row: ArticleIFace) => <div>{row.files ? <IconDocExport/> : <></>}</div>
     }
   ];
 
@@ -217,11 +224,13 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
 
   return (
     <Theme preset={presetGpnDefault}>
-      <div ref={ref} onDragStart={handlerDragStart} onDragOver={display} onDragEnd={hide} className='h-screen w-full relative'>
+      {/* TODO: Плохо работает драг. Если увести файл и бросить за область, то поле не исчезает */}
+      <div ref={ref} onDragStart={handlerDragStart} onDragOver={display} onDragEnd={hide}
+           className='h-screen w-full relative flex flex-col justify-between'>
         <DragLayout/>
         <div
           className={`flex items-center border-b border-slate-300 justify-items-stretch ${isOpen ? 'w-3/4' : 'w-full'}`}>
-          <TableTitle title={title} />
+          <TableTitle title={title}/>
           <div id='buttons' className={`flex ${isOpen ? 'me-20' : 'me-2'}`}>
             <div className='p-1'>
               <Button label='Поиск' size={'m'} view={'clear'} iconLeft={IconSearchStroked}/>
@@ -231,27 +240,33 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
             </div>
           </div>
         </div>
-        {rows &&
-            <Table
-                rows={rows}
-                columns={columns}
-                onRowClick={handleRowClick}
-                getCellWrap={() => 'break'}
-                isResizable={false}
-                stickyHeader
-                emptyRowsPlaceholder={<Text>Здесь пока нет данных</Text>}
-            />
-        }
+        <div id='tableContainer' className='grow'>
+          {rows &&
+              <Table
+                  rows={rows}
+                  columns={columns}
+                  onRowClick={handleRowClick}
+                  getCellWrap={() => 'break'}
+                  isResizable={false}
+                  stickyHeader
+                  emptyRowsPlaceholder={<Text>Здесь пока нет данных</Text>}
+              />
+
+          }
+        </div>
+        <div id='selectedPanelContainer'>
+          <SelectedPanel items={selected}/>
+        </div>
       </div>
       {isOpenContextMenu && contextMenuPosition &&
-      <ContextMenu
-          size='s'
-          direction='rightStartDown'
-          isOpen={isOpenContextMenu}
-          position={contextMenuPosition}
-          items={contextMenuItems}
-          onClickOutside={() => setIsOpenContextMenu(false)}
-      />
+          <ContextMenu
+              size='s'
+              direction='rightStartDown'
+              isOpen={isOpenContextMenu}
+              position={contextMenuPosition}
+              items={contextMenuItems}
+              onClickOutside={() => setIsOpenContextMenu(false)}
+          />
       }
     </Theme>
   )

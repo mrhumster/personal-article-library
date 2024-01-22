@@ -42,8 +42,8 @@ export const collectionSlice = createSlice({
       )
       builder.addMatcher(
         backendApi.endpoints.deleteMyCollection.matchFulfilled,
-        (state: CollectionStateIFace, action) =>{
-          const {collection_id} = action.payload
+        (state: CollectionStateIFace, action) => {
+          const { collection_id } = action.payload
           state.ids = state.ids.filter((id) => id !== collection_id)
           delete state.entities[collection_id]
         }

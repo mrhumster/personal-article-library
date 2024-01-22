@@ -161,7 +161,7 @@ export const backendApi = createApi({
          method: 'DELETE'
        }
       },
-      transformResponse: (response : { data: CollectionIFace[] }) => response.data[0],
+      transformResponse: (response : { data: CollectionIFace[] }) => response,
       transformErrorResponse: (response: ErrorResponse) => response.data.detail
     })
   }),

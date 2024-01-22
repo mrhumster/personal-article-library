@@ -5,7 +5,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {Item} from "./TabsMenu.tsx";
 import {setSelectedMenuItem} from "../../features/ui";
-import {useDeleteMyCollectionMutation, useUpdateMyCollectionMutation} from "../../services/backend";
+import {
+  useDeleteMyCollectionMutation,
+  useUpdateMyCollectionMutation
+} from "../../services/backend";
 import {CollectionStateIFace} from "../../types";
 import {ContextMenu, ContextMenuItemDefault} from "@consta/uikit/ContextMenu";
 import {ProgressSpin} from "@consta/uikit/ProgressSpin";
@@ -117,8 +120,7 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
          onDragOver={handleOnDragOver}
          id={item.key}
     >
-      {Icon && !openRenameField && <><Icon size={'s'} className={'m-2'}/><span
-          className={'grow w-24 truncate'} title={item.label}>{item.label}</span></>}
+      {Icon && !openRenameField && <><Icon size={'s'} className={'m-2'}/><span className={'grow w-24 truncate font-light'} title={item.label}>{item.label}</span></>}
       {item.groupId === 2 && !openRenameField &&
           <>
             {!data.isLoading ?

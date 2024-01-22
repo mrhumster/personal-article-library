@@ -128,7 +128,7 @@ export const TabsMenu = () => {
 
   return (
     <Theme preset={presetGpnDefault}>
-      <div className="ms-0 me-0 font-light  whitespace-nowrap select-none tracking-tighter">
+      <div className="ms-0 me-0 mb-5 font-ligh whitespace-nowrap select-none tracking-tighter">
         <List size={'m'} items={itemsWithCollections} groups={groups}
               renderItem={(item) => <MenuItem item={item} refetch={refetch}/>}/>
 
