@@ -130,6 +130,7 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
       />,
       renderCell: (row: ArticleIFace) =>
         <input type='checkbox'
+               key={row.id}
                checked={selected.includes(row.id)}
                onChange={checkBoxChangeHandler}
                onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
