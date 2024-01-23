@@ -135,6 +135,7 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
                     onChange={headerCheckBoxHandler}
                     id='selectedCheckBoxHeader'
       />,
+      width: 45,
       renderCell: (row: ArticleIFace) =>
         <input type='checkbox'
                key={row.id}
@@ -186,7 +187,7 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
     {
       title: 'Файл',
       accessor: "file_name",
-      renderCell: (row: ArticleIFace) => <div>{row.files ? <IconDocExport/> : <></>}</div>
+      renderCell: (row: ArticleIFace) => <div className={'ms-auto me-auto'}>{row.files ? <IconDocExport/> : <></>}</div>
     }
   ];
 
