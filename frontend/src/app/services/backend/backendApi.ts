@@ -4,6 +4,9 @@ import {baseQueryWithErrorHandler} from "./baseQuery.ts";
 import {normalize, schema} from "normalizr";
 import {ResponseWithArticle} from "../../types";
 import {CollectionIFace} from "../../types";
+import {addMessage, Item} from "../../features/alert";
+import {useDispatch} from "react-redux";
+import {RootState} from "../../store";
 
 export const articleEntity = new schema.Entity('articles')
 export const collectionsEntity = new schema.Entity('collections')
@@ -151,8 +154,34 @@ export const backendApi = createApi({
           body: body
         }
       },
-      transformResponse: (response : { data: CollectionIFace[] }) => response.data[0],
-      transformErrorResponse: (response: ErrorResponse) => response.data.detail
+      transformResponse: (response : { data: CollectionIFace[] }) => {return response.data[0]},
+      transformErrorResponse: (response: ErrorResponse) => response.data.detail,
+      /* Пример использования асинхронной функции добавления кеша
+      https://redux-toolkit.js.org/rtk-query/usage/manual-cache-updates#optimistic-updates
+      async onCacheEntryAdded(
+        arg,
+        {
+          dispatch,
+          getState,
+          extra,
+          requestId,
+          cacheEntryRemoved,
+          cacheDataLoaded,
+          getCacheEntry,
+        }
+      ) {
+        const state = getState()
+        const alert: Item = {
+          message: `Коллекция "${state.collections.entities[arg.collection_id].title}" обновилась.`,
+          status: "normal",
+          progressMode: 'timer',
+        }
+        console.log(arg)
+        console.log(getState())
+        dispatch(addMessage(alert))
+      },
+
+       */
     }),
     deleteMyCollection: builder.mutation({
       query: (collection_id) => {

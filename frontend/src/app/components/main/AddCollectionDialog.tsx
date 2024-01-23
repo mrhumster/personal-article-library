@@ -5,9 +5,10 @@ import {Text} from "@consta/uikit/Text";
 import {Button} from "@consta/uikit/Button";
 import {IconClose} from "@consta/uikit/IconClose";
 import {CheckboxGroup, CheckboxGroupDefaultItem} from '@consta/uikit/CheckboxGroup';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {useUpdateMyCollectionMutation} from "../../services/backend";
+import {addMessage, Item} from "../../features/alert";
 
 
 interface AddCollectionDialogPropsIFace {
@@ -20,7 +21,8 @@ export const AddCollectionDialog = (props: AddCollectionDialogPropsIFace) => {
   const [value, setValue] = React.useState<CheckboxGroupDefaultItem[] | null>(null);
   const [items, setItems] = useState<CheckboxGroupDefaultItem[] | null>(null)
   const { ids, entities} = useSelector((state: RootState) => state.collections)
-  const [ updateMyCollection ] = useUpdateMyCollectionMutation()
+  const [ updateMyCollection, result ] = useUpdateMyCollectionMutation()
+  const dispatch = useDispatch()
 
   useEffect(()=>{
     if (ids && entities) {
@@ -39,14 +41,13 @@ export const AddCollectionDialog = (props: AddCollectionDialogPropsIFace) => {
     if (value) value.map((v) => {
       if (v.key) updateMyCollection({collection_id: v.key, articles: [...entities[v.key].articles, ...props.items]})
     })
-
-    /*if (value) {
-      value.map((collection) => {
-        updateMyCollection({id: collection.key, articles: props.items.map((item) => item.key)})
-      })
-    }
-    */
+    setValue([])
+    props.setShow(false)
   }
+
+  useEffect(()=>{
+    if (result.isSuccess) dispatch(addMessage({message: (value?.length === 1) ? 'Коллекция обновлена.' : 'Коллекции обновлены.'}))
+  }, [result])
 
   return (
     <Modal isOpen={props.show} hasOverlay={false}>
@@ -68,7 +69,7 @@ export const AddCollectionDialog = (props: AddCollectionDialogPropsIFace) => {
           </div>
           <div className={'flex justify-end items-stretch basis-1/2'}>
             <Button className={'grow mx-1 mt-auto mb-auto'} label={'Отменить'} size={'s'} view={'clear'} onClick={() => props.setShow(false)} />
-            <Button className={'grow mx-1 mt-auto mb-auto'} label={'Добавить'} size={'s'} view={'primary'} onClick={addClickHandler} />
+            <Button className={'grow mx-1 mt-auto mb-auto'} label={'Добавить'} size={'s'} view={'primary'} loading={result.isLoading} onClick={addClickHandler} />
           </div>
         </div>
       </Card>
