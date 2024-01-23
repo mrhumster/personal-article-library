@@ -4,9 +4,10 @@ import {SelectedPanelButtonWithTooltip as ButtonWithTooltip} from "./SelectedPan
 import {DefaultListItem} from "@consta/uikit/ListCanary";
 import {Button} from "@consta/uikit/Button";
 import {addMessage, Item} from "../../features/alert";
-import {useDeleteArticleMutation, useGetArticlesQuery} from "../../services/backend";
-import {useDispatch} from "react-redux";
+import {useDeleteArticleMutation, useGetArticlesQuery, useUpdateMyCollectionMutation} from "../../services/backend";
+import {useDispatch, useSelector} from "react-redux";
 import {AddCollectionDialog} from "./AddCollectionDialog.tsx";
+import {RootState} from "../../store";
 
 interface SelectedPanelPropsIFace {
   items: string[]
@@ -15,11 +16,18 @@ interface SelectedPanelPropsIFace {
 export const SelectedPanel = (props: SelectedPanelPropsIFace) => {
   const { items} = props
   const [ deleteArticle] = useDeleteArticleMutation()
+  const [ updateMyCollection ] = useUpdateMyCollectionMutation()
+  const { entities} = useSelector((state: RootState) => state.collections)
   const { refetch } = useGetArticlesQuery({})
   const [ isVisibleAddCollectionDialog, setIsVisibleAddCollectionDialog] = useState<boolean>(false)
+  const checked = useSelector((state: RootState) => state.ui.checked)
   const dispatch = useDispatch()
 
   if (items.length === 0) return null
+
+  const removeFromCollection = () => {
+    updateMyCollection({collection_id: checked.id, articles: entities[checked.id].articles.filter((article_id) => !props.items.includes(article_id))})
+  }
 
   const organizeActions: DefaultListItem[] = [
     {
@@ -28,7 +36,8 @@ export const SelectedPanel = (props: SelectedPanelPropsIFace) => {
     },
     {
       label: 'Убрать из коллекции',
-      onClick: () => {console.log('Убрать из коллекции')}
+      onClick: () => {removeFromCollection()},
+      disabled: checked.group === 1,
     }
   ]
 

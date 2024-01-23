@@ -8,7 +8,7 @@ import {CheckboxGroup, CheckboxGroupDefaultItem} from '@consta/uikit/CheckboxGro
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {useUpdateMyCollectionMutation} from "../../services/backend";
-import {addMessage, Item} from "../../features/alert";
+import {addMessage} from "../../features/alert";
 
 
 interface AddCollectionDialogPropsIFace {
