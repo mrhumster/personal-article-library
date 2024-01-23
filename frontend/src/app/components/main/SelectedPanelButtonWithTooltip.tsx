@@ -1,10 +1,10 @@
 import React, {useRef, useState} from "react";
 import {Button} from "@consta/uikit/Button";
-import {Tooltip} from "@consta/uikit/TooltipCanary";
+import {Tooltip} from "@consta/uikit/Tooltip";
 import {DefaultListItem, List} from "@consta/uikit/ListCanary";
 import {presetGpnDark, Theme} from "@consta/uikit/Theme";
-import {IconArrowUp} from "@consta/uikit/IconArrowUp";
-import {IconArrowDown} from "@consta/uikit/IconArrowDown";
+import {IconArrowUp} from "@consta/icons/IconArrowUp";
+import {IconArrowDown} from "@consta/icons/IconArrowDown";
 
 interface SelectedPanelButtonWithTooltipPropsIFace {
   label: string,

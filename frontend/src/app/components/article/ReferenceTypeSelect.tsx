@@ -1,5 +1,5 @@
 import React from 'react';
-import { Combobox } from '@consta/uikit/ComboboxCanary';
+import { Combobox } from '@consta/uikit/Combobox';
 import {useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {useUpdateArticleMutation} from "../../services/backend";

@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import {Card} from "@consta/uikit/Card";
 import {Text} from "@consta/uikit/Text";
 import {Button} from "@consta/uikit/Button";
-import {IconClose} from "@consta/uikit/IconClose";
+import {IconClose} from "@consta/icons/IconClose";
 import {CheckboxGroup, CheckboxGroupDefaultItem} from '@consta/uikit/CheckboxGroup';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";

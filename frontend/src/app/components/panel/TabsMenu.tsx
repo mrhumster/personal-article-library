@@ -4,8 +4,8 @@ import {useSelector} from "react-redux";
 import {IconComponent} from "@consta/uikit/Icon";
 import {List} from "@consta/uikit/ListCanary";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
-import {IconBookmarkStroked} from "@consta/uikit/IconBookmarkStroked";
-import {IconList} from "@consta/uikit/IconList";
+import {IconBookmarkStroked} from "@consta/icons/IconBookmarkStroked";
+import {IconList} from "@consta/icons/IconList";
 
 import {IconBook, IconClock, IconCopyFile, IconOpenBook, IconStar, IconTrash} from "./Icons.ts";
 import {RootState} from "../../store";

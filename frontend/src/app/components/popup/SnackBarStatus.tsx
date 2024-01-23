@@ -3,8 +3,8 @@ import React from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {removeMessage} from "../../features/alert";
-import {IconAlert} from "@consta/uikit/IconAlert";
-import {IconRing} from "@consta/uikit/IconRing";
+import {IconAlert} from "@consta/icons/IconAlert";
+import {IconRing} from "@consta/icons/IconRing";
 
 const mapIconByStatus = {
   alert: IconAlert,

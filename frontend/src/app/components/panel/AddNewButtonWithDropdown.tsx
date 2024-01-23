@@ -1,11 +1,11 @@
 import React, {useRef, useState} from "react";
 import {ContextMenu, ContextMenuItemDefault} from "@consta/uikit/ContextMenu";
 import {Button} from "@consta/uikit/Button";
-import {IconAdd} from "@consta/uikit/IconAdd";
-import {IconEdit} from "@consta/uikit/IconEdit";
+import {IconAdd} from "@consta/icons/IconAdd";
+import {IconEdit} from "@consta/icons/IconEdit";
 import {AddNewFileButton} from "./AddNewFileButton.tsx";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
-import {IconDocAdd} from "@consta/uikit/IconDocAdd";
+import {IconDocAdd} from "@consta/icons/IconDocAdd";
 import {Text} from "@consta/uikit/Text";
 
 

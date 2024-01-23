@@ -35,7 +35,7 @@ export const collectionSlice = createSlice({
       builder.addMatcher(
         backendApi.endpoints.updateMyCollection.matchFulfilled,
         (state: CollectionStateIFace, action) => {
-          if (action.payload) {
+          if (action.payload.id) {
             state.entities[action.payload.id] = action.payload
           }
         }

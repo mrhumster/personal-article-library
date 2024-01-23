@@ -1,5 +1,5 @@
 import {Button} from "@consta/uikit/Button";
-import {IconKebab} from "@consta/uikit/IconKebab";
+import {IconKebab} from "@consta/icons/IconKebab";
 import React, {useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";

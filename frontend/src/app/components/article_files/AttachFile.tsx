@@ -1,9 +1,9 @@
 import {Attachment} from "@consta/uikit/Attachment";
-import {IconHealth} from "@consta/uikit/IconHealth";
+import {IconHealth} from "@consta/icons/IconHealth";
 import {filesize} from "filesize";
 import moment from "moment";
 import {Button} from "@consta/uikit/Button";
-import {IconKebab} from "@consta/uikit/IconKebab";
+import {IconKebab} from "@consta/icons/IconKebab";
 import React, {useRef, useState} from "react";
 import {ContextMenu, ContextMenuItemDefault} from "@consta/uikit/ContextMenu";
 import {FileScheme} from "../../types";
@@ -57,6 +57,7 @@ export const AttachFile = ({file_id}:{file_id: string}) => {
       {data && <>
           <div className='w-[92%]'>
             <Attachment
+                withPictogram={true}
                 withAction={true}
                 buttonIcon={IconHealth}
                 size={'xs'}

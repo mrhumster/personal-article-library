@@ -4,9 +4,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {setActiveReaderTab} from "../../features/ui";
 import {FileScheme} from "../../types";
-import {IconDocFilled} from "@consta/uikit/IconDocFilled";
+import {IconDocFilled} from "@consta/icons/IconDocFilled";
 import {Button} from "@consta/uikit/Button";
-import {IconClose} from "@consta/uikit/IconClose";
+import {IconClose} from "@consta/icons/IconClose";
 import {closeFile} from "../../features/ui/uiSlice.ts";
 import {PDFViewer} from "./PDFViewer.tsx";
 

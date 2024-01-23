@@ -1,5 +1,5 @@
 import {Button} from "@consta/uikit/Button";
-import {IconLightningBolt} from "@consta/uikit/IconLightningBolt";
+import {IconLightningBolt} from "@consta/icons/IconLightningBolt";
 import React, {useState} from "react";
 import {truncateString} from "../../utils";
 

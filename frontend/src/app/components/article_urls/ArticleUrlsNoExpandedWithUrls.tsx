@@ -2,8 +2,8 @@ import React from "react";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store";
 import Moment from "react-moment";
-import {IconLink} from "@consta/uikit/IconLink";
-import {IconClose} from "@consta/uikit/IconClose";
+import {IconLink} from "@consta/icons/IconLink";
+import {IconClose} from "@consta/icons/IconClose";
 import {Button} from "@consta/uikit/Button";
 import {useUpdateArticleMutation} from "../../services/backend";
 

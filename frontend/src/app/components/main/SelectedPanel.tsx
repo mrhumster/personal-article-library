@@ -8,6 +8,9 @@ import {useDeleteArticleMutation, useGetArticlesQuery, useUpdateMyCollectionMuta
 import {useDispatch, useSelector} from "react-redux";
 import {AddCollectionDialog} from "./AddCollectionDialog.tsx";
 import {RootState} from "../../store";
+import {IconAdd} from "@consta/icons/IconAdd";
+import {IconRemove} from "@consta/icons/IconRemove";
+import {IconFavoriteStroked} from "@consta/icons/IconFavoriteStroked";
 
 interface SelectedPanelPropsIFace {
   items: string[]
@@ -32,18 +35,21 @@ export const SelectedPanel = (props: SelectedPanelPropsIFace) => {
   const organizeActions: DefaultListItem[] = [
     {
       label: 'Добавить в коллекцию',
-      onClick: () => {setIsVisibleAddCollectionDialog(true)}
+      onClick: () => {setIsVisibleAddCollectionDialog(true)},
+      leftIcon: IconAdd
     },
     {
       label: 'Убрать из коллекции',
       onClick: () => {removeFromCollection()},
+      leftIcon: IconRemove,
       disabled: checked.group === 1,
     }
   ]
 
   const markAsActions: DefaultListItem[] = [
     {
-      label: 'избранные'
+      label: 'избранные',
+      leftIcon: IconFavoriteStroked
     },
     {
       label: 'не избранные'
@@ -84,10 +90,15 @@ export const SelectedPanel = (props: SelectedPanelPropsIFace) => {
         <Text className='ps-2' display='inline' weight='light'>выделенных ссылок</Text>
       </div>
       <div id='buttonsContainer' className='flex justify-center grow my-auto mx-auto'>
-        <ButtonWithTooltip label='Организовать' items={organizeActions}/>
-        <ButtonWithTooltip label='Пометить как' items={markAsActions}/>
-        <ButtonWithTooltip label='Скопировать' items={copyToBufferActions}/>
-        <Button className='mx-1' label='Отправить в корзину' view='secondary' size={'s'} onClick={moveToTrash}/>
+        { checked.id === '6' && <></>}
+        { checked.id !== '6' &&
+            <>
+              <ButtonWithTooltip label='Организовать' items={organizeActions}/>
+              <ButtonWithTooltip label='Пометить как' items={markAsActions}/>
+              <ButtonWithTooltip label='Скопировать' items={copyToBufferActions}/>
+              <Button className='mx-1' label='Отправить в корзину' view='secondary' size={'s'} onClick={moveToTrash}/>
+            </>
+        }
       </div>
       <AddCollectionDialog show={isVisibleAddCollectionDialog} setShow={setIsVisibleAddCollectionDialog} items={items}/>
     </div>

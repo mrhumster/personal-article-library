@@ -11,17 +11,16 @@ import {Button} from "@consta/uikit/Button";
 import {ArticleIFace} from "../../types";
 import {customDenormalize} from "../../services/helpers.ts";
 import { Text } from '@consta/uikit/Text';
-import {IconFunnel} from "@consta/uikit/IconFunnel";
+import {IconFunnel} from "@consta/icons/IconFunnel";
 import {DragLayout} from "../layout";
 import {authorsToString} from '../../utils'
 import openBook from '../../../assets/icons/open_book/open_book_m.svg'
 import {ContextMenu, ContextMenuItemDefault} from "@consta/uikit/ContextMenu";
-import {IconTrash} from "@consta/uikit/IconTrash";
-import {IconPaste} from "@consta/uikit/IconPaste";
-import {IconDocExport} from "@consta/uikit/IconDocExport"
+import {IconTrash} from "@consta/icons/IconTrash";
+import {IconPaste} from "@consta/icons/IconPaste";
+import {IconDocExport} from "@consta/icons/IconDocExport"
 import {TableTitle} from "./TableTitle.tsx";
 import {addMessage, Item} from "../../features/alert";
-import { Checkbox } from '@consta/uikit/Checkbox';
 import {SelectedPanel} from "./SelectedPanel.tsx";
 
 
@@ -115,11 +114,13 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
 
   const contextMenuItems: ContextMenuItemDefault[] = [
     {
+      key: 1,
       label: 'Скопировать цитату',
       leftIcon: IconPaste,
       onClick: () => console.log('Copy')
     },
     {
+      key: 2,
       label: 'Удалить ссылку',
       leftIcon: IconTrash,
       onClick: deleteArticleHandler
@@ -138,7 +139,6 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
       width: 45,
       renderCell: (row: ArticleIFace) =>
         <input type='checkbox'
-               key={row.id}
                checked={selected.includes(row.id)}
                onChange={checkBoxChangeHandler}
                onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
@@ -151,28 +151,36 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
       align: 'center',
       sortable: true,
       width: 200,
-      renderCell: (row: ArticleIFace) => <div draggable="true">{row.authors ? authorsToString(row.authors) :
-        <div className={"italic"}>Пусто</div>}</div>
+      renderCell: (row: ArticleIFace) =>
+        <div onContextMenu={showContextMenu} draggable="true">
+          {row.authors ? authorsToString(row.authors) :
+            <div className={"italic"}>Пусто</div>
+          }
+        </div>
     },
     {
       title: 'Год',
       accessor: 'year',
       sortable: true,
-      renderCell: (row: ArticleIFace) => <div draggable="true">{row.publication?.year}</div>
+      renderCell: (row: ArticleIFace) =>
+        <Text truncate draggable="true" onContextMenu={showContextMenu}>
+          {row.publication?.year}
+        </Text>
     },
     {
       title: 'Название',
       accessor: 'title',
       sortable: true,
       renderCell: (row: ArticleIFace) =>
-        <div className="w-full p-0"
+        <Text truncate
+          className="w-full p-0"
              draggable="true"
              onDragStart={drag}
              onContextMenu={showContextMenu}
              data-article-id={row.id}
         >
           {row.title}
-        </div>
+        </Text>
     },
     {
       title: 'Источник',
@@ -182,11 +190,12 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
       title: 'Добавлен',
       accessor: "added",
       sortable: true,
-      renderCell: (row: ArticleIFace) => <div><Moment date={row.added} format="DD.MM.YYYY"/></div>
+      renderCell: (row: ArticleIFace) => <div onContextMenu={showContextMenu}><Moment date={row.added} format="DD.MM.YYYY"/></div>
     },
     {
       title: 'Файл',
       accessor: "file_name",
+      width: 75,
       renderCell: (row: ArticleIFace) => <div className={'ms-auto me-auto'}>{row.files ? <IconDocExport/> : <></>}</div>
     }
   ];
@@ -229,8 +238,7 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
       <div ref={ref} onDragStart={handlerDragStart} onDragOver={display} onDragEnd={hide}
            className='h-screen w-full relative flex flex-col justify-between'>
         <DragLayout/>
-        <div
-          className={`flex items-center border-b border-slate-300 justify-items-stretch ${isOpen ? 'w-3/4' : 'w-full'}`}>
+        <div className={`h-[5%] flex items-center border-b border-slate-300 justify-items-stretch ${isOpen ? 'w-3/4' : 'w-full'}`}>
           <TableTitle title={title}/>
           <div id='buttons' className={`flex ${isOpen ? 'me-20' : 'me-2'}`}>
             <div className='p-1'>
@@ -241,21 +249,20 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
             </div>
           </div>
         </div>
-        <div id='tableContainer' className='grow'>
+        <div id='tableContainer' className={`grow overflow-y-auto ${selected.length > 0 ? 'h-[88%]' : 'h-[95%]'}`}>
           {rows &&
               <Table
                   rows={rows}
                   columns={columns}
                   onRowClick={handleRowClick}
                   getCellWrap={() => 'break'}
-                  isResizable={false}
                   stickyHeader
                   emptyRowsPlaceholder={<Text>Здесь пока нет данных</Text>}
               />
 
           }
         </div>
-        <div id='selectedPanelContainer'>
+        <div id='selectedPanelContainer' className={selected.length > 0 ? 'h-[7%]' : 'h-none'}>
           <SelectedPanel items={selected}/>
         </div>
       </div>

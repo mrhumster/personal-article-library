@@ -1,6 +1,6 @@
 import React from 'react'
-import { IconBook } from "@consta/uikit/IconBook";
-import { IconDocFilled } from "@consta/uikit/IconDocFilled";
+import { IconBook } from "@consta/icons/IconBook";
+import { IconDocFilled } from "@consta/icons/IconDocFilled";
 import logo from '../../../assets/images/logo-without-text.svg'
 import {HeaderButton} from "./HeaderButton.tsx";
 import {UserMenu} from "./UserMenu.tsx";

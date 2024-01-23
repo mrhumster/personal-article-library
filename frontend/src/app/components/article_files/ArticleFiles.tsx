@@ -1,5 +1,5 @@
 import React from 'react'
-import {IconHealth} from "@consta/uikit/IconHealth";
+import {IconHealth} from "@consta/icons/IconHealth";
 import {AddNewFileButton} from "../panel/AddNewFileButton.tsx";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store";

@@ -1,8 +1,8 @@
 import React from "react";
 import {Tabs} from "@consta/uikit/Tabs";
-import { IconDocFilled } from "@consta/uikit/IconDocFilled";
-import {IconCommentFilled} from "@consta/uikit/IconComment";
-import {IconInfo} from "@consta/uikit/IconInfo";
+import { IconDocFilled } from "@consta/icons/IconDocFilled";
+import {IconCommentFilled} from "@consta/icons/IconCommentFilled";
+import {IconInfo} from "@consta/icons/IconInfo";
 import {RightSideBarTabsItem} from "../../types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";

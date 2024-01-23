@@ -1,5 +1,5 @@
 import {Button} from "@consta/uikit/Button";
-import {IconClose} from "@consta/uikit/IconClose";
+import {IconClose} from "@consta/icons/IconClose";
 import React from "react";
 
 interface CloseButtonPropsIFace {

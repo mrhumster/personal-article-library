@@ -34,6 +34,7 @@ export const UploadProgress = () => {
                     <Attachment fileExtension={uploadProgress.file.extension}
                                 fileName={uploadProgress.file.name}
                                 fileDescription={uploadProgress.file.description}
+                                withPictogram={true}
                                 loading={uploadProgress.loading}
                     />
                 </div>

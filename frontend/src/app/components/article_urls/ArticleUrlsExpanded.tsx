@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {TextField} from "@consta/uikit/TextField";
 import {Button} from "@consta/uikit/Button";
-import {IconAdd} from "@consta/uikit/IconAdd";
-import {IconClose} from "@consta/uikit/IconClose";
+import {IconAdd} from "@consta/icons/IconAdd";
+import {IconClose} from "@consta/icons/IconClose";
 import moment from "moment/moment";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store";
