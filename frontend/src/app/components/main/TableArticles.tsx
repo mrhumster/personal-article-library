@@ -50,6 +50,15 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
     setSelected([])
   }, [filter])
 
+  useEffect(() => {
+    if (rows) {
+      const row_ids = rows.map((article: ArticleIFace) => article.id)
+      selected.map((item) => {
+        if (!row_ids?.includes(item)) setSelected(prevState => prevState.filter((selected_article_id) => item !== selected_article_id))
+      })
+    }
+  }, [rows])
+
   const drag = (e: React.DragEvent<HTMLDivElement>) => {
     const article_id = (e.target as HTMLElement).getAttribute('data-article-id')
     if (article_id) e.dataTransfer.setData("article_id", article_id);
@@ -257,6 +266,7 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
                   onRowClick={handleRowClick}
                   getCellWrap={() => 'break'}
                   stickyHeader
+                  isResizable
                   emptyRowsPlaceholder={<Text>Здесь пока нет данных</Text>}
               />
 

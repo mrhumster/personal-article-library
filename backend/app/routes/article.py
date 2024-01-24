@@ -6,10 +6,12 @@ from typing import Optional
 from fastapi import APIRouter, UploadFile, Depends, HTTPException, Body, Form
 from starlette import status
 from starlette.background import BackgroundTasks
+from starlette.responses import JSONResponse
+from uvicorn.main import logger
 
 from authorisation.auth import get_current_active_user
 from helpers.response import ResponseModel
-from requests.article import add_article, retrieve_articles, retrieve_article, update_article
+from requests.article import add_article, retrieve_articles, retrieve_article, update_article, delete_article_perm
 from schema.article import ArticleInDB, UpdateArticleModel, NewArticleSchema
 from schema.user import User
 from utils.environment import Config
@@ -146,7 +148,12 @@ async def update_article_data(article_id: str, req: UpdateArticleModel = Body(..
 
 @router.delete("/{article_id}")
 async def delete_article(article_id: str, user: User = Depends(get_current_active_user)):
-    await get_article_permission(article_id, user)
+    article = await get_article_permission(article_id, user)
+    logger.info(article)
+    if article and article['deleted'] == True:
+        deleted = await delete_article_perm(article_id)
+        if deleted:
+            return ResponseModel(article, "article deleted permanent")
     mark_article_as_deleted = await update_article(article_id, {'deleted': True, 'delete_date': datetime.datetime.now()})
     if mark_article_as_deleted:
         return ResponseModel(mark_article_as_deleted, "Article mark as deleted")

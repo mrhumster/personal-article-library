@@ -17,7 +17,7 @@ import {SelectedPanel} from "./SelectedPanel.tsx";
 
 
 export const TrashView = () => {
-  const {refetch} = useGetArticlesQuery({}, {pollingInterval: 10000})
+  const {refetch} = useGetArticlesQuery({}, {pollingInterval: 100000})
   const {ids, entities} = useSelector((state: RootState) => state.articles.articles)
   const isOpen = useSelector((state: RootState) => state.ui.rightSideBar.isSidebarOpen)
   const [rows, setRows] = useState<ArticleIFace[]>()
@@ -156,6 +156,14 @@ export const TrashView = () => {
 
   useEffect(() => {refetch()}, [])
 
+  useEffect(() => {
+    if (rows) {
+      const row_ids = rows.map((article: ArticleIFace) => article.id)
+      selected.map((item) => {
+        if (!row_ids?.includes(item)) setSelected(prevState => prevState.filter((selected_article_id) => item !== selected_article_id))
+      })
+    }
+  }, [rows])
 
   return (
     <Theme preset={presetGpnDefault}>
@@ -164,13 +172,14 @@ export const TrashView = () => {
           className={`flex items-center border-b border-slate-300 justify-items-stretch ${isOpen ? 'w-3/4' : 'w-full'}`}>
           <TableTitle title='Корзина' />
         </div>
-        <div id='tableContainer' className='grow'>
+        <div id='tableContainer' className={`grow overflow-y-auto ${selected.length > 0 ? 'h-[88%]' : 'h-[95%]'}`}>
         {rows &&
             <Table
                 rows={rows}
                 columns={columns}
                 getCellWrap={() => 'break'}
                 isResizable
+                stickyHeader
                 emptyRowsPlaceholder={<Text>Здесь пока нет данных</Text>}
             />
         }

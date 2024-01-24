@@ -20,7 +20,7 @@ export const AddNewCollection = () => {
     }
   }
 
-  const handleChange = ({value}:{value: string | null}) => {
+  const handleChange = (value : string | null ) => {
     setCollectionName(value)
   }
 

@@ -83,7 +83,7 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
     }
   }
 
-  const handleChangeCollectionName = ({value}: { value: string | null }) => {
+  const handleChangeCollectionName = (value:  string | null ) => {
     setChangeCollectionName(value)
   }
 

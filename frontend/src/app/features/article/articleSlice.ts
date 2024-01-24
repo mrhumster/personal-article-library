@@ -86,7 +86,15 @@ export const articleSlice = createSlice({
       backendApi.endpoints.deleteArticle.matchFulfilled,
       (state: ArticleStateIFace, action) => {
         if (action.payload) {
-          state.articles.entities[action.payload.id] = action.payload
+          const article = action.payload.data[0]
+          const message = action.payload.message
+          console.log(action.payload)
+          if (message === 'article deleted permanent') {
+            delete state.articles.entities[article.id]
+            state.articles.ids = state.articles.ids.filter((id) => id !== article.id)
+          } else {
+            state.articles.entities[article.id] = article
+          }
         }
       }
     )

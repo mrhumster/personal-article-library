@@ -43,7 +43,8 @@ export const backendApi = createApi({
           url: `/articles/${id}`,
           method: 'DELETE'
         }
-      }
+      },
+      transformResponse: (response: ResponseWithArticle) => response
     }),
     updateArticle: builder.mutation({
       query: (data) => {

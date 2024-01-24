@@ -10,6 +10,7 @@ from utils.environment import Config
 client = motor.motor_asyncio.AsyncIOMotorClient(Config.MONGO_URI)
 database = client.pal
 article_collection = database.get_collection("articles_collection")
+collections = database.get_collection("collections")
 
 async def add_article(article_data: ArticleInDB) -> dict:
     article = await article_collection.insert_one(article_data.dict())
@@ -42,3 +43,18 @@ async def update_article(article_id: str, data: dict):
         if updated_article:
             article = await article_collection.find_one({"_id": ObjectId(article_id)})
             return article_helper(article)
+
+async def delete_article_perm(article_id: str):
+    article = await article_collection.find_one({"_id": ObjectId(article_id)})
+    if article:
+        collections_with_this_article = []
+        async for collection in collections.find({"articles": { "$in" : [article_id]} }):
+            collections_with_this_article.append(collection['_id'])
+
+        for collection in collections_with_this_article:
+
+            await collections.update_one({"_id": collection}, {"$pull": {"articles": article_id}})
+
+        await article_collection.delete_one({"_id": ObjectId(article_id)})
+        return True
+    return False

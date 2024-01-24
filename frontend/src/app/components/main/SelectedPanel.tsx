@@ -3,14 +3,21 @@ import {Text} from "@consta/uikit/Text";
 import {SelectedPanelButtonWithTooltip as ButtonWithTooltip} from "./SelectedPanelButtonWithTooltip.tsx";
 import {DefaultListItem} from "@consta/uikit/ListCanary";
 import {Button} from "@consta/uikit/Button";
-import {addMessage, Item} from "../../features/alert";
-import {useDeleteArticleMutation, useGetArticlesQuery, useUpdateMyCollectionMutation} from "../../services/backend";
-import {useDispatch, useSelector} from "react-redux";
+import {
+  useDeleteArticleMutation,
+  useUpdateArticleMutation,
+  useUpdateMyCollectionMutation
+} from "../../services/backend";
+import {useSelector} from "react-redux";
 import {AddCollectionDialog} from "./AddCollectionDialog.tsx";
 import {RootState} from "../../store";
 import {IconAdd} from "@consta/icons/IconAdd";
 import {IconRemove} from "@consta/icons/IconRemove";
 import {IconFavoriteStroked} from "@consta/icons/IconFavoriteStroked";
+import {IconFavoriteFilled} from "@consta/icons/IconFavoriteFilled";
+import {IconEye} from "@consta/icons/IconEye";
+import {IconEyeClose} from "@consta/icons/IconEyeClose";
+import {ConfirmDeleteDialog} from "./ConfirmDeleteDialog.tsx";
 
 interface SelectedPanelPropsIFace {
   items: string[]
@@ -18,18 +25,25 @@ interface SelectedPanelPropsIFace {
 
 export const SelectedPanel = (props: SelectedPanelPropsIFace) => {
   const { items} = props
-  const [ deleteArticle] = useDeleteArticleMutation()
+  const [ deleteArticle, deleteArticleResult] = useDeleteArticleMutation()
   const [ updateMyCollection ] = useUpdateMyCollectionMutation()
+  const [ updateArticle, updateArticleResult ] = useUpdateArticleMutation()
   const { entities} = useSelector((state: RootState) => state.collections)
-  const { refetch } = useGetArticlesQuery({})
   const [ isVisibleAddCollectionDialog, setIsVisibleAddCollectionDialog] = useState<boolean>(false)
+  const [ isVisibleConfirmDeleteDialog, setIsVisibleConfirmDeleteDialog] = useState<boolean>(false)
   const checked = useSelector((state: RootState) => state.ui.checked)
-  const dispatch = useDispatch()
 
   if (items.length === 0) return null
 
   const removeFromCollection = () => {
     updateMyCollection({collection_id: checked.id, articles: entities[checked.id].articles.filter((article_id) => !props.items.includes(article_id))})
+  }
+
+  const restoreFromTrash = () => {
+    props.items.map((id) => {
+      updateArticle({id: id, deleted: false, delete_date: null})
+    })
+
   }
 
   const organizeActions: DefaultListItem[] = [
@@ -49,16 +63,19 @@ export const SelectedPanel = (props: SelectedPanelPropsIFace) => {
   const markAsActions: DefaultListItem[] = [
     {
       label: 'избранные',
+      leftIcon: IconFavoriteFilled
+    },
+    {
+      label: 'не избранные',
       leftIcon: IconFavoriteStroked
     },
     {
-      label: 'не избранные'
+      label: 'прочитанные',
+      leftIcon: IconEye
     },
     {
-      label: 'прочитанные'
-    },
-    {
-      label: 'не прочитанные'
+      label: 'не прочитанные',
+      leftIcon: IconEyeClose
     }
   ]
 
@@ -72,15 +89,6 @@ export const SelectedPanel = (props: SelectedPanelPropsIFace) => {
     if (props.items) {
       props.items.map((article_id: string) => deleteArticle(article_id))
     }
-
-    const alert: Item = {
-      message: 'Выделенные ссылки перемещены в корзину',
-      status: "normal",
-      progressMode: 'timer',
-    }
-
-    refetch()
-    dispatch(addMessage(alert))
   }
 
   return (
@@ -90,17 +98,23 @@ export const SelectedPanel = (props: SelectedPanelPropsIFace) => {
         <Text className='ps-2' display='inline' weight='light'>выделенных ссылок</Text>
       </div>
       <div id='buttonsContainer' className='flex justify-center grow my-auto mx-auto'>
-        { checked.id === '6' && <></>}
+        { checked.id === '6' &&
+            <>
+              <Button loading={updateArticleResult.isLoading} className='mx-1' label='Восстановить' view='secondary' size='s' onClick={restoreFromTrash}/>
+              <Button label="Удалить на всегда" size='s' view='ghost' onClick={() => setIsVisibleConfirmDeleteDialog(true)}/>
+            </>
+        }
         { checked.id !== '6' &&
             <>
               <ButtonWithTooltip label='Организовать' items={organizeActions}/>
               <ButtonWithTooltip label='Пометить как' items={markAsActions}/>
               <ButtonWithTooltip label='Скопировать' items={copyToBufferActions}/>
-              <Button className='mx-1' label='Отправить в корзину' view='secondary' size={'s'} onClick={moveToTrash}/>
+              <Button loading={deleteArticleResult.isLoading} className='mx-1' label='Отправить в корзину' view='secondary' size='s' onClick={moveToTrash}/>
             </>
         }
       </div>
       <AddCollectionDialog show={isVisibleAddCollectionDialog} setShow={setIsVisibleAddCollectionDialog} items={items}/>
+      <ConfirmDeleteDialog show={isVisibleConfirmDeleteDialog} setShow={setIsVisibleConfirmDeleteDialog} items={items}/>
     </div>
   )
  }

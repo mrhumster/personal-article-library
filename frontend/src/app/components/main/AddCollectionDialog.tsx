@@ -58,7 +58,7 @@ export const AddCollectionDialog = (props: AddCollectionDialogPropsIFace) => {
         </div>
         <div className={'grow overflow-y-auto m-5 px-1'}>
           { items &&
-            <CheckboxGroup value={value} items={items} onChange={(props) => setValue(props.value)}/>
+            <CheckboxGroup value={value} items={items} onChange={setValue}/>
           }
         </div>
         <div className={'flex px-3 py-1 h-16 border-t'}>
