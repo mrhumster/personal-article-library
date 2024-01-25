@@ -69,6 +69,8 @@ export interface ArticleIFace {
   description?: string
   deleted?: boolean
   delete_date?: string
+  favorite?: boolean
+  read?: boolean
 }
 
 export interface CreateArticleIFace {

@@ -11,7 +11,7 @@ export const authorsToString = (authors: AuthorIFace[] | null) => {
   } else {
     content = <span className="ms-1">Добавить информацию об авторе(ах)</span>
   }
-  return <Text className={'cursor-pointer select-none'} size={'s'} weight={'regular'}>{content}</Text>
+  return <Text className={'cursor-pointer select-none'} size={'xs'} weight={'regular'}>{content}</Text>
 }
 
 export const publicationDetailToString = (details: PublicationDetails | undefined) => {

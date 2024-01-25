@@ -20,6 +20,8 @@ def article_helper(article) -> dict:
         "identifiers": article["identifiers"],
         "deleted": article["deleted"],
         "delete_date": article["delete_date"],
+        "favorite": article["favorite"],
+        "read": article["read"]
     }
 
 def isbn_meta_helper(meta) -> dict:

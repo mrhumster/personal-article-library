@@ -22,6 +22,9 @@ import {IconDocExport} from "@consta/icons/IconDocExport"
 import {TableTitle} from "./TableTitle.tsx";
 import {addMessage, Item} from "../../features/alert";
 import {SelectedPanel} from "./SelectedPanel.tsx";
+import {IconRecord} from "@consta/icons/IconRecord"
+import {IconFavoriteStroked} from "@consta/icons/IconFavoriteStroked"
+import {IconFavoriteFilled} from "@consta/icons/IconFavoriteFilled"
 
 
 
@@ -145,14 +148,34 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
                     onChange={headerCheckBoxHandler}
                     id='selectedCheckBoxHeader'
       />,
-      width: 45,
+      width: 30,
       renderCell: (row: ArticleIFace) =>
-        <input type='checkbox'
-               checked={selected.includes(row.id)}
-               onChange={checkBoxChangeHandler}
-               onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
-               data-article-id={row.id}
-        />
+        <div className='flex justify-items-center h-full w-full'>
+          <input type='checkbox'
+                 checked={selected.includes(row.id)}
+                 onChange={checkBoxChangeHandler}
+                 onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
+                 data-article-id={row.id}
+          />
+        </div>
+    },
+    {
+      title: '',
+      width: 40,
+      renderCell: (row: ArticleIFace) =>
+        <div className='flex justify-items-center'>
+          { !row.read && <IconRecord view={'success'} size={'m'}/> }
+        </div>
+
+    },
+    {
+      title: '',
+      width: 40,
+      renderCell: (row: ArticleIFace) =>
+        <div className='flex justify-items-center w-full h-full'>
+        { row.favorite ? <IconFavoriteFilled className='my-auto' view={'warning'} size={'s'}/> :
+          <IconFavoriteStroked className='my-auto' view={'ghost'} size={'s'}/> }
+        </div>
     },
     {
       title: 'Автор',
@@ -161,9 +184,9 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
       sortable: true,
       width: 200,
       renderCell: (row: ArticleIFace) =>
-        <div onContextMenu={showContextMenu} draggable="true">
+        <div onContextMenu={showContextMenu} draggable="true" className={'mt-auto mb-auto'}>
           {row.authors ? authorsToString(row.authors) :
-            <div className={"italic"}>Пусто</div>
+            <Text size={'xs'} fontStyle={"italic"}>Пусто</Text>
           }
         </div>
     },
@@ -171,8 +194,9 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
       title: 'Год',
       accessor: 'year',
       sortable: true,
+      width: 100,
       renderCell: (row: ArticleIFace) =>
-        <Text truncate draggable="true" onContextMenu={showContextMenu}>
+        <Text className={'mt-auto mb-auto'} truncate size={'xs'} draggable="true" onContextMenu={showContextMenu}>
           {row.publication?.year}
         </Text>
     },
@@ -182,11 +206,12 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
       sortable: true,
       renderCell: (row: ArticleIFace) =>
         <Text truncate
-          className="w-full p-0"
-             draggable="true"
-             onDragStart={drag}
-             onContextMenu={showContextMenu}
-             data-article-id={row.id}
+              size={'xs'}
+              className="w-full p-0 mt-auto mb-auto"
+              draggable="true"
+              onDragStart={drag}
+              onContextMenu={showContextMenu}
+              data-article-id={row.id}
         >
           {row.title}
         </Text>
@@ -199,13 +224,20 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
       title: 'Добавлен',
       accessor: "added",
       sortable: true,
-      renderCell: (row: ArticleIFace) => <div onContextMenu={showContextMenu}><Moment date={row.added} format="DD.MM.YYYY"/></div>
+      width: 110,
+      renderCell: (row: ArticleIFace) =>
+        <Text className={'mt-auto mb-auto'}
+              size={'xs'}
+              truncate
+              onContextMenu={showContextMenu}>
+          <Moment date={row.added} format="DD.MM.YYYY"/>
+        </Text>
     },
     {
       title: 'Файл',
       accessor: "file_name",
       width: 75,
-      renderCell: (row: ArticleIFace) => <div className={'ms-auto me-auto'}>{row.files ? <IconDocExport/> : <></>}</div>
+      renderCell: (row: ArticleIFace) => <div className={'mb-auto mt-auto'} >{row.files ? <IconDocExport size={'s'} view={'secondary'}/> : <></>}</div>
     }
   ];
 
@@ -261,6 +293,7 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
         <div id='tableContainer' className={`grow overflow-y-auto ${selected.length > 0 ? 'h-[88%]' : 'h-[95%]'}`}>
           {rows &&
               <Table
+                  size={'s'}
                   rows={rows}
                   columns={columns}
                   onRowClick={handleRowClick}

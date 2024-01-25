@@ -106,6 +106,8 @@ class ArticleInDB(BaseModel):
     description: Optional[str] = Field(max_length=2999)
     deleted: Optional[bool]
     delete_date: Optional[datetime]
+    favorite: Optional[bool] = Field(False)
+    read: Optional[bool] = Field(False)
 
     @validator('files')
     def unique_files_id(cls, v):
@@ -134,3 +136,5 @@ class UpdateArticleModel(BaseModel):
     description: Optional[str] = Field(max_length=2999)
     deleted: Optional[bool]
     delete_date: Optional[datetime]
+    favorite: Optional[bool]
+    read: Optional[bool]

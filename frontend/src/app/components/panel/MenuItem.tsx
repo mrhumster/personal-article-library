@@ -120,7 +120,7 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
          onDragOver={handleOnDragOver}
          id={item.key}
     >
-      {Icon && !openRenameField && <><Icon size={'s'} className={'m-2'}/><span className={'grow w-24 truncate font-light'} title={item.label}>{item.label}</span></>}
+      {Icon && !openRenameField && <><Icon size={'s'} view={'secondary'} className={'m-2'}/><span className={'grow w-24 truncate font-light'} title={item.label}>{item.label}</span></>}
       {item.groupId === 2 && !openRenameField &&
           <>
             {!data.isLoading ?
