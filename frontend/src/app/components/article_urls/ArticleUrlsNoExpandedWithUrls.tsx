@@ -6,9 +6,11 @@ import {IconLink} from "@consta/icons/IconLink";
 import {IconClose} from "@consta/icons/IconClose";
 import {Button} from "@consta/uikit/Button";
 import {useUpdateArticleMutation} from "../../services/backend";
+import {Text} from "@consta/uikit/Text"
+import moment from "moment/moment";
 
 export const ArticleUrlsNoExpandedWithUrls = ({setIsExpanded}:{setIsExpanded: React.Dispatch<React.SetStateAction<boolean>>}) => {
-  const article_id = useSelector((state: RootState) => state.articles.current_article?.id)
+  const article = useSelector((state: RootState) => state.articles.current_article)
   const urls = useSelector((state: RootState) => state.articles.current_article?.urls)
   const [updateArticle] = useUpdateArticleMutation()
 
@@ -26,8 +28,9 @@ export const ArticleUrlsNoExpandedWithUrls = ({setIsExpanded}:{setIsExpanded: Re
 
   const handleClickDeleteUrl = (e: React.MouseEvent, url: string) => {
     e.stopPropagation()
-    updateArticle({id: article_id, urls: {
-      date_accessed: urls?.date_accessed,
+    updateArticle({...article, urls: {
+
+      date_accessed: moment(urls?.date_accessed).tz(current_timezone).utc(),
       urls: urls?.urls.filter((u) => u !== url)}})
   }
 
@@ -35,17 +38,27 @@ export const ArticleUrlsNoExpandedWithUrls = ({setIsExpanded}:{setIsExpanded: Re
     <div className={"border border-dotted border-transparent hover:border-sky-700 bg-zinc-100 rounded p-1"}
          onClick={() => setIsExpanded(true)}
     >
-      <div className={"text-zinc-700 text-sm text-light m-1"}>Дата посещения:
-        <span className={"ms-1"}>
-          {urls?.date_accessed && <Moment utc date={urls.date_accessed} tz={current_timezone} format="DD.MM.YYYY"/>}
-        </span>
+      <div>
+        <Text className={"ms-1"} display={'inline'} size={'xs'} weight={'light'}>
+          Дата посещения:
+          {urls?.date_accessed && <Moment className={'ms-1'} utc date={urls.date_accessed} tz={current_timezone} format="DD.MM.YYYY"/>}
+        </Text>
         {urls?.urls.map((url, key) => (
-          <div key={key} className={"flex items-center my-1"}>
-            <IconLink size={'xs'} view={'brand'}/>
-            <span className={'grow ms-1 truncate hover:text-sky-700 hover:underline cursor-pointer'} title={url}
-                  onClick={(e) => handleClickUrl(e, url)}>
+          <div key={key} className={"flex justify-items-center justify-stretch h-full w-full my-1"}>
+            <div className='h-full'>
+              <IconLink className='mt-2' size={'xs'} view={'link'}/>
+            </div>
+            <Text
+              className={'ms-1 grow hover:text-sky-500'}
+              size={'s'}
+              weight={'light'}
+              decoration={'underline'}
+              cursor={'pointer'}
+              truncate
+              title={url}
+              onClick={(e) => handleClickUrl(e, url)}>
               {url}
-            </span>
+            </Text>
             <Button iconLeft={IconClose} size='xs' view='clear' form="round" onClick={(e) => handleClickDeleteUrl(e, url)}/>
           </div>
         ))}

@@ -22,39 +22,25 @@ export const ISBNExtra = (props: ISBNExtraPropsIFace) => {
 
   const handleClickCopyTitle = async (e: React.MouseEvent) => {
     e.stopPropagation()
-    await updateArticle({
-      id: current_article?.id,
-      title: volumeItem.volumeInfo.title,
-      publication: {...current_article?.publication, ...{title: volumeItem.volumeInfo.title}},
-      reference_type: '1'
-    })
+    await updateArticle({...current_article, title: volumeItem.volumeInfo.title, publication: {...current_article?.publication, ...{title: volumeItem.volumeInfo.title}}, reference_type: '1'})
   }
 
   const handleClickCopyAuthors = async (e: React.MouseEvent)=> {
     e.stopPropagation()
     const authors: AuthorIFace[] = makeAuthorsList(volumeItem.volumeInfo.authors)
-    await updateArticle({
-      id: current_article?.id,
-      authors: authors,
-      reference_type: '1'
-    })
+    await updateArticle({...current_article, authors: authors, reference_type: '1'})
   }
 
   const handleClickCopyPublisher = async (e: React.MouseEvent) => {
     e.stopPropagation()
-    await updateArticle({
-      id: current_article?.id,
-      additional_information: {...current_article?.additional_information, ...{publisher: volumeItem.volumeInfo.publisher}},
-      reference_type: '1'
+    await updateArticle({...current_article, additional_information: {...current_article?.additional_information, ...{publisher: volumeItem.volumeInfo.publisher}}, reference_type: '1'
     })
   }
 
   const handleClickCopyPublishedDate = async (e: React.MouseEvent) => {
     e.stopPropagation()
     const date = new Date(volumeItem.volumeInfo.publishedDate)
-    await updateArticle({
-      id: current_article?.id,
-      publication: {...current_article?.publication, ...{year: date.getFullYear()}},
+    await updateArticle({...current_article, publication: {...current_article?.publication, ...{year: date.getFullYear()}},
       additional_information: {...current_article?.additional_information, ...{month: date.getMonth() + 1}, ...{day: date.getDay()}},
       reference_type: '1'
     })
@@ -62,10 +48,7 @@ export const ISBNExtra = (props: ISBNExtraPropsIFace) => {
 
   const handleClickCopyDescription = async (e: React.MouseEvent) => {
     e.stopPropagation()
-    await updateArticle({
-      id: current_article?.id,
-      description: volumeItem.volumeInfo.description
-    })
+    await updateArticle({...current_article, description: volumeItem.volumeInfo.description})
   }
 
   return (

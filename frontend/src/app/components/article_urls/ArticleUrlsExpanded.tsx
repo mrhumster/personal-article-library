@@ -13,8 +13,8 @@ interface ArticleUrlsExpandedPropsIFace {
   datePickerRef : React.RefObject<HTMLDivElement>
   dateAccessed: string | null,
   setDateAccessed: React.Dispatch<React.SetStateAction<string | null>>,
-  urls: (string | null)[],
-  setUrls: React.Dispatch<React.SetStateAction<(string | null)[]>>
+  urls: string[],
+  setUrls: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 export const ArticleUrlsExpanded = (props: ArticleUrlsExpandedPropsIFace) => {
@@ -29,12 +29,27 @@ export const ArticleUrlsExpanded = (props: ArticleUrlsExpandedPropsIFace) => {
 
   const [dateError, setDateError] = useState<string[]>([])
   const [urlError, setUrlError] = useState<{[key: number]:string}>({})
-
   const current_timezone = useSelector((state: RootState) => state.ui.timezone)
+  const article = useSelector((state: RootState) => state.articles.current_article)
+
+  useEffect(() => {
+    if (article) {
+      if (!article.urls.date_accessed) {
+        setDateAccessed(moment().tz(current_timezone).format('DD.MM.YYYY'))
+      } else {
+        setDateAccessed(moment.utc(article.urls.date_accessed).tz(current_timezone).format('DD.MM.YYYY'))
+      }
+      if (article.urls.urls.length !== 0) {
+        setUrls(article.urls.urls)
+      } else {
+        setUrls([''])
+      }
+    }
+  }, [article])
 
   const handleClickAddURL = () => {
     // Добавляет строчку с пустым URL
-    setUrls(prev => [...prev, null])
+    setUrls(prev => [...prev, ''])
   }
 
   const handleClickDeleteURL = (index: number) => {
@@ -50,7 +65,7 @@ export const ArticleUrlsExpanded = (props: ArticleUrlsExpandedPropsIFace) => {
     // Обновление локального состояния URLs
     const mutateUrls = urls.map((url, i) => {
       if (i === index) {
-        return value
+        return value === null ? '' : value
       } else {
         return url
       }
@@ -62,7 +77,7 @@ export const ArticleUrlsExpanded = (props: ArticleUrlsExpandedPropsIFace) => {
     // Валидация даты посещения
     if (dateAccessed) {
       setDateError([])
-      const d = moment.tz(dateAccessed, 'DD.MM.YYYY', current_timezone)
+      const d = moment.tz(dateAccessed ? dateAccessed : '01.01.1970', 'DD.MM.YYYY', current_timezone)
       if (!d.isValid()) {
         setDateError(prev => [...prev, 'Дата должна быть в формате ДД.ММ.ГГГГ'])
       }
@@ -78,6 +93,8 @@ export const ArticleUrlsExpanded = (props: ArticleUrlsExpandedPropsIFace) => {
       if (url) {
         if (!/^(http|https):\/\//.test(url)) {
           setUrlError(prev => ({...prev, [index]: 'Рабочая ссылка должна начинаться с http(s)://'}))
+        } else {
+          setUrlError(prev => ({...prev, [index]: ''}))
         }
       }
     })
@@ -85,19 +102,18 @@ export const ArticleUrlsExpanded = (props: ArticleUrlsExpandedPropsIFace) => {
 
   return (
     <div ref={expandedRef} className={"border border-sky-700 rounded p-4"}>
-      <TextField onChange={({value}) => setDateAccessed(value)}
+      <TextField onChange={setDateAccessed}
                  label={'Дата доступа'}
                  placeholder={'ДД.ММ.ГГГГ'}
                  value={dateAccessed}
                  ref={datePickerRef}
                  status={dateError.length > 0 ? "alert" : "success"}
                  caption={dateError.length > 0 ? dateError.join('\n') : undefined}
-                 width={'full'}
                  size={'s'}
       />
       {urls.map((url, index) => (
         <div key={index} className={'relative'}>
-          <TextField onChange={({value}: { value: string | null }) => handleChangeUrl(value, index)}
+          <TextField onChange={(value: string | null ) => handleChangeUrl(value, index)}
                      type={'url'}
                      className={'my-2'}
                      size={'s'}
@@ -105,7 +121,6 @@ export const ArticleUrlsExpanded = (props: ArticleUrlsExpandedPropsIFace) => {
                      status={urlError[index] ? 'alert' : 'success'}
                      caption={urlError[index] ? urlError[index] : undefined}
                      value={url}
-                     width={'full'}
           />
           {index !== 0 &&
               <div className={'absolute top-0 right-0 mt-2'}>
@@ -115,8 +130,14 @@ export const ArticleUrlsExpanded = (props: ArticleUrlsExpandedPropsIFace) => {
           }
         </div>
       ))}
-      <Button className={'mt-2'} label={'Добавить еще один URL'} view={'clear'} size={'xs'} iconLeft={IconAdd}
-              onClick={handleClickAddURL}/>
+      <Button
+        className={'mt-2'}
+        label={'Добавить еще один URL'}
+        view={'clear'}
+        size={'xs'}
+        iconLeft={IconAdd}
+        onClick={handleClickAddURL}
+      />
     </div>
   )
 }

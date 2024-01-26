@@ -22,9 +22,8 @@ import {IconDocExport} from "@consta/icons/IconDocExport"
 import {TableTitle} from "./TableTitle.tsx";
 import {addMessage, Item} from "../../features/alert";
 import {SelectedPanel} from "./SelectedPanel.tsx";
-import {IconRecord} from "@consta/icons/IconRecord"
-import {IconFavoriteStroked} from "@consta/icons/IconFavoriteStroked"
-import {IconFavoriteFilled} from "@consta/icons/IconFavoriteFilled"
+import {FavoriteCell} from "./FavoriteCell.tsx";
+import {ReadCell} from "./ReadCell.tsx";
 
 
 
@@ -162,31 +161,22 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
     {
       title: '',
       width: 40,
-      renderCell: (row: ArticleIFace) =>
-        <div className='flex justify-items-center'>
-          { !row.read && <IconRecord view={'success'} size={'m'}/> }
-        </div>
-
+      renderCell: (row: ArticleIFace) => <ReadCell article={row}/>
     },
     {
       title: '',
       width: 40,
-      renderCell: (row: ArticleIFace) =>
-        <div className='flex justify-items-center w-full h-full'>
-        { row.favorite ? <IconFavoriteFilled className='my-auto' view={'warning'} size={'s'}/> :
-          <IconFavoriteStroked className='my-auto' view={'ghost'} size={'s'}/> }
-        </div>
-    },
+      renderCell: (row: ArticleIFace) => <FavoriteCell article={row} />
+      },
     {
       title: 'Автор',
       accessor: 'authors',
-      align: 'center',
+      align: 'left',
       sortable: true,
       width: 200,
       renderCell: (row: ArticleIFace) =>
         <div onContextMenu={showContextMenu} draggable="true" className={'mt-auto mb-auto'}>
-          {row.authors ? authorsToString(row.authors) :
-            <Text size={'xs'} fontStyle={"italic"}>Пусто</Text>
+          {row.authors && authorsToString(row.authors)
           }
         </div>
     },
@@ -216,10 +206,12 @@ export const TableArticles = ({filter, title}:{filter? : string[], title?: strin
           {row.title}
         </Text>
     },
+    /*
     {
       title: 'Источник',
       accessor: "source"
     },
+     */
     {
       title: 'Добавлен',
       accessor: "added",

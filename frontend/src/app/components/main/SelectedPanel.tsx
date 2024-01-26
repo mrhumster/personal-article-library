@@ -29,6 +29,7 @@ export const SelectedPanel = (props: SelectedPanelPropsIFace) => {
   const [ updateMyCollection ] = useUpdateMyCollectionMutation()
   const [ updateArticle, updateArticleResult ] = useUpdateArticleMutation()
   const { entities} = useSelector((state: RootState) => state.collections)
+  const articles = useSelector((state: RootState) => state.articles.articles)
   const [ isVisibleAddCollectionDialog, setIsVisibleAddCollectionDialog] = useState<boolean>(false)
   const [ isVisibleConfirmDeleteDialog, setIsVisibleConfirmDeleteDialog] = useState<boolean>(false)
   const checked = useSelector((state: RootState) => state.ui.checked)
@@ -41,9 +42,37 @@ export const SelectedPanel = (props: SelectedPanelPropsIFace) => {
 
   const restoreFromTrash = () => {
     props.items.map((id) => {
-      updateArticle({id: id, deleted: false, delete_date: null})
+      const article = articles.entities[id]
+      updateArticle({...article, deleted: false, delete_date: null})
     })
 
+  }
+
+  const markAsFavorite = () => {
+    props.items.map((id) => {
+      const article = articles.entities[id]
+      updateArticle({...article, favorite: true})
+    })
+  }
+
+  const unmarkAsFavorite = () => {
+    props.items.map((id) => {
+      const article = articles.entities[id]
+      updateArticle({...article, favorite: false})
+    })
+  }
+  const markAsRead = () => {
+    props.items.map((id) => {
+      const article = articles.entities[id]
+      updateArticle({...article, read: true})
+    })
+  }
+
+  const unmarkAsRead = () => {
+    props.items.map((id) => {
+      const article = articles.entities[id]
+      updateArticle({...article, read: false})
+    })
   }
 
   const organizeActions: DefaultListItem[] = [
@@ -63,19 +92,23 @@ export const SelectedPanel = (props: SelectedPanelPropsIFace) => {
   const markAsActions: DefaultListItem[] = [
     {
       label: 'избранные',
-      leftIcon: IconFavoriteFilled
+      leftIcon: IconFavoriteFilled,
+      onClick: () => {markAsFavorite()}
     },
     {
       label: 'не избранные',
-      leftIcon: IconFavoriteStroked
+      leftIcon: IconFavoriteStroked,
+      onClick: () => {unmarkAsFavorite()}
     },
     {
       label: 'прочитанные',
-      leftIcon: IconEye
+      leftIcon: IconEye,
+      onClick: () => {markAsRead()}
     },
     {
       label: 'не прочитанные',
-      leftIcon: IconEyeClose
+      leftIcon: IconEyeClose,
+      onClick: () => {unmarkAsRead()}
     }
   ]
 

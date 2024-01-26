@@ -2,46 +2,44 @@ import React, {useEffect, useRef, useState} from "react";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {useUpdateArticleMutation} from "../../services/backend";
-import {useDebounce} from "@consta/uikit/useDebounce";
 import {TextField} from "@consta/uikit/TextField";
 import {AuthorIFace} from "../../types";
 import { Text } from '@consta/uikit/Text';
 import {authorsToString} from "../../utils";
 
 
-// TODO: Переделать компонент. Необходимо добавить отчество, как в редакторах !!! Чета не правильно
-
 export const AuthorsEdit = () => {
   const [active, setActive] = useState(false)
   const [value, setValue] = useState<string | null>(null)
+
   const authors = useSelector((state: RootState) => state.articles.current_article?.authors)
-  const id = useSelector((state: RootState) => state.articles.current_article?.id)
+  const article = useSelector((state: RootState) => state.articles.current_article)
+
   const [updateArticle] = useUpdateArticleMutation()
 
   const myRef = useRef<HTMLInputElement>(null);
 
   const handleClickOutside = (e: TouchEvent | MouseEvent) => {
-    if (myRef.current) {
-      if (!myRef.current.contains(e.target as Node)) {
-        // Update to backend
-        const authorsList = value?.split('\n')
-        const authors: AuthorIFace[] = []
-        if (authorsList) {
-          authorsList.map((name) => {
-            if (name.length > 1) {
-              const [ last_name, first_name, sur_name] = name.replace(/\s+/g, ' ').split(' ', 3)
-              const author: AuthorIFace = {
-                first_name: first_name,
-                last_name: last_name,
-                sur_name: sur_name
-              }
-              authors.push(author)
+    if (myRef.current && !myRef.current.contains(e.target as Node)) {
+      // Update to backend
+      const authorsList = value?.split('\n')
+      const authors: AuthorIFace[] = []
+      if (authorsList) {
+        authorsList.map((name) => {
+          if (name.length > 1) {
+            const [last_name, first_name, sur_name] = name.replace(/\s+/g, ' ').split(' ', 3)
+            const author: AuthorIFace = {
+              first_name: first_name,
+              last_name: last_name,
+              sur_name: sur_name
             }
-          })
-        }
-        debouncedSetValue(authors)
-        setActive(false);
+            authors.push(author)
+          }
+        })
       }
+      updateArticle({...article, authors: authors})
+      setActive(false);
+
     }
   }
 
@@ -52,11 +50,6 @@ export const AuthorsEdit = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   });
 
-  const handleChange = (authors: AuthorIFace[]) => {
-    updateArticle({id: id, authors: authors})
-  }
-
-  const debouncedSetValue = useDebounce(handleChange, 300)
 
 
   useEffect(() => {
@@ -69,9 +62,6 @@ export const AuthorsEdit = () => {
     }
   }, [authors])
 
-  const change = ({value}: { value: string | null }) => {
-    setValue(value)
-  }
 
 
   const defaultClasses = 'mt-1 mb-1 p-1 pt-0'
@@ -99,7 +89,6 @@ export const AuthorsEdit = () => {
       {active &&
         <TextField
           className={getClass()}
-          width={'full'}
           view={'clear'}
           placeholder={'Авторы'}
           type={'textarea'}
@@ -109,7 +98,7 @@ export const AuthorsEdit = () => {
           ref={myRef}
           onClick={handleClickInside}
           caption={'Фамилия имя и отчество. Авторов можно разделить новой строкой.'}
-          onChange={change}
+          onChange={setValue}
           size={'s'}
         />
       }

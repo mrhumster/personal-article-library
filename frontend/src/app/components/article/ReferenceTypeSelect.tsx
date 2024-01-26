@@ -9,8 +9,9 @@ import {ReferenceTypeItems} from "../../items/reference_type.items.ts";
 export const ReferenceTypeSelect = () => {
   const article = useSelector((state: RootState) => state.articles.current_article)
   const [updateArticle] = useUpdateArticleMutation()
+
   const handleChange = (value: ReferenceTypeItem | null) => {
-    updateArticle({id: article?.id, reference_type: value?.id})
+    updateArticle({...article, reference_type: value?.id})
   }
     return (
       <div className='w-size'>

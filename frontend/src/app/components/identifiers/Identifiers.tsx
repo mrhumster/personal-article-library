@@ -4,22 +4,19 @@ import {IdentifiersCollapse} from "./IdentifiersCollapse.tsx";
 import {useUpdateArticleMutation} from "../../services/backend";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store";
-import {useDebounce} from "@consta/uikit/useDebounce";
 
 export const Identifiers = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
   const expandedRef = useRef<HTMLDivElement>(null)
-  const current_article = useSelector((state: RootState) => state.articles.current_article)
+  const article = useSelector((state: RootState) => state.articles.current_article)
   const [updateArticle] = useUpdateArticleMutation()
-  const debounceUpdateArticle = useDebounce(updateArticle, 300)
+
 
   const handleClickOutside = (e: TouchEvent | MouseEvent) => {
     e.preventDefault()
-    if (expandedRef.current) {
-      if (!expandedRef.current.contains(e.target as Node)) {
-        setIsExpanded(false)
-        debounceUpdateArticle({id: current_article?.id , identifiers: current_article?.identifiers})
-      }
+    if (expandedRef.current && !expandedRef.current.contains(e.target as Node)) {
+      setIsExpanded(false)
+      updateArticle({...article, identifiers: article?.identifiers})
     }
   }
 

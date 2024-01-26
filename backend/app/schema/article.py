@@ -15,9 +15,9 @@ class Pages(BaseModel):
     end: Optional[int] = Field(gt=0, lt=999999)
 
 class PublicationDetails(BaseModel):
-    year: Optional[int] = Field(gt=1900, lt=2100)
+    year: int | None = Field(None, gt=1900, lt=2100)
     title: Optional[str] = Field(max_length=300)
-    pages: Optional[Pages]
+    pages: Optional[Pages] = Field(Pages())
     volume: Optional[str] = Field(max_length=100)
     issue: Optional[str] = Field(max_length=200)
 
@@ -28,7 +28,7 @@ class AuthorSchema(BaseModel):
 
 class ArticleURLs(BaseModel):
     date_accessed: Optional[datetime]
-    urls: Optional[list[str]] = Field(max_items=100)
+    urls: Optional[list[str]] = Field(default=[], max_items=100)
 
     @validator('urls')
     def unique_url(cls, v):
@@ -94,14 +94,14 @@ class Identifiers(BaseModel):
 class ArticleInDB(BaseModel):
     owner: str = Field(...)
     added: datetime = Field(...)
-    files: Optional[list[str]]
-    publication: Optional[PublicationDetails]
+    files: Optional[list[str]] = Field(default=[], min_items=0, max_items=100)
+    publication: Optional[PublicationDetails] = Field(PublicationDetails())
     title: Optional[str] = Field(max_length=300)
     authors: Optional[list[AuthorSchema]] = Field(max_items=5)
     source: Optional[str] = Field(max_length=200)
     reference_type: int = 0
-    additional_information: Optional[AdditionalInformationBook]
-    urls: Optional[ArticleURLs]
+    additional_information: Optional[AdditionalInformationBook] = Field(AdditionalInformationBook())
+    urls: Optional[ArticleURLs] = Field(ArticleURLs())
     identifiers: Optional[Identifiers]
     description: Optional[str] = Field(max_length=2999)
     deleted: Optional[bool]
@@ -111,7 +111,10 @@ class ArticleInDB(BaseModel):
 
     @validator('files')
     def unique_files_id(cls, v):
-        return list(set(v))
+        if v:
+            return list(set(v))
+        else:
+            return []
 
 
 class NewArticleSchema(BaseModel):
@@ -130,7 +133,7 @@ class UpdateArticleModel(BaseModel):
     source: Optional[str]
     reference_type: Optional[str]
     additional_information: Optional[AdditionalInformationBook]
-    files: Optional[list[str]]
+    files: Optional[list[str]] = Field(default=[], min_items=0, max_items=100)
     urls: Optional[ArticleURLs]
     identifiers: Optional[Identifiers]
     description: Optional[str] = Field(max_length=2999)

@@ -93,14 +93,14 @@ export type ReferenceTypeItem = {
 };
 
 export type PagesType = {
-  start?: string
-  end?: string
+  start: string | null
+  end: string | null
 };
 
 export type PublicationDetails = {
-  year?: string;
-  title?: string; // book title, encyclopedia title, conference title
-  pages?: PagesType
-  volume?: string;
-  issue?: string;
+  year: string | null;
+  title: string | null; // book title, encyclopedia title, conference title
+  pages: PagesType;
+  volume: string | null;
+  issue: string | null;
 };

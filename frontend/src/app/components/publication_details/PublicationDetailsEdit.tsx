@@ -5,7 +5,6 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {Grid, GridItem} from "@consta/uikit/Grid";
 import {TextField} from "@consta/uikit/TextField";
-import {useDebounce} from "@consta/uikit/useDebounce";
 import {PublicationDetails} from "../../types";
 import {useUpdateArticleMutation} from "../../services/backend";
 import {publicationDetailToString} from "../../utils";
@@ -38,52 +37,35 @@ const getTitleNameByReferenceType = (reference_type: number | undefined) => {
 
 export const PublicationDetailsEdit = () => {
   const [active, setActive] = useState<boolean>(false)
+  const [title, setTitle] = useState<string | null>(null);
+  const [volume, setVolume] = useState<string  | null>(null);
+  const [issue, setIssue] = useState<string | null>(null);
+  const [pageStart, setPageStart] = useState<string | null>(null);
+  const [pageEnd, setPageEnd] = useState<string | null>(null);
+  const [year, setYear] = useState<string | null>(null);
 
-  const [title, setTitle] = useState<string | undefined>(undefined);
-  const handleChangeTitle = (value: string | undefined ) => setTitle(value);
-
-  const [volume, setVolume] = useState<string  | undefined>(undefined);
-  const handleChangeVolume = (value : string | undefined ) => setVolume(value);
-
-  const [issue, setIssue] = useState<string | undefined>(undefined);
-  const handleChangeIssue = (value: string | undefined ) => setIssue(value);
-
-  const [pageStart, setPageStart] = useState<string | undefined>(undefined);
-  const handleChangePageStart = (value : string | undefined ) => setPageStart(value);
-
-  const [pageEnd, setPageEnd] = useState<string | undefined>(undefined);
-  const handleChangePageEnd = (value : string | undefined ) => setPageEnd(value);
-
-  const [year, setYear] = useState<string | undefined>(undefined);
-  const handleChangeYear = (value: string | undefined ) => setYear(value);
 
   const [updateArticle] = useUpdateArticleMutation()
 
-  const handleChange = (publication: PublicationDetails) => {
-    updateArticle({id: id, publication: publication})
-  }
-
-  const debouncedSetValue = useDebounce(handleChange, 300)
-
-  const pubDetails = useSelector((state: RootState) => state.articles.current_article?.publication)
-  const id = useSelector((state: RootState) => state.articles.current_article?.id)
+  const publication = useSelector((state: RootState) => state.articles.current_article?.publication)
+  const article = useSelector((state: RootState) => state.articles.current_article)
   const reference_type = useSelector((state: RootState) => state.articles.current_article?.reference_type)
   const myRef = useRef<HTMLInputElement>(null);
 
   const handleClickOutside = (e: TouchEvent | MouseEvent) => {
-    if (myRef.current) {
-      if (!myRef.current.contains(e.target as Node)) {
-        setActive(false);
-        debouncedSetValue({
-          title: title,
-          year: year,
-          pages: {
-            start: pageStart,
-            end: pageEnd,
-          },
-          volume: volume
-        })
+    if (myRef.current && !myRef.current.contains(e.target as Node)) {
+      setActive(false);
+      const publication: PublicationDetails = {
+        title: title,
+        year: year,
+        volume: volume,
+        issue: issue,
+        pages: {
+          start: pageStart,
+          end: pageEnd
+        }
       }
+      updateArticle({...article, publication: publication})
     }
   }
 
@@ -95,62 +77,64 @@ export const PublicationDetailsEdit = () => {
   });
 
   useEffect(() => {
-    if (pubDetails) {
-      setTitle(pubDetails?.title)
-      setVolume(pubDetails?.volume)
-      setYear(pubDetails?.year)
-      setPageStart(pubDetails?.pages?.start)
-      setPageEnd(pubDetails?.pages?.end)
+    if (publication) {
+      setTitle(publication.title)
+      setVolume(publication.volume)
+      setYear(publication.year)
+      setPageStart(publication.pages.start)
+      setPageEnd(publication.pages.end)
     }
-  }, [pubDetails])
+  }, [publication, article])
 
   return (
     <>
       {!active &&
           <Text className="border rounded border-transparent hover:border-sky-700 hover:border-dotted py-1 mb-1"
                 onClick={() => setActive(true)}>
-            {publicationDetailToString(pubDetails)}
+            {publicationDetailToString(publication)}
           </Text>
       }
       {active &&
           <div className="border rounded border-sky-700 mb-1" ref={myRef} onClick={handleClickInside}>
               <Grid className={'p-3'} cols={2} rowGap={'m'} colGap={'m'}>
                   <GridItem col={2}>
-                      <TextField size={'s'} width={'full'} label={getTitleNameByReferenceType(reference_type)}
+                      <TextField size={'s'}
+                                 label={getTitleNameByReferenceType(reference_type)}
                                  placeholder={getTitleNameByReferenceType(reference_type)}
-                                 onChange={({value}:{value: string | null})=> handleChangeTitle(value? value : undefined)} value={title}/>
+                                 onChange={setTitle}
+                                 value={title}/>
                   </GridItem>
                   <GridItem>
                       <TextField size={'s'} label={'Год'} type={'number'} max={2100} min={1800} incrementButtons={false}
                                  placeholder={'Год публикации'}
-                                 width={'full'}
-                                 onChange={({value}:{value: string | null})=> handleChangeYear(value? value : undefined)} value={year}/>
+                                 onChange={setYear}
+                                 value={year}/>
                   </GridItem>
                   <GridItem className={'flex items-end'}>
                           <TextField size={'s'} className={'self-end me-1 w-24'} type={'number'} min={1} max={10000}
                                      incrementButtons={false} label={'Страницы'}
-                                     onChange={({value}:{value: string | null})=> handleChangePageStart(value? value : undefined)}
+                                     onChange={setPageStart}
                                      value={pageStart}
                                      placeholder={'c'}
                           />
                           <TextField size={'s'} className={'self-end ms-1 w-24'} type={'number'} min={1} max={10000}
                                      incrementButtons={false}
-                                     onChange={({value}:{value: string | null})=> handleChangePageEnd(value? value : undefined)}
+                                     onChange={setPageEnd}
                                      value={pageEnd}
                                      placeholder={'по'}
                           />
                   </GridItem>
                   <GridItem col={1}>
-                      <TextField size={'s'} width={'full'} label={'Том'}
-                                 onChange={({value}:{value: string | null})=> handleChangeVolume(value? value : undefined)}
+                      <TextField size={'s'} label={'Том'}
+                                 onChange={setVolume}
                                  value={volume}
                                  placeholder={'Номер тома'}
                       />
                   </GridItem>
                   <GridItem col={1}>
-                      <TextField size={'s'} width={'full'} label={'Издание'}
+                      <TextField size={'s'} label={'Издание'}
                                  placeholder={'Введите издание'}
-                                 onChange={({value}:{value: string | null})=> handleChangeIssue(value? value : undefined)}
+                                 onChange={setIssue}
                                  value={issue}/>
                   </GridItem>
               </Grid>

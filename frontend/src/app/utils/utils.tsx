@@ -7,11 +7,11 @@ export const authorsToString = (authors: AuthorIFace[] | null) => {
   if (authors && authors.length > 0) {
     const authorsList = authors?.map(
       ({first_name, last_name}) => `${last_name} ${first_name ? `${first_name[0]}.` : ''}`)
-    content = authorsList?.map((author, index) => <span key={index} className="inline-block mx-1">{author}</span>)
+    content = authorsList?.map((author, index) => <Text size={'xs'} key={index} className="inline-block mx-1">{author}</Text>)
   } else {
     content = <span className="ms-1">Добавить информацию об авторе(ах)</span>
   }
-  return <Text className={'cursor-pointer select-none'} size={'xs'} weight={'regular'}>{content}</Text>
+  return <Text className={'cursor-pointer select-none'} defaultValue={'НЕТ'} size={'xs'} weight={'regular'}>{content}</Text>
 }
 
 export const publicationDetailToString = (details: PublicationDetails | undefined) => {
