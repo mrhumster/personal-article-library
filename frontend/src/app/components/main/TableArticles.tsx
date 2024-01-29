@@ -27,7 +27,13 @@ import {ReadCell} from "./ReadCell.tsx";
 
 
 
-export const TableArticles = ({filter, title}:{filter? : string[], title?: string}) => {
+interface TableArticlesIFace {
+  filter?: string[],
+  title?: string
+}
+
+export const TableArticles = (props: TableArticlesIFace) => {
+  const {filter, title} = props
   const { refetch } = useGetArticlesQuery({}, {pollingInterval: 5000})
   const {ids, entities} = useSelector((state: RootState) => state.articles.articles)
 

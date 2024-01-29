@@ -1,3 +1,8 @@
+from datetime import datetime
+
+from uvicorn.server import logger
+
+
 def additional_information_helper(information) -> dict:
     return {
         'edition': information['edition'],
@@ -5,10 +10,11 @@ def additional_information_helper(information) -> dict:
     }
 
 def article_helper(article) -> dict:
+    logger.info(article['urls']['date_accessed'].strftime("%Y-%m-%dT%H:%M:%S.%fZ"))
     return {
         "id": str(article["_id"]),
         "owner": article["owner"],
-        "added": article["added"],
+        "added": article["added"].strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
         "files": article["files"],
         "publication": article["publication"],
         "title": article["title"],
@@ -16,7 +22,10 @@ def article_helper(article) -> dict:
         "source": article["source"],
         "reference_type": int(article["reference_type"]),
         "additional_information": article["additional_information"],
-        "urls": article["urls"],
+        "urls": {
+            "date_accessed": article['urls']['date_accessed'].strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
+            "urls": article['urls']['urls']
+        },
         "identifiers": article["identifiers"],
         "deleted": article["deleted"],
         "delete_date": article["delete_date"],
