@@ -41,7 +41,7 @@ class ArticleURLs(BaseModel):
     @validator('date_accessed')
     def validate_date(cls, v: datetime):
         if not v:
-            raise ValueError("Не корректная дата")
+            return None
         if v > datetime.now(timezone.utc):
             raise ValueError("Дата посещения не может быть в будущем")
         return v
@@ -108,6 +108,7 @@ class ArticleInDB(BaseModel):
     delete_date: Optional[datetime]
     favorite: Optional[bool] = Field(False)
     read: Optional[bool] = Field(False)
+    read_date: Optional[datetime] = Field(None)
 
     @validator('files')
     def unique_files_id(cls, v):
@@ -141,3 +142,4 @@ class UpdateArticleModel(BaseModel):
     delete_date: Optional[datetime]
     favorite: Optional[bool]
     read: Optional[bool]
+    read_date: Optional[datetime] = Field(None)

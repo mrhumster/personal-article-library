@@ -24,22 +24,22 @@ import {addMessage, Item} from "../../features/alert";
 import {SelectedPanel} from "./SelectedPanel.tsx";
 import {FavoriteCell} from "./FavoriteCell.tsx";
 import {ReadCell} from "./ReadCell.tsx";
+import moment from "moment";
 
 
 
-interface TableArticlesIFace {
+type TableArticlesIFace = {
   filter?: string[],
   title?: string
 }
 
-export const TableArticles = (props: TableArticlesIFace) => {
-  const {filter, title} = props
+export const TableArticles = ({filter, title}: TableArticlesIFace) => {
   const { refetch } = useGetArticlesQuery({}, {pollingInterval: 5000})
   const {ids, entities} = useSelector((state: RootState) => state.articles.articles)
 
   const isOpen = useSelector((state: RootState) => state.ui.rightSideBar.isSidebarOpen)
   const ref = useRef<HTMLDivElement>(null)
-
+  const selected_menu_item = useSelector((state: RootState) => state.ui.checked)
   const [rows, setRows] = useState<ArticleIFace[]>()
   const [isOpenContextMenu, setIsOpenContextMenu] = useState<boolean>(false)
   const [contextMenuPosition, setContextMenuPosition] = useState<{ x: number, y: number } | undefined>(undefined)
@@ -66,6 +66,17 @@ export const TableArticles = (props: TableArticlesIFace) => {
       })
     }
   }, [rows])
+
+
+  useEffect(() => {
+    const allArticles = customDenormalize(ids, entities)
+    if (filter) setRows(allArticles.filter((value: ArticleIFace) => filter.includes(value.id)).filter((value: ArticleIFace) => !value.deleted))
+    if (!filter) setRows(allArticles.filter((value: ArticleIFace) => !value.deleted))
+
+    if (selected_menu_item.id === '1') setRows((prevState) => prevState?.filter((row) => moment(row.added).isAfter(moment().day(-7))))
+    if (selected_menu_item.id === '3') setRows(prevState => prevState?.filter(row => row.favorite))
+    if (selected_menu_item.id === '2') setRows(prevState => prevState?.filter(row => row.read && moment(row.read_date).isAfter(moment().day(-7))))
+  }, [ids, entities, filter, selected_menu_item])
 
   const drag = (e: React.DragEvent<HTMLDivElement>) => {
     const article_id = (e.target as HTMLElement).getAttribute('data-article-id')
@@ -238,13 +249,6 @@ export const TableArticles = (props: TableArticlesIFace) => {
       renderCell: (row: ArticleIFace) => <div className={'mb-auto mt-auto'} >{row.files ? <IconDocExport size={'s'} view={'secondary'}/> : <></>}</div>
     }
   ];
-
-  useEffect(() => {
-    const allArticles = customDenormalize(ids, entities)
-    if (filter) setRows(allArticles.filter((value: ArticleIFace) => filter.includes(value.id)).filter((value: ArticleIFace) => !value.deleted))
-    if (!filter) setRows(allArticles.filter((value: ArticleIFace) => !value.deleted))
-  }, [ids, entities, filter])
-
 
   const handleRowClick = (arg: { id: string; e: React.MouseEvent }) => {
     dispatch(openSideBar({id: arg.id}))

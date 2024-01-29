@@ -14,7 +14,13 @@ export const LayoutMain = () => {
         content = <TableArticles title={'Все ссылки'}/>
         break
       case '1':
-        content = <div>Недавно добавленные</div>
+        content = <TableArticles title={'Недавно добавленные'}/>
+        break
+      case '2':
+        content = <TableArticles title={'Недавно прочитанные'} />
+        break
+      case '3':
+        content = <TableArticles title={'Избранное'}/>
         break
       case '6':
         // TODO: Надо представление допилить

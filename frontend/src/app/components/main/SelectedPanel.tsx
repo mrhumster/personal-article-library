@@ -18,6 +18,7 @@ import {IconFavoriteFilled} from "@consta/icons/IconFavoriteFilled";
 import {IconEye} from "@consta/icons/IconEye";
 import {IconEyeClose} from "@consta/icons/IconEyeClose";
 import {ConfirmDeleteDialog} from "./ConfirmDeleteDialog.tsx";
+import moment from "moment";
 
 interface SelectedPanelPropsIFace {
   items: string[]
@@ -33,6 +34,7 @@ export const SelectedPanel = (props: SelectedPanelPropsIFace) => {
   const [ isVisibleAddCollectionDialog, setIsVisibleAddCollectionDialog] = useState<boolean>(false)
   const [ isVisibleConfirmDeleteDialog, setIsVisibleConfirmDeleteDialog] = useState<boolean>(false)
   const checked = useSelector((state: RootState) => state.ui.checked)
+  const current_timezone = useSelector((state: RootState) => state.ui.timezone)
 
   if (items.length === 0) return null
 
@@ -64,14 +66,14 @@ export const SelectedPanel = (props: SelectedPanelPropsIFace) => {
   const markAsRead = () => {
     props.items.map((id) => {
       const article = articles.entities[id]
-      updateArticle({...article, read: true})
+      updateArticle({...article, read: true, read_date: moment().tz(current_timezone).utc()})
     })
   }
 
   const unmarkAsRead = () => {
     props.items.map((id) => {
       const article = articles.entities[id]
-      updateArticle({...article, read: false})
+      updateArticle({...article, read: false, read_date: null})
     })
   }
 

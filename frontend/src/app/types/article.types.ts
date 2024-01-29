@@ -71,6 +71,7 @@ export interface ArticleIFace {
   delete_date?: string
   favorite?: boolean
   read?: boolean
+  read_date?: string
 }
 
 export interface CreateArticleIFace {

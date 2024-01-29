@@ -9,8 +9,13 @@ def additional_information_helper(information) -> dict:
         'editors': information['editors']
     }
 
+def datetime_to_str(value) -> str:
+    if value:
+        return value.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    else:
+        return value
+
 def article_helper(article) -> dict:
-    logger.info(article['urls']['date_accessed'].strftime("%Y-%m-%dT%H:%M:%S.%fZ"))
     return {
         "id": str(article["_id"]),
         "owner": article["owner"],
@@ -23,14 +28,15 @@ def article_helper(article) -> dict:
         "reference_type": int(article["reference_type"]),
         "additional_information": article["additional_information"],
         "urls": {
-            "date_accessed": article['urls']['date_accessed'].strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
+            "date_accessed": datetime_to_str(article['urls']['date_accessed']),
             "urls": article['urls']['urls']
         },
         "identifiers": article["identifiers"],
         "deleted": article["deleted"],
         "delete_date": article["delete_date"],
         "favorite": article["favorite"],
-        "read": article["read"]
+        "read": article["read"],
+        "read_date": datetime_to_str(article['read_date'])
     }
 
 def isbn_meta_helper(meta) -> dict:
