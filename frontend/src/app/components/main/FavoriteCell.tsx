@@ -15,7 +15,7 @@ export const FavoriteCell = (props: FavoriteCellIFace) => {
 
   const clickHandler = (e: React.MouseEvent) => {
     e.stopPropagation()
-    updateArticle({id: article.id, favorite: !article.favorite})
+    updateArticle({...article, favorite: !article.favorite})
   }
 
   return (
