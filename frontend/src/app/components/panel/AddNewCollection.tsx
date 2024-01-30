@@ -50,7 +50,7 @@ export const AddNewCollection = () => {
     }
   }, [])
 
-  if (isClicked) return <TextField className="ms-3 me-3 mt-1"
+  if (isClicked) return <TextField className="px-2 mt-1"
                                    size={'s'}
                                    ref={inputRef}
                                    value={collectionName}

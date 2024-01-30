@@ -60,8 +60,10 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
 
   const handleClickOutside = () => setIsOpenContextMenu(false)
 
-  const handleDelete = () => {
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation()
     setIsOpenContextMenu(false)
+    if (checked === item.key) dispatch(setSelectedMenuItem({id: '0', group: 1}))
     deleteMyCollection(item.key)
   }
 

@@ -10,7 +10,7 @@ import {FileScheme} from "../../types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {useGetFileQuery, useUpdateArticleMutation} from "../../services/backend";
-import {closeSideBar, openReader} from "../../features/ui";
+import {openReader} from "../../features/ui";
 import {openFile} from "../../features/ui/uiSlice.ts";
 
 
