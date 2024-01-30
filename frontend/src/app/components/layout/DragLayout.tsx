@@ -74,9 +74,10 @@ export const DragLayout = () => {
 
   useEffect(() => {
     if (!addFileResult.isUninitialized) {
+      console.log(addFileResult)
       dispatch(showUploadProgress(true))
     }
-  }, [addFileResult.isUninitialized])
+  }, [addFileResult])
 
   if (isActive && kind === 'file' && type === 'application/pdf') {
     return (
