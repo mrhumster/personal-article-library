@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import { Tooltip } from '@consta/uikit/Tooltip';
 import { Button } from '@consta/uikit/Button';
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
-import {IconComponent} from "@consta/uikit/Icon";
+import {IconComponent} from "@consta/icons/Icon";
 
 interface HeaderButtonPropsIFace {
   text: string
@@ -42,6 +42,7 @@ export const HeaderButton = (props: HeaderButtonPropsIFace) => {
                  anchorRef={buttonRef}
                  isInteractive={false}
                  offset={9}
+                 placeholder={text}
         >
           {text}
         </Tooltip>

@@ -48,6 +48,7 @@ export const PublicationDetailsEdit = () => {
   const [updateArticle] = useUpdateArticleMutation()
 
   const publication = useSelector((state: RootState) => state.articles.current_article?.publication)
+  const id = useSelector((state: RootState) => state.articles.current_article?.id)
   const article = useSelector((state: RootState) => state.articles.current_article)
   const reference_type = useSelector((state: RootState) => state.articles.current_article?.reference_type)
   const myRef = useRef<HTMLInputElement>(null);
@@ -83,8 +84,9 @@ export const PublicationDetailsEdit = () => {
       setYear(publication.year)
       setPageStart(publication.pages.start)
       setPageEnd(publication.pages.end)
+      setIssue(publication.issue)
     }
-  }, [publication, article])
+  }, [id])
 
   return (
     <>

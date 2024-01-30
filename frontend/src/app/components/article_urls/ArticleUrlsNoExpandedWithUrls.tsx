@@ -29,7 +29,6 @@ export const ArticleUrlsNoExpandedWithUrls = ({setIsExpanded}:{setIsExpanded: Re
   const handleClickDeleteUrl = (e: React.MouseEvent, url: string) => {
     e.stopPropagation()
     updateArticle({...article, urls: {
-
       date_accessed: moment(urls?.date_accessed).tz(current_timezone).utc(),
       urls: urls?.urls.filter((u) => u !== url)}})
   }

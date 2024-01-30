@@ -15,7 +15,7 @@ export const TitleEdit = () => {
   const titleRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const handleChange = (value: string | undefined) => {
-    updateArticle({id: article?.id, title: value})
+    updateArticle({...article, title: value})
   }
   const debouncedSetValue = useDebounce(handleChange, 300)
 
@@ -23,7 +23,7 @@ export const TitleEdit = () => {
     setValue(article?.title ? article?.title : null)
   }, [article])
 
-  const change = ({value}: { value: string | null }) => {
+  const change = (value: string | null ) => {
     setValue(value)
   }
 
@@ -58,7 +58,6 @@ export const TitleEdit = () => {
   return (
     <TextField
       className={getClass()}
-      width={'full'}
       view={'clear'}
       placeholder={'Заголовок статьи'}
       type={'textarea'}
@@ -69,7 +68,7 @@ export const TitleEdit = () => {
       onClick={() => setActive(true)}
       onChange={change}
       ref={titleRef}
-      inputRef={inputRef}
+      inputContainerRef={inputRef}
     />
 
   )

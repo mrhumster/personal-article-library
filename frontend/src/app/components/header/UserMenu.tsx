@@ -64,6 +64,7 @@ export const UserMenu = () => {
                anchorRef={buttonRef}
                isInteractive={false}
                offset={6}
+               placeholder={isOpen ? 'Меню' : 'Аккаунт'}
       >{isOpen ? 'Меню' : 'Аккаунт'}</Tooltip>
       <ContextMenu
         isOpen={isOpen}

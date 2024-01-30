@@ -23,9 +23,9 @@ export const RightSideBar = () => {
     <Theme preset={presetGpnDefault}>
       <Sidebar isOpen={isSidebarOpen} onEsc={handleCloseSideBar} size={'l'} hasOverlay={false}>
         <Sidebar.Content>
-          <RightSideBarTabs />
-          <CloseButton callback={handleCloseSideBar} />
-          <RightSideBarContent />
+          <RightSideBarTabs/>
+          <CloseButton callback={handleCloseSideBar}/>
+          <RightSideBarContent/>
         </Sidebar.Content>
       </Sidebar>
     </Theme>

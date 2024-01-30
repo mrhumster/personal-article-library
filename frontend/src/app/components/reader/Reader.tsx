@@ -20,7 +20,7 @@ export const Reader = () => {
     return file.file_name ? file.file_name : 'Файл без имени'
   }
 
-  const handleClickTab = ({value}: { value: FileScheme }) => {
+  const handleClickTab = ( value: FileScheme ) => {
     dispatch(setActiveReaderTab(value))
   }
 
@@ -41,7 +41,7 @@ export const Reader = () => {
       />
 
   return (
-    <div className={`flex flex-col ${isSidebarOpen ? 'w-5/6' : 'w-full'}`}>
+    <div className={`flex flex-col ${isSidebarOpen ? 'cropped' : 'w-full'}`}>
       <Tabs
         className="ps-2"
         value={active}

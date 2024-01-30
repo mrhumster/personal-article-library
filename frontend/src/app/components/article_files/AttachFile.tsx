@@ -32,7 +32,7 @@ export const AttachFile = ({file_id}:{file_id: string}) => {
   const removeFile = (file: FileScheme) => {
     if (current_article) {
       const article_files = current_article.files?.filter((f: string) => f !== file.id)
-      updateArticle({id: current_article.id, files: article_files})
+      updateArticle({...current_article, files: article_files})
     }
   }
 
@@ -49,7 +49,7 @@ export const AttachFile = ({file_id}:{file_id: string}) => {
   const handleClickAttachment = () => {
     dispatch(openReader())
     dispatch(openFile(data))
-    dispatch(closeSideBar())
+    //dispatch(closeSideBar())
   }
 
   return (

@@ -23,14 +23,14 @@ export const AdditionalInformationEdit = () => {
       if (!formRef.current.contains(e.target as Node)) {
         setActive(false);
         setMoreInfo(false)
-        updateArticle({id: current_article?.id, additional_information: current_article?.additional_information})
+        updateArticle({...current_article, additional_information: current_article?.additional_information})
       }
     }
     if (moreInfoRef.current) {
       if (!moreInfoRef.current.contains(e.target as Node)) {
         setActive(false);
         // setMoreInfo(false)
-        updateArticle({id: current_article?.id, additional_information: current_article?.additional_information})
+        updateArticle({...current_article, additional_information: current_article?.additional_information})
       }
     }
   }

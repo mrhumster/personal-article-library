@@ -281,7 +281,7 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
       <div ref={ref} onDragStart={handlerDragStart} onDragOver={display} onDragEnd={hide}
            className='h-screen w-full relative flex flex-col justify-between'>
         <DragLayout/>
-        <div className={`h-[5%] flex items-center border-b border-slate-300 justify-items-stretch ${isOpen ? 'w-3/4' : 'w-full'}`}>
+        <div className={`h-[5%] flex items-center border-b border-slate-300 justify-items-stretch ${isOpen ? 'cropped' : 'w-full'}`}>
           <TableTitle title={title}/>
           <div id='buttons' className={`flex ${isOpen ? 'me-20' : 'me-2'}`}>
             <div className='p-1'>
