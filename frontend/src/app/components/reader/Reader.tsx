@@ -43,6 +43,9 @@ export const Reader = () => {
   return (
     <div className={`flex flex-col ${isSidebarOpen ? 'cropped' : 'w-full'}`}>
       <Tabs
+        size={'s'}
+        view={'clear'}
+        fitMode={'scroll'}
         className="ps-2"
         value={active}
         getItemLabel={getItemLabel}

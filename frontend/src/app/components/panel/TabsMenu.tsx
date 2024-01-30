@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
 
-import {IconComponent} from "@consta/uikit/Icon";
+import {IconComponent} from "@consta/icons/Icon";
 import {List} from "@consta/uikit/ListCanary";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
 import {IconBookmarkStroked} from "@consta/icons/IconBookmarkStroked";

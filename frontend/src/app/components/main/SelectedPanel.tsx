@@ -35,6 +35,7 @@ export const SelectedPanel = (props: SelectedPanelPropsIFace) => {
   const [ isVisibleConfirmDeleteDialog, setIsVisibleConfirmDeleteDialog] = useState<boolean>(false)
   const checked = useSelector((state: RootState) => state.ui.checked)
   const current_timezone = useSelector((state: RootState) => state.ui.timezone)
+  const isSidebarOpen = useSelector((state: RootState) => state.ui.rightSideBar.isSidebarOpen)
 
   if (items.length === 0) return null
 
@@ -127,7 +128,7 @@ export const SelectedPanel = (props: SelectedPanelPropsIFace) => {
   }
 
   return (
-    <div className='flex h-16 border-t border-zinc-400 bg-zinc-100 p-3'>
+    <div className={`flex h-16 border-t border-zinc-400 bg-zinc-100 p-3 ${isSidebarOpen ? 'cropped' : 'w-full'}`}>
       <div id='selectedInformer' className='my-auto ms-2 select-none'>
         <Text weight='bold' display='inline'> {items.length}</Text>
         <Text className='ps-2' display='inline' weight='light'>выделенных ссылок</Text>

@@ -40,11 +40,11 @@ export const Login = () => {
   const [getToken, loginResult] = useGetTokenMutation()
   const [createUser] = useCreateUserMutation()
 
-  const handleChangeUsername = ({value}: { value: string | null }) => setUsername(value);
-  const handleChangePassword = ({value}: { value: string | null }) => setPassword(value);
-  const handleChangeRePassword = ({value}: { value: string | null }) => setRePassword(value);
-  const handleChangeEmail = ({value}: { value: string | null }) => setEmail(value);
-  const handleChangeFullname = ({value}: { value: string | null }) => setFullName(value);
+  const handleChangeUsername = (value: string | null ) => setUsername(value);
+  const handleChangePassword = (value: string | null ) => setPassword(value);
+  const handleChangeRePassword = (value: string | null ) => setRePassword(value);
+  const handleChangeEmail = (value: string | null ) => setEmail(value);
+  const handleChangeFullname = (value: string | null ) => setFullName(value);
 
   const handleClickOtherUser = () => {
     setUsername(null)
@@ -115,7 +115,7 @@ export const Login = () => {
             }
             {auth.isExists === undefined && <TextField
                 autoFocus
-                className="w-64"
+                className="px-16"
                 type="text"
                 placeholder="Логин"
                 value={username}
@@ -125,7 +125,7 @@ export const Login = () => {
             />}
             {auth.isExists && !auth.isLogin && <TextField
                 autoFocus
-                className="w-64"
+                className="px-16"
                 type="password"
                 placeholder="Пароль"
                 value={password}
@@ -136,7 +136,7 @@ export const Login = () => {
             />}
             {!auth.isExists && !auth.email && auth.username && <TextField
                 autoFocus
-                className="w-64"
+                className="px-16"
                 type="email"
                 placeholder="Адрес электронной почты"
                 value={email}
@@ -146,7 +146,7 @@ export const Login = () => {
             />}
             {!auth.isExists && auth.email && auth.username && !auth.fullName && <TextField
                 autoFocus
-                className="w-64"
+                className="px-16"
                 type="text"
                 placeholder="Полное имя"
                 value={fullName}
@@ -157,7 +157,7 @@ export const Login = () => {
             {!auth.isExists && auth.email && auth.username && auth.fullName && <>
                 <TextField
                     autoFocus
-                    className="w-64 m-1"
+                    className="px-16 mb-1"
                     type="password"
                     placeholder="Пароль"
                     value={password}
@@ -166,7 +166,7 @@ export const Login = () => {
                     status={passwordError ? 'alert' : undefined}
                 />
                 <TextField
-                    className="w-64"
+                    className="px-16"
                     type="password"
                     placeholder="Пароль еще раз"
                     value={rePassword}

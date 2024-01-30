@@ -38,7 +38,7 @@ export const RightSideBarTabs = () => {
     <div className='px-2'>
       <Tabs value={items[selectedTab]}
             className={'mt-2'}
-            onChange={({ value}) => handleTabClick(value)}
+            onChange={handleTabClick}
             items={items}
             view={"bordered"}/>
     </div>
