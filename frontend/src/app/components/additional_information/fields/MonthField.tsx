@@ -10,7 +10,7 @@ export const MonthField = () => {
   const [error, setError] = useState<string | undefined>(undefined)
   const dispatch = useDispatch()
 
-  const handleChange = ({value}:{value: string | null}) => {
+  const handleChange = (value: string | null) => {
     dispatch(setAdditionalInformation({month: value}))
   }
 
@@ -32,13 +32,13 @@ export const MonthField = () => {
 
   return (
     <GridItem col={1}>
-      <TextField size={'s'}
-                 width={'full'}
-                 label={'Месяц'}
-                 onChange={handleChange}
-                 value={value}
-                 status={error ? 'alert' : undefined}
-                 caption={error && error}
+      <TextField
+        size={'s'}
+        label={'Месяц'}
+        onChange={handleChange}
+        value={value}
+        status={error ? 'alert' : undefined}
+        caption={error && error}
       />
     </GridItem>
   )

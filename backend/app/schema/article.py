@@ -15,7 +15,7 @@ class Pages(BaseModel):
     end: Optional[int] = Field(gt=0, lt=999999)
 
 class PublicationDetails(BaseModel):
-    year: int | None = Field(None, gt=1900, lt=2100)
+    year: int | None = Field(None, gt=1800, lt=2100)
     title: Optional[str] = Field(max_length=300)
     pages: Optional[Pages] = Field(Pages())
     volume: Optional[str] = Field(max_length=100)
@@ -82,10 +82,12 @@ class ISBN(BaseModel):
 
     @validator('value')
     def isbn_validate(cls, v):
-        isbn = canonical(v)
-        if is_isbn13(isbn) or is_isbn10(isbn):
-            return isbn
-        raise ValueError('Не верный формат ISBN')
+        if v:
+            isbn = canonical(v)
+            if is_isbn13(isbn) or is_isbn10(isbn):
+                return isbn
+            raise ValueError('Не верный формат ISBN')
+        return None
 
 
 class Identifiers(BaseModel):
@@ -116,6 +118,12 @@ class ArticleInDB(BaseModel):
             return list(set(v))
         else:
             return []
+
+    def to_string(self, fmt: str = 'gost') -> str:
+        match fmt:
+            case 'gost':
+
+                return f'{self.title}'
 
 
 class NewArticleSchema(BaseModel):

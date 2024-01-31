@@ -12,7 +12,9 @@ export const AdditionalInformationBookTable = () => {
         <div className={'text-slate-500'}>Редакторы: </div>
         <div>{additional_information?.editors?.map(
           ({last_name, first_name, sur_name})=>
-            `${last_name} ${first_name} ${sur_name}`).map((content, index) => <div key={index}>{content}</div>)}
+            `${last_name} ${first_name} ${sur_name}`).map((content, index) => {
+              if (content) return <div key={index}>{content}</div>
+            })}
         </div>
         <div className={'text-slate-500'}>Город: </div>
         <div>{additional_information?.city}</div>

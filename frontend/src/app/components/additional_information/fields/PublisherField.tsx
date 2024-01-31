@@ -9,13 +9,13 @@ export const PublisherField = () => {
   const value = useSelector((state: RootState) => state.articles.current_article?.additional_information?.publisher)
   const dispatch = useDispatch()
 
-  const handleChange = ({value}:{value: string | null}) => {
+  const handleChange = (value: string | null) => {
     dispatch(setAdditionalInformation({publisher: value}))
   }
 
   return (
     <GridItem col={1}>
-      <TextField size={'s'} width={'full'} label={'Издатель'} onChange={handleChange} value={value}/>
+      <TextField size={'s'} label={'Издатель'} onChange={handleChange} value={value}/>
     </GridItem>
   )
 }

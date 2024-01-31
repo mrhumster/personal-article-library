@@ -10,7 +10,7 @@ export const DayField = () => {
   const [error, setError] = useState<string | undefined>(undefined)
   const dispatch = useDispatch()
 
-  const handleChange = ({value}:{value: string | null}) => {
+  const handleChange = (value: string | null) => {
     dispatch(setAdditionalInformation({day: value}))
   }
 
@@ -33,13 +33,13 @@ export const DayField = () => {
 
   return (
     <GridItem col={1}>
-      <TextField size={'s'}
-                 width={'full'}
-                 label={'День'}
-                 onChange={handleChange}
-                 value={value}
-                 status={error ? 'alert' : undefined}
-                 caption={error && error}
+      <TextField
+        size={'s'}
+        label={'День'}
+        onChange={handleChange}
+        value={value}
+        status={error ? 'alert' : undefined}
+        caption={error && error}
       />
     </GridItem>
   )

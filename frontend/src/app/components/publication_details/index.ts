@@ -1,0 +1,1 @@
+export { PubDetails } from './PubDetails.tsx'

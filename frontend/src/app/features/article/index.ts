@@ -5,5 +5,6 @@ export {
   setAdditionalInformation,
   setCurrentArticle,
   setIdentifiers,
+  setPublicationDetails,
   articleSlice
 } from './articleSlice.ts'

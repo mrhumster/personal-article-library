@@ -49,16 +49,14 @@ export const EditorsField = () => {
   return (
     <GridItem col={2}>
       <TextField
-          width={'full'}
           size={'s'}
-          placeholder={'Фамилия и имя'}
           type={'textarea'}
           minRows={1}
           maxRows={5}
           value={value}
           label={'Редактор(ы)'}
-          caption={'Фамилия имя и отчество. Персоны можно разделить новой строкой.'}
-          onChange={({value}:{value: string | null}) => setValue(value)}
+          caption={'Фамилия Имя и Отчество. Редакторов разделяйте новой строкой.'}
+          onChange={setValue}
         />
     </GridItem>
   )

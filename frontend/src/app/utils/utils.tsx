@@ -62,3 +62,28 @@ export const getISBNFromData = (type: 'ISBN_13' | 'ISBN_10', volume: VolumeIFace
   })
   return expected_identifier
 }
+
+export const getTitleNameByReferenceType = (reference_type: number | undefined) => {
+  switch (reference_type) {
+    case 0:
+      return 'Название'
+    case 1:
+      return 'Название книги'
+    case 2:
+      return 'Название журнала'
+    case 3:
+      return 'Название статьи (источника)'
+    case 4:
+      return 'Название газеты'
+    case 5:
+      return 'Название нормативного акта'
+    case 6:
+      return 'Название сборника'
+    case 7:
+      return 'Название (тема)'
+    case 8:
+      return 'Название документа'
+    case undefined:
+      return 'Название'
+  }
+}

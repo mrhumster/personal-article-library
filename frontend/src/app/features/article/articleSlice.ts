@@ -35,6 +35,11 @@ export const articleSlice = createSlice({
         state.current_article.additional_information = {...state.current_article.additional_information,  ...payload}
       }
     },
+    setPublicationDetails: (state: ArticleStateIFace, {payload}) => {
+      if (state.current_article && payload) {
+        state.current_article.publication = {...state.current_article.publication, ...payload}
+      }
+    },
     setIdentifiers: (state : ArticleStateIFace, { payload }) => {
       if (state.current_article && payload) {
         state.current_article.identifiers = {...state.current_article.identifiers, ...payload}
@@ -125,5 +130,6 @@ export const {
   setCurrentReferenceType,
   setAdditionalInformation,
   setCurrentArticle,
-  setIdentifiers
+  setIdentifiers,
+  setPublicationDetails
 } = articleSlice.actions

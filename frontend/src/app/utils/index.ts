@@ -1,1 +1,8 @@
-export {publicationDetailToString, authorsToString, truncateString, getISBNFromData, makeAuthorsList} from './utils.tsx'
+export {
+  publicationDetailToString,
+  authorsToString,
+  truncateString,
+  getISBNFromData,
+  makeAuthorsList,
+  getTitleNameByReferenceType
+} from './utils.tsx'
