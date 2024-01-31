@@ -79,6 +79,13 @@ export const backendApi = createApi({
       },
       transformErrorResponse: (response: ErrorResponse) => response.data
     }),
+    getArticleString: builder.query({
+      query: (article_id) => {
+        return {
+          url: `/articles/${article_id}/str`
+        }
+      }
+    }),
     addArticleFile: builder.mutation({
       // TODO: Надо убирать
       query: (body) => {
@@ -209,5 +216,6 @@ export const {
   useUpdateMyCollectionMutation,
   useDeleteMyCollectionMutation,
   useGetDocumentQuery,
-  useDeleteArticleMutation
+  useDeleteArticleMutation,
+  useGetArticleStringQuery
 } = backendApi

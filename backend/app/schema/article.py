@@ -122,8 +122,7 @@ class ArticleInDB(BaseModel):
     def to_string(self, fmt: str = 'gost') -> str:
         match fmt:
             case 'gost':
-
-                return f'{self.title}'
+                return f'{self.authors[0]}{self.title}'
 
 
 class NewArticleSchema(BaseModel):

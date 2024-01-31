@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {useDeleteArticleMutation, useGetArticlesQuery} from "../../services/backend";
+import {useDeleteArticleMutation, useGetArticlesQuery, useGetArticleStringQuery} from "../../services/backend";
 import {Table, TableColumn} from '@consta/uikit/Table';
 import {IconSearchStroked} from '@consta/icons/IconSearchStroked'
 import {useDispatch, useSelector} from "react-redux";
@@ -46,6 +46,8 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
   const [contextMenuArticleId, setContextMenuArticleId] = useState<string | null>(null)
   const [deleteArticle] = useDeleteArticleMutation()
   const [selected, setSelected] = useState<string[]>([])
+  const [idForRequest, setIdForRequest] = useState<string | null>(null)
+  const { data } = useGetArticleStringQuery(idForRequest, {skip: !idForRequest})
 
   const headerCheckBox = useRef(null)
   const dispatch = useDispatch()
@@ -140,12 +142,21 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
     }
   }
 
+  const copyArticleStringHandler = () => {
+    if (contextMenuArticleId) setIdForRequest(contextMenuArticleId)
+    setIsOpenContextMenu(false)
+  }
+
+  useEffect(()=>{
+    console.log(data)
+  }, [data])
+
   const contextMenuItems: ContextMenuItemDefault[] = [
     {
       key: 1,
       label: 'Скопировать цитату',
       leftIcon: IconPaste,
-      onClick: () => console.log('Copy')
+      onClick: copyArticleStringHandler
     },
     {
       key: 2,

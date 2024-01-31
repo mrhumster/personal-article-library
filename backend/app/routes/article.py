@@ -137,11 +137,8 @@ async def get_article_data(article_id: str, current_user: User = Depends(get_cur
 async def get_article_string(article_id: str, current_user: User = Depends(get_current_active_user)):
     article = await get_article_permission(article_id, current_user)
     if not article: raise HTTPException(status_code=status.HTTP_204_NO_CONTENT, headers={'WWW-Authenticate': 'Bearer'})
-    logger.info(dir(article))
-    logger.info(article.__class__)
     a = ArticleInDB.parse_obj(article)
-    logger.info(a.to_string())
-    return JSONResponse({'tut': 'tam'})
+    return JSONResponse({'link': a.to_string()})
 
 @router.put("/{article_id}", response_description='Статья')
 async def update_article_data(article_id: str, req: UpdateArticleModel = Body(...), current_user: User = Depends(get_current_active_user)):
