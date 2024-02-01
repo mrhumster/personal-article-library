@@ -48,7 +48,10 @@ class AuthorSchema(BaseModel):
         return f'{self.firstname} {self.surname} {self.last_name}'
 
     def toShortString(self):
-        return f'{self.first_name} {self.short_firstname}{self.short_surname}'
+        return f'{self.lastname}, {self.short_firstname}{self.short_surname}'
+
+    def toShortStringReverse(self):
+        return f'{self.short_firstname}{self.short_surname} {self.lastname}'
 
 class ArticleURLs(BaseModel):
     date_accessed: Optional[datetime]
@@ -127,7 +130,7 @@ class ArticleInDB(BaseModel):
     files: Optional[list[str]] = Field(default=[], min_items=0, max_items=100)
     publication: Optional[PublicationDetails] = Field(PublicationDetails())
     title: Optional[str] = Field(max_length=300)
-    authors: Optional[list[AuthorSchema]] = Field(max_items=5)
+    authors: Optional[list[AuthorSchema]] = Field(max_items=10)
     source: Optional[str] = Field(max_length=200)
     reference_type: int = 0
     additional_information: Optional[AdditionalInformationBook] = Field(AdditionalInformationBook())
@@ -154,10 +157,35 @@ class ArticleInDB(BaseModel):
                     case 1:
                         # ГОСТ - КНИГА
                         author = self.authors[0]
-                        author_area = f'{author.lastname}, {author.short_firstname}{author.short_surname}'
+                        author_area = f'{author.toShortString()}'
                         match len(self.authors):
                             case 1:
+                                # КНИГА С ОДНИМ АВТОРОМ
                                 output = f'{author_area} {self.title} / {author.toLongString()}.— ' \
+                                         f'{self.additional_information.City}: {self.additional_information.publisher}, ' \
+                                         f'{self.publication.year}.— {self.publication.pages.end} с.'
+                                return ' '.join(output.split())
+                            case 2:
+                                authors = ', '.join([author.toShortStringReverse() for author in sorted(self.authors, key=lambda x: x.last_name)])
+                                output = f'{author_area} {self.title} / {authors}.— ' \
+                                         f'{self.additional_information.City}: {self.additional_information.publisher}, ' \
+                                         f'{self.publication.year}.— {self.publication.pages.end} с.'
+                                return ' '.join(output.split())
+                            case 3:
+                                authors = ', '.join([author.toShortStringReverse() for author in sorted(self.authors, key=lambda x: x.last_name)])
+                                output = f'{author_area} {self.title} / {authors}.— ' \
+                                         f'{self.additional_information.City}: {self.additional_information.publisher}, ' \
+                                         f'{self.publication.year}.— {self.publication.pages.end} с.'
+                                return ' '.join(output.split())
+                            case 4:
+                                authors = ', '.join([author.toShortStringReverse() for author in sorted(self.authors, key=lambda x: x.last_name)])
+                                output = f'{self.title} / {authors}.— ' \
+                                         f'{self.additional_information.City}: {self.additional_information.publisher}, ' \
+                                         f'{self.publication.year}.— {self.publication.pages.end} с.'
+                                return ' '.join(output.split())
+                            case _:
+                                authors = ', '.join([author.toShortStringReverse() for author in sorted(self.authors, key=lambda x: x.last_name)][:3])
+                                output = f'{self.title} / {authors} [и др.].— ' \
                                          f'{self.additional_information.City}: {self.additional_information.publisher}, ' \
                                          f'{self.publication.year}.— {self.publication.pages.end} с.'
                                 return ' '.join(output.split())
