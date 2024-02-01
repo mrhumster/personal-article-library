@@ -13,7 +13,7 @@ import {customDenormalize} from "../../services/helpers.ts";
 import { Text } from '@consta/uikit/Text';
 import {IconFunnel} from "@consta/icons/IconFunnel";
 import {DragLayout} from "../layout";
-import {authorsToString} from '../../utils'
+import {authorsToString, copyTextToClipboard} from '../../utils'
 import openBook from '../../../assets/icons/open_book/open_book_m.svg'
 import {ContextMenu, ContextMenuItemDefault} from "@consta/uikit/ContextMenu";
 import {IconTrash} from "@consta/icons/IconTrash";
@@ -47,7 +47,7 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
   const [deleteArticle] = useDeleteArticleMutation()
   const [selected, setSelected] = useState<string[]>([])
   const [idForRequest, setIdForRequest] = useState<string | null>(null)
-  const { data } = useGetArticleStringQuery(idForRequest, {skip: !idForRequest})
+  const articleString = useGetArticleStringQuery(idForRequest, {skip: !idForRequest})
 
   const headerCheckBox = useRef(null)
   const dispatch = useDispatch()
@@ -145,11 +145,18 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
   const copyArticleStringHandler = () => {
     if (contextMenuArticleId) setIdForRequest(contextMenuArticleId)
     setIsOpenContextMenu(false)
+    articleString.refetch()
   }
 
   useEffect(()=>{
-    console.log(data)
-  }, [data])
+    if (articleString.data && 'link' in articleString.data) {
+      copyTextToClipboard(articleString.data['link']).then(() => {
+        dispatch(addMessage({'message': 'Ссылка скопирована в буфер', 'status': 'success'}))
+      }).catch((error) => {
+        dispatch(addMessage({'message': error.toString(), 'status': 'alert'}))
+      })
+    }
+  }, [articleString.data])
 
   const contextMenuItems: ContextMenuItemDefault[] = [
     {

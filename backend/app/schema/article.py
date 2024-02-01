@@ -4,10 +4,8 @@ from datetime import datetime, timezone
 from typing import Optional
 
 from fastapi import Form
-from isbnlib import canonical, is_isbn10, is_isbn13, mask, meta
-from isbnlib.registry import bibformatters
+from isbnlib import canonical, is_isbn10, is_isbn13
 from pydantic import BaseModel, Field, validator
-from uvicorn.main import logger
 
 
 class Pages(BaseModel):
@@ -25,6 +23,32 @@ class AuthorSchema(BaseModel):
     first_name: Optional[str] = Field(max_length=100)
     last_name: Optional[str] = Field(max_length=100)
     sur_name: Optional[str] = Field(max_length=100)
+
+    @property
+    def short_surname(self) -> str:
+        return self.sur_name[0]+"." if self.sur_name is not None else ""
+
+    @property
+    def short_firstname(self) -> str:
+        return self.first_name[0]+"." if self.first_name is not None else ""
+
+    @property
+    def firstname(self) -> str:
+        return self.first_name if self.first_name is not None else ""
+
+    @property
+    def lastname(self) -> str:
+        return self.last_name if self.last_name is not None else ""
+
+    @property
+    def surname(self) -> str:
+        return self.sur_name if self.sur_name is not None else ""
+
+    def toLongString(self):
+        return f'{self.firstname} {self.surname} {self.last_name}'
+
+    def toShortString(self):
+        return f'{self.first_name} {self.short_firstname}{self.short_surname}'
 
 class ArticleURLs(BaseModel):
     date_accessed: Optional[datetime]
@@ -68,6 +92,10 @@ class AdditionalInformationBook(BaseModel):
     publisher: Optional[str] = Field(max_length=200)
     month: Optional[int] = Field(gt=0, lt=13)
     day: Optional[int] = Field(gt=0, lt=32)
+
+    @property
+    def City(self):
+        return self.city if self.city else ""
 
 class MetaScheme(BaseModel):
     title: Optional[str] = Field(max_length=1000)
@@ -122,7 +150,17 @@ class ArticleInDB(BaseModel):
     def to_string(self, fmt: str = 'gost') -> str:
         match fmt:
             case 'gost':
-                return f'{self.authors[0]}{self.title}'
+                match self.reference_type:
+                    case 1:
+                        # ГОСТ - КНИГА
+                        author = self.authors[0]
+                        author_area = f'{author.lastname}, {author.short_firstname}{author.short_surname}'
+                        match len(self.authors):
+                            case 1:
+                                output = f'{author_area} {self.title} / {author.toLongString()}.— ' \
+                                         f'{self.additional_information.City}: {self.additional_information.publisher}, ' \
+                                         f'{self.publication.year}.— {self.publication.pages.end} с.'
+                                return ' '.join(output.split())
 
 
 class NewArticleSchema(BaseModel):

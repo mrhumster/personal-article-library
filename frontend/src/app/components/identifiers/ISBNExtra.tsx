@@ -37,6 +37,14 @@ export const ISBNExtra = (props: ISBNExtraPropsIFace) => {
     })
   }
 
+  const handleClickCopyPages = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    await updateArticle(
+      {...current_article,
+        publication: {...current_article?.publication, pages:
+            {...current_article?.publication?.pages, end: volumeItem.volumeInfo.pageCount.toString()}}})
+  }
+
   const handleClickCopyPublishedDate = async (e: React.MouseEvent) => {
     e.stopPropagation()
     const date = new Date(volumeItem.volumeInfo.publishedDate)
@@ -62,7 +70,7 @@ export const ISBNExtra = (props: ISBNExtraPropsIFace) => {
         <ISBNExtraRow label='Дата публикации'
                       content={moment(new Date(volumeItem.volumeInfo.publishedDate)).format('DD.MM.YYYY')}
                       callback={handleClickCopyPublishedDate}/>
-        <ISBNExtraRow label='Количество страниц' content={volumeItem.volumeInfo.pageCount.toString()}/>
+        <ISBNExtraRow label='Количество страниц' content={volumeItem.volumeInfo.pageCount.toString()} callback={handleClickCopyPages}/>
         <ISBNExtraRow label='Категория' content={volumeItem.volumeInfo.categories}/>
         <ISBNExtraRow label='Язык' content={volumeItem.volumeInfo.language}/>
         <ISBNExtraRow label='ISBN 13' content={getISBNFromData('ISBN_13', volumeItem)}/>

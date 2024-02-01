@@ -4,5 +4,6 @@ export {
   truncateString,
   getISBNFromData,
   makeAuthorsList,
-  getTitleNameByReferenceType
+  getTitleNameByReferenceType,
+  copyTextToClipboard
 } from './utils.tsx'
