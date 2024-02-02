@@ -1,5 +1,10 @@
 import React, {useEffect, useRef, useState} from "react";
-import {useDeleteArticleMutation, useGetArticlesQuery, useGetArticleStringQuery} from "../../services/backend";
+import {
+  useDeleteArticleMutation,
+  useGetArticleListStringMutation,
+  useGetArticlesQuery,
+  useGetArticleStringQuery
+} from "../../services/backend";
 import {Table, TableColumn} from '@consta/uikit/Table';
 import {IconSearchStroked} from '@consta/icons/IconSearchStroked'
 import {useDispatch, useSelector} from "react-redux";
@@ -49,8 +54,25 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
   const [idForRequest, setIdForRequest] = useState<string | null>(null)
   const articleString = useGetArticleStringQuery(idForRequest, {skip: !idForRequest})
 
+  const [ getArticleListString, getArticleListStringResult] = useGetArticleListStringMutation()
+
   const headerCheckBox = useRef(null)
   const dispatch = useDispatch()
+
+  useEffect(()=>{
+    if (getArticleListStringResult.data) {
+      copyTextToClipboard(getArticleListStringResult.data.articles_string.join('\n'))
+        .then(()=>{
+      dispatch(addMessage({'message': 'Ссылки скопированы в буфер', 'status': 'success'}))
+      }).catch((error) => {
+        dispatch(addMessage({'message': error.toString(), 'status': 'alert'}))
+      })
+    }
+  }, [getArticleListStringResult])
+
+  const copySelectedArticleString = () => {
+    getArticleListString(selected)
+  }
 
   useEffect(() => {
     refetch()
@@ -326,7 +348,7 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
           }
         </div>
         <div id='selectedPanelContainer' className={selected.length > 0 ? 'h-[7%]' : 'h-none'}>
-          <SelectedPanel items={selected}/>
+          <SelectedPanel items={selected} copySelectedArticleString={copySelectedArticleString}/>
         </div>
       </div>
       {isOpenContextMenu && contextMenuPosition &&

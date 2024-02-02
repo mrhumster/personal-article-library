@@ -4,8 +4,7 @@ import {SelectedPanelButtonWithTooltip as ButtonWithTooltip} from "./SelectedPan
 import {DefaultListItem} from "@consta/uikit/ListCanary";
 import {Button} from "@consta/uikit/Button";
 import {
-  useDeleteArticleMutation,
-  useUpdateArticleMutation,
+  useDeleteArticleMutation, useUpdateArticleMutation,
   useUpdateMyCollectionMutation
 } from "../../services/backend";
 import {useSelector} from "react-redux";
@@ -17,15 +16,17 @@ import {IconFavoriteStroked} from "@consta/icons/IconFavoriteStroked";
 import {IconFavoriteFilled} from "@consta/icons/IconFavoriteFilled";
 import {IconEye} from "@consta/icons/IconEye";
 import {IconEyeClose} from "@consta/icons/IconEyeClose";
+import {IconList} from "@consta/icons/IconList"
 import {ConfirmDeleteDialog} from "./ConfirmDeleteDialog.tsx";
 import moment from "moment";
 
 interface SelectedPanelPropsIFace {
-  items: string[]
+  items: string[],
+  copySelectedArticleString: () => void
 }
 
 export const SelectedPanel = (props: SelectedPanelPropsIFace) => {
-  const { items} = props
+  const { items, copySelectedArticleString} = props
   const [ deleteArticle, deleteArticleResult] = useDeleteArticleMutation()
   const [ updateMyCollection ] = useUpdateMyCollectionMutation()
   const [ updateArticle, updateArticleResult ] = useUpdateArticleMutation()
@@ -117,7 +118,9 @@ export const SelectedPanel = (props: SelectedPanelPropsIFace) => {
 
   const copyToBufferActions: DefaultListItem[] = [
     {
-      label: 'Скопировать цитаты'
+      label: 'Скопировать цитаты',
+      leftIcon: IconList,
+      onClick: () => {copySelectedArticleString()}
     }
   ]
 

@@ -86,6 +86,16 @@ export const backendApi = createApi({
         }
       }
     }),
+    getArticleListString: builder.mutation({
+      query: (body: string[]) => {
+        return {
+          url: '/articles/str',
+          method: 'POST',
+          body: body
+        }
+      },
+      transformResponse: (response: {data: {articles_string: string[]}[] }) => {return response.data[0]}
+    }),
     addArticleFile: builder.mutation({
       // TODO: Надо убирать
       query: (body) => {
@@ -217,5 +227,6 @@ export const {
   useDeleteMyCollectionMutation,
   useGetDocumentQuery,
   useDeleteArticleMutation,
-  useGetArticleStringQuery
+  useGetArticleStringQuery,
+  useGetArticleListStringMutation
 } = backendApi

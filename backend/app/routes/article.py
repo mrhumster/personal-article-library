@@ -1,4 +1,5 @@
 import datetime
+import json
 import os.path
 import uuid
 from typing import Optional
@@ -169,3 +170,13 @@ async def delete_article(article_id: str, user: User = Depends(get_current_activ
             status_code=status.HTTP_204_NO_CONTENT,
             headers={'WWW-Authenticate': 'Bearer'}
         )
+
+@router.post("/str")
+async def get_articles_to_string(article_list_id: list[str], user: User = Depends(get_current_active_user)):
+    response = []
+    for article_id in article_list_id:
+        article = await get_article_permission(article_id, user)
+        if article:
+            article = ArticleInDB.parse_obj(article)
+            response.append(article.to_string())
+    return ResponseModel({'articles_string': response}, message='Articles string list')

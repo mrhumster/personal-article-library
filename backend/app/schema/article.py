@@ -7,7 +7,6 @@ from fastapi import Form
 from isbnlib import canonical, is_isbn10, is_isbn13
 from pydantic import BaseModel, Field, validator
 
-
 class Pages(BaseModel):
     start: Optional[int] = Field(gt=0, lt=999999)
     end: Optional[int] = Field(gt=0, lt=999999)
@@ -156,8 +155,12 @@ class ArticleInDB(BaseModel):
                 match self.reference_type:
                     case 1:
                         # ГОСТ - КНИГА
-                        author = self.authors[0]
-                        author_area = f'{author.toShortString()}'
+                        try:
+                            author = self.authors[0]
+                            author_area = f'{author.toShortString()}'
+                        except IndexError:
+                            author = author_area = 'АВТОР НЕ ЗАПОЛНЕН'
+
                         match len(self.authors):
                             case 1:
                                 # КНИГА С ОДНИМ АВТОРОМ
