@@ -41,7 +41,7 @@ type TableArticlesIFace = {
 export const TableArticles = ({filter, title}: TableArticlesIFace) => {
   const { refetch } = useGetArticlesQuery({}, {pollingInterval: 5000})
   const {ids, entities} = useSelector((state: RootState) => state.articles.articles)
-
+  const selectedRow = useSelector((state: RootState) => state.articles.current_article?.id)
   const isOpen = useSelector((state: RootState) => state.ui.rightSideBar.isSidebarOpen)
   const ref = useRef<HTMLDivElement>(null)
   const selected_menu_item = useSelector((state: RootState) => state.ui.checked)
@@ -341,6 +341,7 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
                   getCellWrap={() => 'break'}
                   stickyHeader
                   isResizable
+                  activeRow={{ id: selectedRow, onChange: handleRowClick }}
                   emptyRowsPlaceholder={<Text>Здесь пока нет данных</Text>}
               />
 

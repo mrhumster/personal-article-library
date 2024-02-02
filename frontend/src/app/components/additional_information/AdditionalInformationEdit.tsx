@@ -8,7 +8,7 @@ import {getAdditionInformationTableByType} from "./getAdditionInformationTableBy
 
 export const AdditionalInformationEdit = () => {
   const [active, setActive] = useState<boolean>(false)
-  const [moreInfo, setMoreInfo] = useState<boolean>(false)
+  const [moreInfo, setMoreInfo] = useState<boolean>(true)
   const formRef = useRef<HTMLInputElement>(null)
   const moreInfoRef = useRef<HTMLInputElement>(null)
   const lessInfoRef = useRef<HTMLInputElement>(null)
@@ -22,7 +22,7 @@ export const AdditionalInformationEdit = () => {
     if (formRef.current) {
       if (!formRef.current.contains(e.target as Node)) {
         setActive(false);
-        setMoreInfo(false)
+        setMoreInfo(true)
         updateArticle({...current_article, additional_information: current_article?.additional_information})
       }
     }

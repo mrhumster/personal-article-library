@@ -7,6 +7,7 @@ import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
 import {RightSideBarTabs} from "./RightSideBarTabs.tsx";
 import {CloseButton} from "../buttons";
 import {RightSideBarContent} from "./RightSideBarContent.tsx";
+import {setCurrentArticle} from "../../features/article";
 
 
 
@@ -17,6 +18,7 @@ export const RightSideBar = () => {
 
   const handleCloseSideBar = () => {
     dispatch(closeSideBar())
+    dispatch(setCurrentArticle({}))
   }
 
   return (
