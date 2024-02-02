@@ -61,7 +61,7 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
 
   useEffect(()=>{
     if (getArticleListStringResult.data) {
-      copyTextToClipboard(getArticleListStringResult.data.articles_string.join('\n'))
+      copyTextToClipboard(getArticleListStringResult.data.articles_string)
         .then(()=>{
       dispatch(addMessage({'message': 'Ссылки скопированы в буфер', 'status': 'success'}))
       }).catch((error) => {
@@ -167,7 +167,6 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
   const copyArticleStringHandler = () => {
     if (contextMenuArticleId) setIdForRequest(contextMenuArticleId)
     setIsOpenContextMenu(false)
-    articleString.refetch()
   }
 
   useEffect(()=>{

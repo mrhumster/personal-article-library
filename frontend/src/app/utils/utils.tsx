@@ -88,7 +88,8 @@ export const getTitleNameByReferenceType = (reference_type: number | undefined) 
   }
 }
 
-export const copyTextToClipboard = async (text: string) => {
+export const copyTextToClipboard = async (text: string | string[]) => {
+  if (typeof text === 'object') text = text.join('\n')
   if ('clipboard' in navigator) {
     return await navigator.clipboard.writeText(text);
   } else {
