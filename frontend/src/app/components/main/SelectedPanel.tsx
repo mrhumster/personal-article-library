@@ -22,7 +22,7 @@ import moment from "moment";
 
 interface SelectedPanelPropsIFace {
   items: string[],
-  copySelectedArticleString: () => void
+  copySelectedArticleString?: () => void
 }
 
 export const SelectedPanel = (props: SelectedPanelPropsIFace) => {
@@ -79,6 +79,10 @@ export const SelectedPanel = (props: SelectedPanelPropsIFace) => {
     })
   }
 
+  const handleClickCopyArticleString = () => {
+    if (copySelectedArticleString) copySelectedArticleString()
+  }
+
   const organizeActions: DefaultListItem[] = [
     {
       label: 'Добавить в коллекцию',
@@ -120,7 +124,7 @@ export const SelectedPanel = (props: SelectedPanelPropsIFace) => {
     {
       label: 'Скопировать цитаты',
       leftIcon: IconList,
-      onClick: () => {copySelectedArticleString()}
+      onClick: handleClickCopyArticleString
     }
   ]
 

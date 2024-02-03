@@ -104,6 +104,7 @@ export const TabsMenu = () => {
   const collections: CollectionStateIFace = useSelector((state: RootState) => state.collections)
   const [itemsWithCollections, setItemsWithCollections] = useState<Item[]>(items)
 
+  useEffect(() => {refetch()}, [])
 
   useEffect(() => {
     // Создание пунктов меню для Коллекций

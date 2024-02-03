@@ -175,6 +175,7 @@ export const TrashView = () => {
         <div id='tableContainer' className={`grow overflow-y-auto ${selected.length > 0 ? 'h-[88%]' : 'h-[95%]'}`}>
         {rows &&
             <Table
+                size={'s'}
                 rows={rows}
                 columns={columns}
                 getCellWrap={() => 'break'}
