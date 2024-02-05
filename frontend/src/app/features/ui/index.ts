@@ -13,5 +13,6 @@ export {
   setDragEvent,
   closeReader,
   openReader,
-  setActiveReaderTab
+  setActiveReaderTab,
+  resetUi,
 } from './uiSlice.ts'

@@ -10,7 +10,11 @@ const initialState: CollectionStateIFace = {
 export const collectionSlice = createSlice({
     name: 'collections',
     initialState,
-    reducers: {},
+    reducers: {
+      resetCollection: () => {
+        return initialState;
+      }
+    },
     extraReducers: (builder) => {
         builder.addMatcher(
           backendApi.endpoints.getMyCollections.matchFulfilled,
@@ -50,3 +54,7 @@ export const collectionSlice = createSlice({
       )
     }
 })
+
+export const {
+  resetCollection
+} = collectionSlice.actions

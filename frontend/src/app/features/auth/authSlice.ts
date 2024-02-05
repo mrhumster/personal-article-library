@@ -34,12 +34,8 @@ export const authSlice = createSlice({
     setFullName: (state: AuthState, action) => {
       state.fullName = action.payload
     },
-    clearAuthData: (state: AuthState) => {
-      state.isExists = undefined
-      state.isLogin = false
-      state.username = undefined
-      state.email = undefined
-      state.fullName = undefined
+    clearAuthData: () => {
+      return initialState
     },
   },
   extraReducers: (builder) => {

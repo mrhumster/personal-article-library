@@ -63,7 +63,7 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
     if (getArticleListStringResult.data) {
       copyTextToClipboard(getArticleListStringResult.data.articles_string)
         .then(()=>{
-      dispatch(addMessage({'message': 'Ссылки скопированы в буфер', 'status': 'success'}))
+      dispatch(addMessage({'message': 'Ссылки скопированы в буфер'}))
       }).catch((error) => {
         dispatch(addMessage({'message': error.toString(), 'status': 'alert'}))
       })

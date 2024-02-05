@@ -1,1 +1,1 @@
-export {collectionSlice} from './collectionSlice.ts'
+export {collectionSlice, resetCollection} from './collectionSlice.ts'

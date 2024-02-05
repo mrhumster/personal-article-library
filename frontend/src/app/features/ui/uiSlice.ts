@@ -97,6 +97,9 @@ export const uiSlice = createSlice({
     },
     setActiveReaderTab: (state: uiState, action) => {
       state.reader.activeTab = action.payload
+    },
+    resetUi: () => {
+      return initialState
     }
   },
   extraReducers: (builder) => {
@@ -126,5 +129,6 @@ export const {
   closeReader,
   openFile,
   closeFile,
-  setActiveReaderTab
+  setActiveReaderTab,
+  resetUi
 } = uiSlice.actions

@@ -9,6 +9,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {clearAuthData} from "../../features/auth";
 import {RootState} from "../../store";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
+import {resetCollection} from "../../features/collections";
+import {resetUi} from "../../features/ui";
+import {resetArticle} from "../../features/article";
+import {addMessage} from "../../features/alert";
 
 
 export const UserMenu = () => {
@@ -19,6 +23,10 @@ export const UserMenu = () => {
   const dispatch = useDispatch()
   const handleClickExit = () => {
     dispatch(clearAuthData())
+    dispatch(resetCollection())
+    dispatch(resetUi())
+    dispatch(resetArticle())
+    dispatch(addMessage({'message': 'Вы вышли из системы'}))
     logout()
   }
   const items: ContextMenuItemDefault[] = [

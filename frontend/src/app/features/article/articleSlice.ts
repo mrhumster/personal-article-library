@@ -49,6 +49,9 @@ export const articleSlice = createSlice({
       if (payload) {
         state.current_article = payload
       }
+    },
+    resetArticle: () => {
+      return initialState
     }
   },
   extraReducers: (builder) => {
@@ -131,5 +134,6 @@ export const {
   setAdditionalInformation,
   setCurrentArticle,
   setIdentifiers,
-  setPublicationDetails
+  setPublicationDetails,
+  resetArticle
 } = articleSlice.actions
