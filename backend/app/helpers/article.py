@@ -1,8 +1,3 @@
-from datetime import datetime
-
-from uvicorn.server import logger
-
-
 def additional_information_helper(information) -> dict:
     return {
         'edition': information['edition'],

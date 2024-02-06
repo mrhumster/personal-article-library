@@ -12,6 +12,7 @@ import {RootState} from "../../store";
 import {useGetFileQuery, useUpdateArticleMutation} from "../../services/backend";
 import {openReader} from "../../features/ui";
 import {openFile} from "../../features/ui/uiSlice.ts";
+import {Informer} from "@consta/uikit/Informer";
 
 
 
@@ -27,10 +28,10 @@ export const AttachFile = ({file_id}:{file_id: string}) => {
   const current_article = useSelector((state: RootState) => state.articles.current_article)
   const [updateArticle, {isLoading}] = useUpdateArticleMutation()
   const dispatch = useDispatch()
-  const {data} = useGetFileQuery(file_id)
+  const {data, isError, isSuccess} = useGetFileQuery(file_id)
 
-  const removeFile = (file: FileScheme) => {
-    if (current_article) {
+  const removeFile = (file: FileScheme | undefined) => {
+    if (current_article && file) {
       const article_files = current_article.files?.filter((f: string) => f !== file.id)
       updateArticle({...current_article, files: article_files})
     }
@@ -54,7 +55,7 @@ export const AttachFile = ({file_id}:{file_id: string}) => {
 
   return (
     <div className={'flex items-center border rounded my-2'}>
-      {data && <>
+      {data && isSuccess && !isError && <>
           <div className='w-[92%]'>
             <Attachment
                 withPictogram={true}
@@ -85,6 +86,13 @@ export const AttachFile = ({file_id}:{file_id: string}) => {
           />
       </>
       }
+      {isError && <Informer
+          status={'alert'}
+          title={'Ошибка'}
+          view={"bordered"}
+          size={'s'}
+          label={'Что-то пошло не так с вашим файлом. Свяжитесь с администратором.'}
+      />}
     </div>
   )
 }

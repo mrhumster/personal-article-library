@@ -17,3 +17,16 @@ async def add_file(data: FileWithOwner) -> dict:
 async def retrieve_file(file_id: str) -> dict | bool:
     file = await files_collection.find_one({"_id": ObjectId(file_id)})
     return file_helper(file) if file else False
+
+async def update_file(file_id: str, data: dict):
+
+    if len(data) < 1:
+        return False
+
+    file = await files_collection.find_one({"_id": ObjectId(file_id)})
+
+    if file:
+        updated_file = await files_collection.update_one({"_id": ObjectId(file_id)}, {"$set": data})
+        if updated_file:
+            file = await files_collection.find_one({"_id": ObjectId(file_id)})
+            return file_helper(file)

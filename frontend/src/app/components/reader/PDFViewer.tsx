@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {LocalizationMap, SpecialZoomLevel, Viewer, Worker} from '@react-pdf-viewer/core'
@@ -6,17 +6,54 @@ import {defaultLayoutPlugin} from '@react-pdf-viewer/default-layout'
 import ru_RU from '@react-pdf-viewer/locales/lib/ru_RU.json'
 import '@react-pdf-viewer/core/lib/styles/index.css'
 import '@react-pdf-viewer/default-layout/lib/styles/index.css'
+import {useGetFileQuery, useUpdateFileMutation} from "../../services/backend";
+import moment from "moment";
 
 
 export const PDFViewer = () => {
   const file = useSelector((state: RootState) => state.ui.reader.activeTab)
-  // const { data } = useGetFileQuery(file?.id, {skip: !file})
+  const [updateFile] = useUpdateFileMutation()
+  const { data, refetch } = useGetFileQuery(file?.id, {skip: !file?.id})
+  const username = useSelector((state: RootState) => state.auth.username)
+  const [openData, setOpenData] = useState<string | null>(null)
+  const [scale, setScale] = useState<number | SpecialZoomLevel>(1)
+  const [page, setPage] = useState<number>(0)
+  const tz = useSelector((state: RootState) => state.ui.timezone)
+
   const newPlugin = defaultLayoutPlugin()
 
-  const handlePageChange = ({currentPage, doc}: {currentPage: number, doc: object}) => {
-    console.log(currentPage)
-    console.log(doc)
+  useEffect(() => {setOpenData(moment().tz(tz).toISOString())}, [])
+
+  useEffect(() => {
+    if (data && username && data.history && 'wasOpening' in data.history) {
+      const user_scale = data.history?.wasOpening[username].scale
+      if (user_scale) setScale(user_scale)
+      const user_page = data.history?.wasOpening[username].page
+      if (user_page) setPage(user_page)
+    }
+  }, [data, username])
+
+  useEffect(() => {refetch()}, [])
+
+  const handlePageChange = ({currentPage}: {currentPage: number}) => {
+    console.log(data)
+    if (data && username && scale) {
+      updateFile({
+        ...data,
+        history: {
+          wasOpening: {
+            [username]: {
+              page: currentPage,
+              scale: scale,
+              lastOpeningDate: openData
+            }
+          }
+        }
+      })
+    }
   }
+
+
 
   return (
     <div className='pdf-container'>
@@ -26,8 +63,9 @@ export const PDFViewer = () => {
                   localization={ru_RU as unknown as LocalizationMap}
                   plugins={[newPlugin]}
                   theme={'dark'}
-                  initialPage={10}
-                  defaultScale={SpecialZoomLevel.PageFit}
+                  initialPage={page}
+                  defaultScale={scale}
+                  onZoom={(e) => setScale(e.scale)}
                   onPageChange={handlePageChange}
           />
       }

@@ -4,6 +4,7 @@ import {baseQueryWithErrorHandler} from "./baseQuery.ts";
 import {normalize, schema} from "normalizr";
 import {ResponseWithArticle} from "../../types";
 import {CollectionIFace} from "../../types";
+import {ResponseWithFile} from "../../types/api.types.ts";
 
 export const articleEntity = new schema.Entity('articles')
 export const collectionsEntity = new schema.Entity('collections')
@@ -13,7 +14,18 @@ export const backendApi = createApi({
   baseQuery: baseQueryWithErrorHandler,
   endpoints: (builder) => ({
     getFile: builder.query({
-      query: (file_id) => `/files/${file_id}`
+      query: (file_id) => `/files/${file_id}`,
+      transformResponse: (response: ResponseWithFile) => response.data[0]
+    }),
+    updateFile: builder.mutation({
+      query: (data) => {
+        const { id, ...body } = data
+        return {
+          url: `/files/${id}`,
+          method: 'POST',
+          body: body
+        }
+      }
     }),
     getDocument: builder.query({
       query: (file_uuid) => `../media/${file_uuid}`
@@ -228,5 +240,6 @@ export const {
   useGetDocumentQuery,
   useDeleteArticleMutation,
   useGetArticleStringQuery,
-  useGetArticleListStringMutation
+  useGetArticleListStringMutation,
+  useUpdateFileMutation
 } = backendApi

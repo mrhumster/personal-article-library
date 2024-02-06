@@ -17,7 +17,8 @@ export {
   useGetDocumentQuery,
   useDeleteArticleMutation,
   useGetArticleStringQuery,
-  useGetArticleListStringMutation
+  useGetArticleListStringMutation,
+  useUpdateFileMutation
 } from './backendApi.ts'
 
 export {baseQueryWithErrorHandler} from './baseQuery.ts'

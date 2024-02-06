@@ -1,4 +1,5 @@
-import {ArticleIFace} from "./article.types.ts";
+import {ArticleIFace, FileScheme} from "./article.types.ts";
+import {CollectionIFace} from "./collection.types.ts";
 
 export interface ErrorResponse {
   status: number,
@@ -7,10 +8,21 @@ export interface ErrorResponse {
   }
 }
 
-export interface ResponseWithArticle {
+export interface Response {
   code: number,
-  message: string,
+  message: string
+}
+
+export interface ResponseWithCollection extends Response {
+  data: CollectionIFace[]
+}
+
+export interface ResponseWithArticle extends Response{
   data: ArticleIFace[]
+}
+
+export interface ResponseWithFile extends Response{
+  data: FileScheme[]
 }
 
 export interface IndustryIdentifiersIFace {

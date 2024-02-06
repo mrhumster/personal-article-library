@@ -20,6 +20,16 @@ export interface ArticleStateIFace {
   current_article?: ArticleIFace
 }
 
+export interface WasOpeningScheme {
+  lastOpeningDate: string
+  scale: number
+  page: number
+}
+
+export interface FileHistoryScheme {
+  wasOpening: {[key: string]: WasOpeningScheme}
+}
+
 export interface FileScheme {
   id: string;
   file_name?: string;
@@ -28,6 +38,7 @@ export interface FileScheme {
   size: number;
   created?: Date;
   owner: string
+  history?: FileHistoryScheme;
 }
 
 export interface ArticleURLs {

@@ -2,17 +2,19 @@ import datetime
 import os
 import uuid
 
-from fastapi import APIRouter, UploadFile, Depends, HTTPException
+from fastapi import APIRouter, UploadFile, Depends, HTTPException, Body
 from starlette import status
 from starlette.background import BackgroundTasks
 from uvicorn.server import logger
 
 from authorisation.auth import get_current_active_user
 from helpers.files import file_helper
-from requests.files import add_file, retrieve_file
-from schema.files import FileWithOwner
+from helpers.response import ResponseModel
+from requests.files import add_file, retrieve_file, update_file
+from schema.files import FileWithOwner, FileScheme
 from schema.user import User
 from utils.environment import Config
+from utils.validators import validate_files
 
 router = APIRouter()
 
@@ -59,8 +61,25 @@ async def upload(attach: UploadFile,
 
 @router.get('/{file_id}')
 async def get_file(file_id: str, user: User = Depends(get_current_active_user)):
+    try:
+        await validate_files([file_id], user)
+    except ValueError:
+        return HTTPException(status_code=status.HTTP_403_FORBIDDEN, headers={'WWW-Authenticate': 'Bearer'})
+
     file = await retrieve_file(file_id)
-    logger.info(f'*** {file}')
-    return HTTPException(status_code=status.HTTP_204_NO_CONTENT) if not file \
-        else file if file['owner'] == user['username'] \
-        else HTTPException(status_code=status.HTTP_403_FORBIDDEN)
+
+    if file:
+        return ResponseModel(file, 'File meta retrieve')
+
+
+
+@router.post('/{file_id}')
+async def update_file_data(file_id: str, req: FileScheme = Body(...), user: User = Depends(get_current_active_user)):
+    req = {k: v for k, v in req.dict().items() if v is not None}
+    updated_file = await update_file(file_id, req)
+    if updated_file:
+        return ResponseModel(updated_file, "File updated successfully")
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_204_NO_CONTENT,
+            headers={'WWW-Authenticate': 'Bearer'})
