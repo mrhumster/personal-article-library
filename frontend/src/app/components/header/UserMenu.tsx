@@ -63,7 +63,7 @@ export const UserMenu = () => {
          ref={buttonRef}
          onClick={() => setIsOpen(!isOpen)}
     >
-      <Avatar name={auth.fullName} className="select-none" />
+      <Avatar name={auth.fullName} className="" />
       <Theme preset={presetGpnDefault}>
       <Tooltip className={showTooltip && !isOpen? 'z-40':'hidden z-40'}
                direction="rightCenter"

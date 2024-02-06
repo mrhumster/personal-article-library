@@ -62,7 +62,7 @@ export const uiSlice = createSlice({
     },
     closeSideBar: (state: uiState) => {
       state.rightSideBar.isSidebarOpen = false
-      state.rightSideBar.article = undefined
+      //state.rightSideBar.article = undefined
     },
     setActiveTab: (state: uiState, action) => {
       state.rightSideBar.activeTab = action.payload
@@ -80,7 +80,6 @@ export const uiSlice = createSlice({
       state.reader.isReaderOpen = false
     },
     openFile: (state: uiState, action) => {
-               /*     :HINT:    indexOf for object array     */
       if (state.reader.files.map(file => file.id).indexOf(action.payload.id) === -1) {
         state.reader.files = [...state.reader.files, action.payload]
       }

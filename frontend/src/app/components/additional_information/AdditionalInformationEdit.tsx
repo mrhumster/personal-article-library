@@ -8,7 +8,7 @@ import {getAdditionInformationTableByType} from "./getAdditionInformationTableBy
 
 export const AdditionalInformationEdit = () => {
   const [active, setActive] = useState<boolean>(false)
-  const [moreInfo, setMoreInfo] = useState<boolean>(true)
+  const [moreInfo, setMoreInfo] = useState<boolean>(false)
   const formRef = useRef<HTMLInputElement>(null)
   const moreInfoRef = useRef<HTMLInputElement>(null)
   const lessInfoRef = useRef<HTMLInputElement>(null)
@@ -67,18 +67,18 @@ export const AdditionalInformationEdit = () => {
         <Text className="border rounded border-transparent hover:border-sky-700 hover:border-dotted py-1" onClick={handleClickInside}>
           { !moreInfo && !current_article?.additional_information &&
             <Text size={'s'} weight={'light'} cursor={'pointer'} fontStyle={'italic'}>
-                <span onClick={() => setActive(true)} className={'ms-1 select-none'}>Добавить дополнительную информацию</span>
+                <span onClick={() => setActive(true)} className={'ms-1'}>Добавить дополнительную информацию</span>
             </Text>
           }
           { !moreInfo && current_article?.additional_information &&
             <div ref={lessInfoRef}>
               <Text size={'s'} weight={'light'} cursor={'pointer'}>
-                <span ref={showMoreInfoRef} className={'ms-1 select-none text-sky-500 hover:underline'}>Показать дополнительную информацию</span>
+                <span ref={showMoreInfoRef} className={'ms-1 text-sky-500 hover:underline'}>Показать дополнительную информацию</span>
               </Text>
             </div>
           }
           { moreInfo &&
-              <div ref={moreInfoRef} className={'select-none'}>
+              <div ref={moreInfoRef} className={'select-user'}>
                 {getAdditionInformationTableByType(reference_type)}
                 <Text size={'s'} cursor={'pointer'} weight={'light'}>
                   <span ref={showLessInfoRef} className={'ms-1 text-sky-500 hover:underline'}>Спрятать дополнительную информацию</span>

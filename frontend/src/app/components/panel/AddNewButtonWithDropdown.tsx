@@ -25,7 +25,7 @@ export const AddNewButtonWithDropdown = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const ref = useRef(null);
   return (
-    <div className="flex justify-center items-center p-3 h-20 w-full select-none">
+    <div className="flex justify-center items-center p-3 h-20 w-full">
       <Button ref={ref}
               label="Добавить"
               view={'primary'}

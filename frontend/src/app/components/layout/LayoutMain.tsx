@@ -23,7 +23,6 @@ export const LayoutMain = () => {
         content = <TableArticles title={'Избранное'}/>
         break
       case '6':
-        // TODO: Надо представление допилить
         content = <TrashView />
         break
     }
@@ -32,7 +31,7 @@ export const LayoutMain = () => {
     content = <TableArticles filter={collection?.articles} title={collection?.title} />
   }
   return (
-      <div id="menu" className="w-full bg-white select-none">
+      <div id="menu" className={`bg-white w-full`}>
         {content && content}
       </div>
   )

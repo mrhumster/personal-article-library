@@ -13,12 +13,12 @@ export const ArticleCollectionBadge = ({collection}:{collection: CollectionIFace
     dispatch(setSelectedMenuItem({ id: collection.id, group: 2}))
   }
   return (
-      <Badge className={'m-1 cursor-pointer hover:shadow hover:border hover:border-zinc-500'}
+      <Badge className={'m-1 cursor-pointer hover:shadow focus:ring active:shadow-inner hover:shadow-zinc-500/40 hover:border hover:border-sky-500'}
              iconLeft={IconList}
-             status={'system'}
+             status={'normal'}
              label={truncateString(collection.title, 20)}
              size={'s'}
-             view={'filled'}
+             view={'stroked'}
              onClick={handleClick}
       />
   )

@@ -25,7 +25,7 @@ export const UploadProgress = () => {
                 className="absolute hover:shadow-xl hover:shadow-zinc-500/50 shadow-lg shadow-zinc-500/20 right-0 bottom-0 m-3 w-96 bg-zinc-700 z-50">
               <CloseButton callback={handleClick}/>
             {uploadProgress.file &&
-                <div className="me-3 select-none">
+                <div className="me-3">
                     <Attachment fileExtension={uploadProgress.file.extension}
                                 size={'xs'}
                                 fileName={uploadProgress.file.name}

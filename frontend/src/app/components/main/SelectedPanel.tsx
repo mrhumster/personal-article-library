@@ -136,7 +136,7 @@ export const SelectedPanel = (props: SelectedPanelPropsIFace) => {
 
   return (
     <div className={`flex h-16 border-t border-zinc-400 bg-zinc-100 p-3 ${isSidebarOpen ? 'cropped' : 'w-full'}`}>
-      <div id='selectedInformer' className='my-auto ms-2 select-none'>
+      <div id='selectedInformer' className='my-auto ms-2'>
         <Text weight='bold' display='inline'> {items.length}</Text>
         <Text className='ps-2' display='inline' weight='light'>выделенных ссылок</Text>
       </div>

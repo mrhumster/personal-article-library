@@ -11,19 +11,19 @@ export const authorsToString = (authors: AuthorIFace[] | null) => {
   } else {
     content = <span className="ms-1">Добавить информацию об авторе(ах)</span>
   }
-  return <Text className={'cursor-pointer select-none'} defaultValue={'НЕТ'} size={'xs'} weight={'regular'}>{content}</Text>
+  return <Text className={'cursor-pointer'} defaultValue={'НЕТ'} size={'xs'} weight={'regular'}>{content}</Text>
 }
 
 export const publicationDetailToString = (details: PublicationDetails | undefined) => {
   if ( !details?.year) {
     return (
     <Text size={'s'} fontStyle={'italic'} weight={'light'}>
-      <span className={'ms-1 cursor-pointer select-none'}>Добавить информации о публикации</span>
+      <span className={'ms-1 cursor-pointer'}>Добавить информации о публикации</span>
     </Text>
     )
   }
   return (
-    <Text size={'s'} fontStyle={'italic'} weight={'light'} className={'ms-1 cursor-pointer select-none'}>
+    <Text size={'s'} fontStyle={'italic'} weight={'light'} className={'ms-1 cursor-pointer'}>
       {details.year && <span>({details.year})</span>}
       {details.pages?.start && details.pages?.end && <span>, {details.pages?.start} - {details.pages?.end}</span>}
       {details.volume && <span>, {details.volume}</span>}

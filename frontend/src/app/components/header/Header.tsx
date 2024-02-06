@@ -23,7 +23,7 @@ export const Header = () => {
   }
 
   return (
-    <header className="bg-zinc-900 select-none text-white shadow-xl absolute inset-y-0 left-0 w-16 top-0 z-10">
+    <header className="bg-zinc-900 select-user text-white shadow-xl absolute inset-y-0 left-0 w-16 top-0 z-10">
         <section className="max-w-screen-lg h-full mx-auto p-1 flex flex-col">
           <h1 className="mb-4 mt-2 mx-auto w-6">
             <a href="#">

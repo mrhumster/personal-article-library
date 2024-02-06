@@ -42,7 +42,6 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
   const { refetch } = useGetArticlesQuery({}, {pollingInterval: 5000})
   const {ids, entities} = useSelector((state: RootState) => state.articles.articles)
   const selectedRow = useSelector((state: RootState) => state.articles.current_article?.id)
-  const isOpen = useSelector((state: RootState) => state.ui.rightSideBar.isSidebarOpen)
   const ref = useRef<HTMLDivElement>(null)
   const selected_menu_item = useSelector((state: RootState) => state.ui.checked)
   const [rows, setRows] = useState<ArticleIFace[]>()
@@ -75,7 +74,7 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
   }
 
   useEffect(() => {
-    refetch()
+    //refetch()
   }, [])
 
   useEffect(() => {
@@ -314,9 +313,9 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
       <div ref={ref} onDragStart={handlerDragStart} onDragOver={display} onDragEnd={hide}
            className='h-screen w-full relative flex flex-col justify-between'>
         <DragLayout/>
-        <div className={`h-[5%] flex items-center border-b border-slate-300 justify-items-stretch ${isOpen ? 'cropped' : 'w-full'}`}>
+        <div className={`h-[5%] flex items-center border-b border-slate-300 justify-items-stretch`}>
           <TableTitle title={title}/>
-          <div id='buttons' className={`flex ${isOpen ? 'me-20' : 'me-2'}`}>
+          <div id='buttons' className={`flex`}>
             <div className='p-1'>
               <Button label='Поиск' size={'m'} view={'clear'} iconLeft={IconSearchStroked}/>
             </div>

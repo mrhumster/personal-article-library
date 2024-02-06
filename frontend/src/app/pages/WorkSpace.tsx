@@ -11,9 +11,8 @@ export const WorkSpace = () => {
   return (
     <Layout>
       <div className="flex flex-row w-full h-full">
-
-        { !isReaderOpen && <> <Panel /> <LayoutMain /> </> }
-        { isReaderOpen && <Reader /> }
+        { !isReaderOpen && <><Panel /><LayoutMain /></> }
+        { isReaderOpen && <><Reader /></> }
         <UploadProgress />
         <RightSideBar />
       </div>

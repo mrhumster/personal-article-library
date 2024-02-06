@@ -42,7 +42,7 @@ export const Reader = () => {
       />
 
   return (
-    <div className={`flex flex-col ${isSidebarOpen ? 'cropped' : 'w-full'}`}>
+    <div className={`flex flex-col ${isSidebarOpen ? 'cropped' : 'w-[99%]'}`}>
       <Tabs
         size={'xs'}
         view={'clear'}
