@@ -67,6 +67,7 @@ export const PDFViewer = () => {
                   defaultScale={scale}
                   onZoom={(e) => setScale(e.scale)}
                   onPageChange={handlePageChange}
+                  
           />
       }
     </Worker>

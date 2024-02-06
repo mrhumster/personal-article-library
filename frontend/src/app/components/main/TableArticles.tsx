@@ -5,7 +5,7 @@ import {
   useGetArticlesQuery,
   useGetArticleStringQuery
 } from "../../services/backend";
-import {Table, TableColumn} from '@consta/uikit/Table';
+import {SortByProps, Table, TableColumn} from '@consta/uikit/Table';
 import {IconSearchStroked} from '@consta/icons/IconSearchStroked'
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
@@ -53,7 +53,7 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
   const [selected, setSelected] = useState<string[]>([])
   const [idForRequest, setIdForRequest] = useState<string | null>(null)
   const articleString = useGetArticleStringQuery(idForRequest, {skip: !idForRequest})
-
+  const [sortSetting, setSortSetting] = useState<SortByProps<ArticleIFace> | null>(null);
   const [ getArticleListString, getArticleListStringResult] = useGetArticleListStringMutation()
 
   const headerCheckBox = useRef(null)
@@ -262,12 +262,6 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
           {row.title}
         </Text>
     },
-    /*
-    {
-      title: 'Источник',
-      accessor: "source"
-    },
-     */
     {
       title: 'Добавлен',
       accessor: "added",
@@ -343,6 +337,7 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
                   isResizable
                   activeRow={{ id: selectedRow, onChange: handleRowClick }}
                   emptyRowsPlaceholder={<Text>Здесь пока нет данных</Text>}
+                  onSortBy={setSortSetting}
               />
 
           }

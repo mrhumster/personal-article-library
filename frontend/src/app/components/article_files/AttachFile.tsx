@@ -13,6 +13,7 @@ import {useGetFileQuery, useUpdateArticleMutation} from "../../services/backend"
 import {openReader} from "../../features/ui";
 import {openFile} from "../../features/ui/uiSlice.ts";
 import {Informer} from "@consta/uikit/Informer";
+import {truncateString} from "../../utils";
 
 
 
@@ -63,7 +64,8 @@ export const AttachFile = ({file_id}:{file_id: string}) => {
                 buttonIcon={IconHealth}
                 size={'xs'}
                 fileExtension={data.extension}
-                fileName={data.file_name}
+                fileName={truncateString(data.file_name, 55)}
+                title={data.file_name}
                 fileDescription={getFileDescription(data)}
                 onClick={handleClickAttachment}
             />

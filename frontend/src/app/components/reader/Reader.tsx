@@ -9,6 +9,7 @@ import {Button} from "@consta/uikit/Button";
 import {IconClose} from "@consta/icons/IconClose";
 import {closeFile} from "../../features/ui/uiSlice.ts";
 import {PDFViewer} from "./PDFViewer.tsx";
+import {truncateString} from "../../utils";
 
 
 export const Reader = () => {
@@ -17,7 +18,7 @@ export const Reader = () => {
   const isSidebarOpen = useSelector((state: RootState) => state.ui.rightSideBar.isSidebarOpen)
   const dispatch = useDispatch()
   const getItemLabel = (file: FileScheme) => {
-    return file.file_name ? file.file_name : 'Файл без имени'
+    return file.file_name ? truncateString(file.file_name, 30) : 'Файл без имени'
   }
 
   const handleClickTab = ( value: FileScheme ) => {
@@ -43,7 +44,7 @@ export const Reader = () => {
   return (
     <div className={`flex flex-col ${isSidebarOpen ? 'cropped' : 'w-full'}`}>
       <Tabs
-        size={'s'}
+        size={'xs'}
         view={'clear'}
         fitMode={'scroll'}
         className="ps-2"
