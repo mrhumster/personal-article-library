@@ -37,7 +37,8 @@ export const EditorsField = () => {
 
   useEffect(()=> {
     if (editors) {
-      const a = editors.map(({ last_name, first_name, sur_name}) => `${last_name} ${first_name} ${sur_name}`)
+      const a = editors.map(({ last_name, first_name, sur_name}) =>
+        `${last_name} ${first_name} ${sur_name !== 'null' ? sur_name : ''}`)
       setValue(a.join('\n'))
     }
   }, [])
