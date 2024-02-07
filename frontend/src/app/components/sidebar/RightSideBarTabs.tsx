@@ -37,6 +37,7 @@ export const RightSideBarTabs = () => {
   return (
     <div className='px-2'>
       <Tabs value={items[selectedTab]}
+            size={'xs'}
             className={'mt-2'}
             onChange={handleTabClick}
             items={items}

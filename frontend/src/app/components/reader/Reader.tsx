@@ -47,7 +47,7 @@ export const Reader = () => {
         size={'xs'}
         view={'clear'}
         fitMode={'scroll'}
-        className="ps-2"
+        className="ps-2 mt-1 mb-1"
         value={active}
         getItemLabel={getItemLabel}
         items={files}

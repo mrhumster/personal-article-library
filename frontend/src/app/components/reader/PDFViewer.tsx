@@ -87,7 +87,10 @@ export const PDFViewer = () => {
     </Toolbar>
   );
 
-  const newPlugin = defaultLayoutPlugin({renderToolbar})
+  const customizeDefaultLayoutPlugin = defaultLayoutPlugin({renderToolbar, sidebarTabs: (defaultTabs) => [
+        defaultTabs[0], // Bookmarks tab
+        defaultTabs[1], // Thumbnails tab
+    ]})
 
   useEffect(() => {
     setOpenData(moment().tz(tz).toISOString())
@@ -131,7 +134,7 @@ export const PDFViewer = () => {
         {file &&
             <Viewer fileUrl={`/media/${file.file_uuid}`}
                     localization={ru_RU as unknown as LocalizationMap}
-                    plugins={[newPlugin]}
+                    plugins={[customizeDefaultLayoutPlugin]}
                     theme={'dark'}
                     initialPage={page}
                     defaultScale={scale}
