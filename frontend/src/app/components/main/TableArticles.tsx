@@ -5,8 +5,7 @@ import {
   useGetArticlesQuery,
   useGetArticleStringQuery
 } from "../../services/backend";
-import {SortByProps, Table, TableColumn} from '@consta/uikit/Table';
-import {IconSearchStroked} from '@consta/icons/IconSearchStroked'
+import {Table, TableColumn} from '@consta/uikit/Table';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {openSideBar, setActiveTab, setDragEvent} from "../../features/ui";
@@ -18,7 +17,7 @@ import {customDenormalize} from "../../services/helpers.ts";
 import { Text } from '@consta/uikit/Text';
 import {IconFunnel} from "@consta/icons/IconFunnel";
 import {DragLayout} from "../layout";
-import {authorsToString, copyTextToClipboard} from '../../utils'
+import {authorToString, copyTextToClipboard} from '../../utils'
 import openBook from '../../../assets/icons/open_book/open_book_m.svg'
 import {ContextMenu, ContextMenuItemDefault} from "@consta/uikit/ContextMenu";
 import {IconTrash} from "@consta/icons/IconTrash";
@@ -27,10 +26,9 @@ import {IconDocExport} from "@consta/icons/IconDocExport"
 import {TableTitle} from "./TableTitle.tsx";
 import {addMessage, Item} from "../../features/alert";
 import {SelectedPanel} from "./SelectedPanel.tsx";
-import {FavoriteCell} from "./FavoriteCell.tsx";
-import {ReadCell} from "./ReadCell.tsx";
+import {AuthorsCell, FavoriteCell, ReadCell} from "./table_cells";
 import moment from "moment";
-
+import {SearchDialog} from "./search";
 
 
 type TableArticlesIFace = {
@@ -52,11 +50,11 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
   const [selected, setSelected] = useState<string[]>([])
   const [idForRequest, setIdForRequest] = useState<string | null>(null)
   const articleString = useGetArticleStringQuery(idForRequest, {skip: !idForRequest})
-  const [sortSetting, setSortSetting] = useState<SortByProps<ArticleIFace> | null>(null);
   const [ getArticleListString, getArticleListStringResult] = useGetArticleListStringMutation()
-
   const headerCheckBox = useRef(null)
   const dispatch = useDispatch()
+  const [searchValue, setSearchValue] = useState<string | null>(null)
+
 
   useEffect(()=>{
     if (getArticleListStringResult.data) {
@@ -72,10 +70,6 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
   const copySelectedArticleString = () => {
     getArticleListString(selected)
   }
-
-  useEffect(() => {
-    //refetch()
-  }, [])
 
   useEffect(() => {
     setSelected([])
@@ -99,7 +93,13 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
     if (selected_menu_item.id === '1') setRows((prevState) => prevState?.filter((row) => moment(row.added).isAfter(moment().day(-7))))
     if (selected_menu_item.id === '3') setRows(prevState => prevState?.filter(row => row.favorite))
     if (selected_menu_item.id === '2') setRows(prevState => prevState?.filter(row => row.read && moment(row.read_date).isAfter(moment().day(-7))))
-  }, [ids, entities, filter, selected_menu_item])
+    if (searchValue) setRows(prevState => prevState?.filter(row =>
+      row.title?.toLowerCase().includes(searchValue) ||
+      row.publication?.year?.toString().includes(searchValue) ||
+      row.authors.map(author => authorToString(author)).join(' ').toLowerCase().includes(searchValue)
+    )
+    )
+  }, [ids, entities, filter, selected_menu_item, searchValue])
 
   const drag = (e: React.DragEvent<HTMLDivElement>) => {
     const article_id = (e.target as HTMLElement).getAttribute('data-article-id')
@@ -215,31 +215,25 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
     },
     {
       title: '',
-      width: 40,
+      width: 35,
       renderCell: (row: ArticleIFace) => <ReadCell article={row}/>
     },
     {
       title: '',
-      width: 40,
+      width: 35,
       renderCell: (row: ArticleIFace) => <FavoriteCell article={row} />
       },
     {
-      title: 'Автор',
+      title: 'Авторы',
       accessor: 'authors',
       align: 'left',
-      sortable: true,
-      width: 200,
-      renderCell: (row: ArticleIFace) =>
-        <div onContextMenu={showContextMenu} draggable="true" className={'mt-auto mb-auto'}>
-          {row.authors && authorsToString(row.authors)
-          }
-        </div>
+      width: 100,
+      renderCell: (row: ArticleIFace) => <AuthorsCell items={row.authors} />
     },
     {
       title: 'Год',
       accessor: 'year',
-      sortable: true,
-      width: 100,
+      width: 60,
       renderCell: (row: ArticleIFace) =>
         <Text className={'mt-auto mb-auto'} truncate size={'xs'} draggable="true" onContextMenu={showContextMenu}>
           {row.publication?.year}
@@ -248,7 +242,6 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
     {
       title: 'Название',
       accessor: 'title',
-      sortable: true,
       renderCell: (row: ArticleIFace) =>
         <Text truncate
               size={'xs'}
@@ -264,7 +257,6 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
     {
       title: 'Добавлен',
       accessor: "added",
-      sortable: true,
       width: 110,
       renderCell: (row: ArticleIFace) =>
         <Text className={'mt-auto mb-auto'}
@@ -282,7 +274,7 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
     }
   ];
 
-  const handleRowClick = (arg: { id: string; e: React.MouseEvent }) => {
+  const handleRowClick = (arg: { id?: string | undefined; e?: React.SyntheticEvent<Element, Event> | undefined }) => {
     dispatch(openSideBar({id: arg.id}))
     dispatch(setActiveTab(0))
   }
@@ -316,9 +308,7 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
         <div className={`h-[5%] flex items-center border-b border-slate-300 justify-items-stretch`}>
           <TableTitle title={title}/>
           <div id='buttons' className={`flex`}>
-            <div className='p-1'>
-              <Button label='Поиск' size={'m'} view={'clear'} iconLeft={IconSearchStroked}/>
-            </div>
+            <SearchDialog searchValue={searchValue} setSearchValue={setSearchValue}/>
             <div className='p-1'>
               <Button label='Фильтр' size={'m'} view={'clear'} iconLeft={IconFunnel}/>
             </div>
@@ -336,7 +326,6 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
                   isResizable
                   activeRow={{ id: selectedRow, onChange: handleRowClick }}
                   emptyRowsPlaceholder={<Text>Здесь пока нет данных</Text>}
-                  onSortBy={setSortSetting}
               />
 
           }

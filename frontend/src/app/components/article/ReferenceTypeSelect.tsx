@@ -5,6 +5,7 @@ import {RootState} from "../../store";
 import {useUpdateArticleMutation} from "../../services/backend";
 import {ReferenceTypeItem} from "../../types";
 import {ReferenceTypeItems} from "../../items/reference_type.items.ts";
+import {FavoriteCell} from "../main/table_cells";
 
 export const ReferenceTypeSelect = () => {
   const article = useSelector((state: RootState) => state.articles.current_article)
@@ -14,7 +15,7 @@ export const ReferenceTypeSelect = () => {
     updateArticle({...article, reference_type: value?.id})
   }
     return (
-      <div className='w-size'>
+      <div className='w-size flex items-stretch'>
         <Combobox
           placeholder="Выберите вариант"
           items={ReferenceTypeItems}
@@ -23,6 +24,7 @@ export const ReferenceTypeSelect = () => {
           size={'s'}
           view={'default'}
         />
+        <FavoriteCell article={article} size={'m'}/>
       </div>
     )
 }

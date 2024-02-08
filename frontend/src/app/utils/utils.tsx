@@ -1,17 +1,28 @@
+import React from "react";
 import {AuthorIFace, PublicationDetails, VolumeIFace} from "../types";
 import {Text} from "@consta/uikit/Text";
-import React from "react";
+import {User} from "@consta/uikit/User";
 
 export const authorsToString = (authors: AuthorIFace[] | null) => {
   let content
   if (authors && authors.length > 0) {
-    const authorsList = authors?.map(
-      ({first_name, last_name}) => `${last_name} ${first_name ? `${first_name[0]}.` : ''}`)
-    content = authorsList?.map((author, index) => <Text size={'xs'} key={index} className="inline-block mx-1">{author}</Text>)
+    const authorsList = authors?.map((author) => authorToString(author))
+    content = authorsList?.map((author, index) =>
+      /*<Text size={'xs'} key={index} className="inline-block mx-1">{author}</Text>*/
+      <User key={index}
+            name={author}
+            info={authorsList.length === 1 ? 'Автор' : 'Cоавтор'}
+      />
+    )
   } else {
     content = <span className="ms-1">Добавить информацию об авторе(ах)</span>
   }
-  return <Text className={'cursor-pointer'} defaultValue={'НЕТ'} size={'xs'} weight={'regular'}>{content}</Text>
+  return <div className={'flex flex-wrap cursor-pointer'}>{content}</div>
+}
+
+export const authorToString = (author: AuthorIFace) => {
+  const {first_name, last_name, sur_name} = author
+  return `${last_name !== 'null' ? last_name : ''} ${first_name !== 'null' ? first_name : ''} ${sur_name !== null ? sur_name : ''}`
 }
 
 export const publicationDetailToString = (details: PublicationDetails | undefined) => {

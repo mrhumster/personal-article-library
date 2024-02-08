@@ -1,4 +1,4 @@
-import {ArticleIFace} from "../../types";
+import {ArticleIFace} from "../../../types";
 import React from "react";
 
 import {IconRecord} from "@consta/icons/IconRecord"
@@ -11,7 +11,7 @@ export const ReadCell = (props: ReadCellIFace) => {
   const {article} = props
   return (
     <div className='flex justify-items-center h-full w-full'>
-      { !article.read && <IconRecord className='my-auto' view={'success'} size={'m'}/> }
+      { !article.read && <IconRecord className='my-auto mx-auto' view={'success'} size={'m'}/> }
     </div>
   )
 }

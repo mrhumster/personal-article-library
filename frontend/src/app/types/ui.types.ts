@@ -1,10 +1,10 @@
-import {IconComponent} from "@consta/uikit/Icon";
+import {IconComponent} from "@consta/icons/Icon";
 import {FileScheme} from "./article.types.ts";
 
 export type RightSideBarTabsItem = {
   key: number;
   label: string;
-  icon: IconComponent;
+  leftIcon: IconComponent;
 };
 
 export interface uiState {

@@ -5,6 +5,9 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {useUpdateArticleMutation} from "../../services/backend";
 import {getAdditionInformationTableByType} from "./getAdditionInformationTableByType.tsx";
+import {Button} from "@consta/uikit/Button";
+import {IconSelect} from "@consta/icons/IconSelect"
+import {IconSelectOpen} from "@consta/icons/IconSelectOpen"
 
 export const AdditionalInformationEdit = () => {
   const [active, setActive] = useState<boolean>(false)
@@ -64,25 +67,37 @@ export const AdditionalInformationEdit = () => {
   return (
     <>
       {!active &&
-        <Text className="border rounded border-transparent hover:border-sky-700 hover:border-dotted py-1" onClick={handleClickInside}>
+        <Text className="border rounded border-transparent hover:border-sky-700 hover:border-dotted py-1 bg-zinc-100" onClick={handleClickInside}>
           { !moreInfo && !current_article?.additional_information &&
             <Text size={'s'} weight={'light'} cursor={'pointer'} fontStyle={'italic'}>
                 <span onClick={() => setActive(true)} className={'ms-1'}>Добавить дополнительную информацию</span>
             </Text>
           }
           { !moreInfo && current_article?.additional_information &&
-            <div ref={lessInfoRef}>
-              <Text size={'s'} weight={'light'} cursor={'pointer'}>
-                <span ref={showMoreInfoRef} className={'ms-1 text-sky-500 hover:underline'}>Показать дополнительную информацию</span>
-              </Text>
+            <div ref={lessInfoRef} className={'w-full px-1'}>
+              <Button
+                  iconLeft={IconSelect}
+                  iconRight={IconSelect}
+                  label={'Показать дополнительную информацию'}
+                  width={'full'}
+                  size={'xs'}
+                  view={'clear'}
+                  onClick={() => setMoreInfo(true)}/>
             </div>
           }
           { moreInfo &&
               <div ref={moreInfoRef} className={'select-user'}>
                 {getAdditionInformationTableByType(reference_type)}
-                <Text size={'s'} cursor={'pointer'} weight={'light'}>
-                  <span ref={showLessInfoRef} className={'ms-1 text-sky-500 hover:underline'}>Спрятать дополнительную информацию</span>
-                </Text>
+                <div ref={showLessInfoRef} className={'w-full px-1'}>
+                  <Button
+                      iconLeft={IconSelectOpen}
+                      iconRight={IconSelectOpen}
+                      label={'Скрыть дополнительную информацию'}
+                      width={'full'}
+                      size={'xs'}
+                      view={'clear'}
+                      onClick={() => setMoreInfo(false)}/>
+                </div>
               </div>
           }
         </Text>

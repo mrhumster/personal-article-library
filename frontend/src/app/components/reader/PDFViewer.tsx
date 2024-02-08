@@ -110,7 +110,6 @@ export const PDFViewer = () => {
   }, [])
 
   const handlePageChange = ({currentPage}: { currentPage: number }) => {
-    console.log(data)
     if (data && username && scale) {
       updateFile({
         ...data,
@@ -132,16 +131,16 @@ export const PDFViewer = () => {
     <div className='pdf-container'>
       <Worker workerUrl={`//unpkg.com/pdfjs-dist@2.16.105/build/pdf.worker.min.js`}>
         {file &&
-            <Viewer fileUrl={`/media/${file.file_uuid}`}
-                    localization={ru_RU as unknown as LocalizationMap}
-                    plugins={[customizeDefaultLayoutPlugin]}
-                    theme={'dark'}
-                    initialPage={page}
-                    defaultScale={scale}
-                    onZoom={(e) => setScale(e.scale)}
-                    onPageChange={handlePageChange}
-
-            />
+          <Viewer
+            fileUrl={`/media/${file.file_uuid}`}
+            localization={ru_RU as unknown as LocalizationMap}
+            plugins={[customizeDefaultLayoutPlugin]}
+            theme={'dark'}
+            initialPage={page}
+            defaultScale={scale}
+            onZoom={(e) => setScale(e.scale)}
+            onPageChange={handlePageChange}
+          />
         }
       </Worker>
     </div>

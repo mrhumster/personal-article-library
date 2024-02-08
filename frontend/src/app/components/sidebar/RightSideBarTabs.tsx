@@ -1,5 +1,4 @@
 import React from "react";
-import {Tabs} from "@consta/uikit/Tabs";
 import { IconDocFilled } from "@consta/icons/IconDocFilled";
 import {IconCommentFilled} from "@consta/icons/IconCommentFilled";
 import {IconInfo} from "@consta/icons/IconInfo";
@@ -7,23 +6,24 @@ import {RightSideBarTabsItem} from "../../types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {setActiveTab} from "../../features/ui";
+import {BookmarkTabs} from "@consta/uikit/BookmarkTabs";
 
 
 const items: RightSideBarTabsItem[] = [
   {
     key: 0,
     label: 'Инфо',
-    icon: IconInfo,
+    leftIcon: IconInfo,
   },
   {
     key: 1,
     label: 'Аннотации',
-    icon: IconCommentFilled,
+    leftIcon: IconCommentFilled,
   },
   {
     key: 2,
     label: 'Блокнот',
-    icon: IconDocFilled,
+    leftIcon: IconDocFilled,
   },
 ];
 
@@ -35,13 +35,14 @@ export const RightSideBarTabs = () => {
     dispatch(setActiveTab(value.key))
   }
   return (
-    <div className='px-2'>
-      <Tabs value={items[selectedTab]}
-            size={'xs'}
-            className={'mt-2'}
-            onChange={handleTabClick}
-            items={items}
-            view={"bordered"}/>
+    <div className=''>
+      <BookmarkTabs
+        value={items[selectedTab]}
+        size='s'
+        onChange={handleTabClick}
+        items={items}
+        view={'clear'}
+      />
     </div>
   )
 }

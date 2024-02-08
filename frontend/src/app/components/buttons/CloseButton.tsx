@@ -9,7 +9,7 @@ interface CloseButtonPropsIFace {
 export const CloseButton = (props: CloseButtonPropsIFace) => {
   const { callback } = props
   return (
-    <div className="absolute top-0 right-0 m-2">
+    <div className="absolute top-0 right-0 m-1">
       <Button iconLeft={IconClose} size='xs' view='clear' form="round" onClick={callback}/>
     </div>
   )

@@ -8,6 +8,7 @@ import {GridItem} from "@consta/uikit/Grid";
 import {RootState} from "../../../store";
 import {EditorsIFace} from "../../../types";
 import {setAdditionalInformation} from "../../../features/article";
+import {authorToString} from "../../../utils";
 
 export const EditorsField = () => {
   const editors = useSelector((state: RootState) => state.articles.current_article?.additional_information?.editors)
@@ -37,8 +38,7 @@ export const EditorsField = () => {
 
   useEffect(()=> {
     if (editors) {
-      const a = editors.map(({ last_name, first_name, sur_name}) =>
-        `${last_name} ${first_name} ${sur_name !== 'null' ? sur_name : ''}`)
+      const a = editors.map((editor) => authorToString(editor))
       setValue(a.join('\n'))
     }
   }, [])
