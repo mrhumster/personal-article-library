@@ -92,9 +92,9 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
     if (filter) setRows(allArticles.filter((value: ArticleIFace) => filter.includes(value.id)).filter((value: ArticleIFace) => !value.deleted))
     if (!filter) setRows(allArticles.filter((value: ArticleIFace) => !value.deleted))
 
-    if (selected_menu_item.id === '1') setRows((prevState) => prevState?.filter((row) => moment(row.added).isAfter(moment().day(-7))))
+    if (selected_menu_item.id === '1') setRows((prevState) => prevState?.filter((row) => moment(row.added).isAfter(moment().subtract(7, 'days'))))
     if (selected_menu_item.id === '3') setRows(prevState => prevState?.filter(row => row.favorite))
-    if (selected_menu_item.id === '2') setRows(prevState => prevState?.filter(row => row.read && moment(row.read_date).isAfter(moment().day(-7))))
+    if (selected_menu_item.id === '2') setRows(prevState => prevState?.filter(row => row.read && moment(row.read_date).isAfter(moment().subtract(7, 'days'))))
     if (searchValue) setRows(prevState => prevState?.filter(row =>
         row.title?.toLowerCase().includes(searchValue.toLowerCase()) ||
         row.publication?.year?.toString().includes(searchValue.toLowerCase()) ||
@@ -229,7 +229,7 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
       title: 'Авторы',
       accessor: 'authors',
       align: 'left',
-      width: 100,
+      width: 200,
       renderCell: (row: ArticleIFace) => <AuthorsCell items={row.authors}/>
     },
     {

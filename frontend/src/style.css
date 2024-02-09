@@ -26,6 +26,12 @@ body {
 
 .cropped {
     width: calc(100% - 480px);
+    transition:.24s;
+}
+
+.full {
+    width: 99.6%;
+    transition:.2s;
 }
 
 

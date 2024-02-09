@@ -21,13 +21,8 @@ export const Reader = () => {
     return file.file_name ? truncateString(file.file_name, 30) : 'Файл без имени'
   }
 
-  const handleClickTab = ( value: FileScheme ) => {
-    dispatch(setActiveReaderTab(value))
-  }
-
+  const handleClickTab = ( value: FileScheme ) => dispatch(setActiveReaderTab(value))
   const getItemIcon = () => IconDocFilled
-
-
   const getItemRightSide = (item: FileScheme) =>
       <Button
         tabIndex={0}
@@ -42,7 +37,7 @@ export const Reader = () => {
       />
 
   return (
-    <div className={`flex flex-col ${isSidebarOpen ? 'cropped' : 'w-[99%]'}`}>
+    <div className={`flex flex-col ${isSidebarOpen ? 'cropped' : 'full'}`}>
       <Tabs
         size={'xs'}
         view={'clear'}

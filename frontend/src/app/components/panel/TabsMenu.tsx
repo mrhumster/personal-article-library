@@ -76,6 +76,7 @@ const items: Item[] = [
     groupId: 1,
     availableForDrop: false,
   },
+  /*
   {
     key: '4',
     label: 'Мои публикации',
@@ -90,6 +91,7 @@ const items: Item[] = [
     groupId: 1,
     availableForDrop: false,
   },
+   */
   {
     key: '6',
     label: 'Корзина',

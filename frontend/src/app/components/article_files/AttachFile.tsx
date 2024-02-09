@@ -64,7 +64,7 @@ export const AttachFile = ({file_id}:{file_id: string}) => {
                 buttonIcon={IconHealth}
                 size={'xs'}
                 fileExtension={data.extension}
-                fileName={truncateString(data.file_name, 55)}
+                fileName={truncateString(data.file_name, 45)}
                 title={data.file_name}
                 fileDescription={getFileDescription(data)}
                 onClick={handleClickAttachment}

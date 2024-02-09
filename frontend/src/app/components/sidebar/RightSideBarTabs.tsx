@@ -35,7 +35,7 @@ export const RightSideBarTabs = () => {
     dispatch(setActiveTab(value.key))
   }
   return (
-    <div className=''>
+
       <BookmarkTabs
         value={items[selectedTab]}
         size='s'
@@ -43,6 +43,5 @@ export const RightSideBarTabs = () => {
         items={items}
         view={'clear'}
       />
-    </div>
   )
 }
