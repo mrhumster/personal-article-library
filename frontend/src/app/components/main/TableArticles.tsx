@@ -5,17 +5,19 @@ import {
   useGetArticlesQuery,
   useGetArticleStringQuery
 } from "../../services/backend";
-import {Table, TableColumn} from '@consta/uikit/Table';
+import {
+  Table,
+  TableColumn, TableFilters,
+  TableTextFilter
+} from '@consta/uikit/Table';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {openSideBar, setActiveTab, setDragEvent} from "../../features/ui";
 import Moment from "react-moment";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
-import {Button} from "@consta/uikit/Button";
-import {ArticleIFace} from "../../types";
+import {ArticleIFace, AuthorIFace} from "../../types";
 import {customDenormalize} from "../../services/helpers.ts";
 import { Text } from '@consta/uikit/Text';
-import {IconFunnel} from "@consta/icons/IconFunnel";
 import {DragLayout} from "../layout";
 import {authorToString, copyTextToClipboard} from '../../utils'
 import openBook from '../../../assets/icons/open_book/open_book_m.svg'
@@ -37,7 +39,7 @@ type TableArticlesIFace = {
 }
 
 export const TableArticles = ({filter, title}: TableArticlesIFace) => {
-  const { refetch } = useGetArticlesQuery({}, {pollingInterval: 5000})
+  const {refetch} = useGetArticlesQuery({}, {pollingInterval: 5000})
   const {ids, entities} = useSelector((state: RootState) => state.articles.articles)
   const selectedRow = useSelector((state: RootState) => state.articles.current_article?.id)
   const ref = useRef<HTMLDivElement>(null)
@@ -50,18 +52,18 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
   const [selected, setSelected] = useState<string[]>([])
   const [idForRequest, setIdForRequest] = useState<string | null>(null)
   const articleString = useGetArticleStringQuery(idForRequest, {skip: !idForRequest})
-  const [ getArticleListString, getArticleListStringResult] = useGetArticleListStringMutation()
+  const [getArticleListString, getArticleListStringResult] = useGetArticleListStringMutation()
   const headerCheckBox = useRef(null)
   const dispatch = useDispatch()
-  const [searchValue, setSearchValue] = useState<string | null>(null)
+  const [searchValue, setSearchValue] = useState<string | undefined | null>(undefined)
 
 
-  useEffect(()=>{
+  useEffect(() => {
     if (getArticleListStringResult.data) {
       copyTextToClipboard(getArticleListStringResult.data.articles_string)
-        .then(()=>{
-      dispatch(addMessage({'message': 'Ссылки скопированы в буфер'}))
-      }).catch((error) => {
+        .then(() => {
+          dispatch(addMessage({'message': 'Ссылки скопированы в буфер'}))
+        }).catch((error) => {
         dispatch(addMessage({'message': error.toString(), 'status': 'alert'}))
       })
     }
@@ -94,10 +96,10 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
     if (selected_menu_item.id === '3') setRows(prevState => prevState?.filter(row => row.favorite))
     if (selected_menu_item.id === '2') setRows(prevState => prevState?.filter(row => row.read && moment(row.read_date).isAfter(moment().day(-7))))
     if (searchValue) setRows(prevState => prevState?.filter(row =>
-      row.title?.toLowerCase().includes(searchValue) ||
-      row.publication?.year?.toString().includes(searchValue) ||
-      row.authors.map(author => authorToString(author)).join(' ').toLowerCase().includes(searchValue)
-    )
+        row.title?.toLowerCase().includes(searchValue.toLowerCase()) ||
+        row.publication?.year?.toString().includes(searchValue.toLowerCase()) ||
+        row.authors.map(author => authorToString(author)).join(' ').toLowerCase().includes(searchValue.toLowerCase())
+      )
     )
   }, [ids, entities, filter, selected_menu_item, searchValue])
 
@@ -168,7 +170,7 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
     setIsOpenContextMenu(false)
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     if (articleString.data && 'link' in articleString.data) {
       copyTextToClipboard(articleString.data['link']).then(() => {
         dispatch(addMessage({'message': 'Ссылка скопирована в буфер', 'status': 'success'}))
@@ -221,19 +223,19 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
     {
       title: '',
       width: 35,
-      renderCell: (row: ArticleIFace) => <FavoriteCell article={row} />
-      },
+      renderCell: (row: ArticleIFace) => <FavoriteCell article={row}/>
+    },
     {
       title: 'Авторы',
       accessor: 'authors',
       align: 'left',
       width: 100,
-      renderCell: (row: ArticleIFace) => <AuthorsCell items={row.authors} />
+      renderCell: (row: ArticleIFace) => <AuthorsCell items={row.authors}/>
     },
     {
       title: 'Год',
       accessor: 'year',
-      width: 60,
+      width: 80,
       renderCell: (row: ArticleIFace) =>
         <Text className={'mt-auto mb-auto'} truncate size={'xs'} draggable="true" onContextMenu={showContextMenu}>
           {row.publication?.year}
@@ -270,7 +272,8 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
       title: 'Файл',
       accessor: "file_name",
       width: 75,
-      renderCell: (row: ArticleIFace) => <div className={'mb-auto mt-auto'} >{row.files ? <IconDocExport size={'s'} view={'secondary'}/> : <></>}</div>
+      renderCell: (row: ArticleIFace) => <div className={'mb-auto mt-auto'}>{row.files ?
+        <IconDocExport size={'s'} view={'secondary'}/> : <></>}</div>
     }
   ];
 
@@ -299,6 +302,53 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
   }
 
 
+  const filters: TableFilters<ArticleIFace> = [
+    {
+      id: 'authors',
+      name: 'Автор: ',
+      field: 'authors',
+      filterer: (cellValue: AuthorIFace[], filterValues: Array<{ value: AuthorIFace; name: string }>,) => {
+        return filterValues.some(
+          (filterValue) => {
+            const match = cellValue.filter(value =>
+              value.last_name === filterValue.value.last_name &&
+              value.first_name === filterValue.value.first_name &&
+              value.sur_name === filterValue.value.sur_name
+            )
+            return filterValue && match.length !== 0
+          },
+        );
+      },
+      component: {
+        name: TableTextFilter,
+        props: {
+          withSearch: true,
+          items: [...new Set(rows?.map(row => row.authors)
+            .flat()
+            .sort((a, b) => {
+              const fa = a.last_name,
+                fb = b.last_name;
+              if (fa && fb) {
+                if (fa < fb) {
+                  return -1;
+                }
+                if (fa > fb) {
+                  return 1;
+                }
+              }
+              return 0;
+            }))].map(value => {
+            return {
+              name: authorToString(value),
+              value: value
+            }
+          })
+        },
+      },
+    }
+  ];
+
+
   return (
     <Theme preset={presetGpnDefault}>
       {/* TODO: Плохо работает драг. Если увести файл и бросить за область, то поле не исчезает */}
@@ -309,9 +359,6 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
           <TableTitle title={title}/>
           <div id='buttons' className={`flex`}>
             <SearchDialog searchValue={searchValue} setSearchValue={setSearchValue}/>
-            <div className='p-1'>
-              <Button label='Фильтр' size={'m'} view={'clear'} iconLeft={IconFunnel}/>
-            </div>
           </div>
         </div>
         <div id='tableContainer' className={`grow overflow-y-auto ${selected.length > 0 ? 'h-[88%]' : 'h-[95%]'}`}>
@@ -324,10 +371,10 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
                   getCellWrap={() => 'break'}
                   stickyHeader
                   isResizable
-                  activeRow={{ id: selectedRow, onChange: handleRowClick }}
+                  activeRow={{id: selectedRow, onChange: handleRowClick}}
                   emptyRowsPlaceholder={<Text>Здесь пока нет данных</Text>}
+                  filters={filters}
               />
-
           }
         </div>
         <div id='selectedPanelContainer' className={selected.length > 0 ? 'h-[7%]' : 'h-none'}>

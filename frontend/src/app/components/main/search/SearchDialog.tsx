@@ -4,8 +4,8 @@ import {IconSearchStroked} from "@consta/icons/IconSearchStroked";
 import {TextField} from "@consta/uikit/TextField";
 
 interface SearchDialogPropsIFace {
-  searchValue?: string,
-  setSearchValue: React.Dispatch<React.SetStateAction<string | null>>
+  searchValue?: string | null,
+  setSearchValue: React.Dispatch<React.SetStateAction<string | undefined | null>>
 }
 
 export const SearchDialog = (props: SearchDialogPropsIFace) => {
@@ -28,16 +28,17 @@ export const SearchDialog = (props: SearchDialogPropsIFace) => {
 
 
   return (
-    <div className='p-1 my-auto flex'>
+    <div className='p-1 my-auto flex ms-10 me-2'>
       { !showInput && <Button label='Поиск' size={'s'} view={'clear'} iconLeft={IconSearchStroked} onClick={handleClickInside}/> }
       { showInput &&
           <TextField
               style={{width: '200px'}}
-              size={'s'}
+              size={'xs'}
               ref={ref}
               onChange={setSearchValue}
               value={searchValue}
               withClearButton
+              leftSide={IconSearchStroked}
           />
       }
     </div>
