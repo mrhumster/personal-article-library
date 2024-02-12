@@ -15,6 +15,7 @@ import {ContextMenu, ContextMenuItemDefault} from "@consta/uikit/ContextMenu";
 import {ProgressSpin} from "@consta/uikit/ProgressSpin";
 import {addMessage} from "../../features/alert";
 import {TextField} from "@consta/uikit/TextField";
+import {Text} from "@consta/uikit/Text"
 
 interface MenuItemPropsIFace {
   item: Item
@@ -155,8 +156,8 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
   return (
     <div className={`
                 ${item.key === checked ? 'border-s-2 border-sky-600' : ''} 
-                ${isActive && kind === 'string' && item.availableForDrop && 'bg-gradient-to-r from-gray-300'}
-                ${dragOver && item.availableForDrop && 'bg-gradient-to-l from-gray-500'}
+                ${isActive && kind === 'string' && item.availableForDrop && 'bg-gradient-to-r from-10% from-gray-300'}
+                ${dragOver && item.availableForDrop && 'bg-gray-400'}
                 cursor-pointer my-1 flex items-center align-center
               `}
          onClick={() => handleItemClick(item)}
@@ -165,7 +166,20 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
          onDragLeave={handleOnDragLeave}
          id={item.key}
     >
-      {Icon && !openRenameField && <><Icon size={'s'} view={'secondary'} className={'m-2'}/><span className={'grow w-24 truncate font-light'} title={item.label}>{item.label}</span></>}
+      {Icon && !openRenameField &&
+        <>
+          <Icon size={'s'} view={'secondary'} className={'m-2'}/>
+          <Text className={'grow hover:underline'}
+                display={'block'}
+                weight={'light'}
+                view={'primary'}
+                size={'s'}
+                spacing={'xs'}
+                cursor={'pointer'}
+                truncate
+          >{item.label}</Text>
+        </>
+      }
       {item.groupId === 2 && !openRenameField &&
           <>
             {!data.isLoading ?

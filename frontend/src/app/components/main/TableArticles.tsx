@@ -20,7 +20,7 @@ import {customDenormalize} from "../../services/helpers.ts";
 import { Text } from '@consta/uikit/Text';
 import {DragLayout} from "../layout";
 import {authorToString, copyTextToClipboard} from '../../utils'
-import openBook from '../../../assets/icons/open_book/open_book_m.svg'
+import line from '../../../assets/images/line.svg'
 import {ContextMenu, ContextMenuItemDefault} from "@consta/uikit/ContextMenu";
 import {IconTrash} from "@consta/icons/IconTrash";
 import {IconPaste} from "@consta/icons/IconPaste";
@@ -57,6 +57,8 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
   const dispatch = useDispatch()
   const [searchValue, setSearchValue] = useState<string | undefined | null>(undefined)
 
+  const dragImage = new Image()
+  dragImage.src = line
 
   useEffect(() => {
     if (getArticleListStringResult.data) {
@@ -296,10 +298,8 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
   }
 
   const handlerDragStart = (event: React.DragEvent<HTMLDivElement>) => {
-    const img = new Image()
-    img.src = openBook
+    event.dataTransfer?.setDragImage(dragImage, 50, 10)
     event.dataTransfer?.setData('text/plain', 'article')
-    event.dataTransfer?.setDragImage(img, 12, 12)
   }
 
 
