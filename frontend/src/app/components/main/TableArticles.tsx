@@ -282,7 +282,8 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
     dispatch(setActiveTab(0))
   }
 
-  const display = (event: DragEvent) => {
+  const display = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault()
     dispatch(setDragEvent({
       isActive: true,
       kind: event.dataTransfer?.items[0].kind,
@@ -294,7 +295,7 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
     dispatch(setDragEvent({isActive: false}))
   }
 
-  const handlerDragStart = (event: DragEvent) => {
+  const handlerDragStart = (event: React.DragEvent<HTMLDivElement>) => {
     const img = new Image()
     img.src = openBook
     event.dataTransfer?.setData('text/plain', 'article')
@@ -326,8 +327,8 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
           items: [...new Set(rows?.map(row => row.authors)
             .flat()
             .sort((a, b) => {
-              const fa = a.last_name,
-                fb = b.last_name;
+              const fa = a && a.last_name ? a.last_name : '',
+                    fb = b && b.last_name ? b.last_name : '';
               if (fa && fb) {
                 if (fa < fb) {
                   return -1;
@@ -347,7 +348,6 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
       },
     }
   ];
-
 
   return (
     <Theme preset={presetGpnDefault}>

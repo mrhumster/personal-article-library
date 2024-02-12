@@ -7,7 +7,7 @@ import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
 import {IconBookmarkStroked} from "@consta/icons/IconBookmarkStroked";
 import {IconList} from "@consta/icons/IconList";
 
-import {IconBook, IconClock, IconCopyFile, IconOpenBook, IconStar, IconTrash} from "./Icons.ts";
+import {IconBook, IconClock, IconStar, IconTrash} from "./Icons.ts";
 import {RootState} from "../../store";
 import {AddNewCollection} from "./AddNewCollection.tsx";
 import {useGetMyCollectionsQuery} from "../../services/backend";
@@ -74,7 +74,7 @@ const items: Item[] = [
     label: 'Избранное',
     leftIcon: IconStar,
     groupId: 1,
-    availableForDrop: false,
+    availableForDrop: true,
   },
   /*
   {
@@ -97,7 +97,7 @@ const items: Item[] = [
     label: 'Корзина',
     leftIcon: IconTrash,
     groupId: 1,
-    availableForDrop: false,
+    availableForDrop: true,
   }
 ];
 

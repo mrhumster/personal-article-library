@@ -6,7 +6,8 @@ import {RootState} from "../../store";
 import {Item} from "./TabsMenu.tsx";
 import {setSelectedMenuItem} from "../../features/ui";
 import {
-  useDeleteMyCollectionMutation,
+  useDeleteArticleMutation,
+  useDeleteMyCollectionMutation, useUpdateArticleMutation,
   useUpdateMyCollectionMutation
 } from "../../services/backend";
 import {CollectionStateIFace} from "../../types";
@@ -31,6 +32,10 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
   const [openRenameField, setOpenRenameField] = useState<boolean>(false)
   const [changeCollectionName, setChangeCollectionName] = useState<string | null>(null)
   const [isOpenContextMenu, setIsOpenContextMenu] = useState<boolean>(false)
+  const [dragOver, setDragOver] = useState<boolean>(false)
+  const all_article = useSelector((state: RootState) => state.articles.articles)
+  const [ deleteArticle, deleteArticleResult] = useDeleteArticleMutation()
+  const [ updateArticle, updateArticleResult ] = useUpdateArticleMutation()
 
   const dispatch = useDispatch()
 
@@ -38,19 +43,37 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
 
   const handleItemClick = (item: Item) => dispatch(setSelectedMenuItem({id: item.key, group: item.groupId}))
 
-  const handleOnDragOver = (event: React.DragEvent) => event.preventDefault()
+  const handleOnDragOver = (event: React.DragEvent) => {
+    event.preventDefault();
+    setDragOver(true)
+  }
+
+  const handleOnDragLeave =(event: React.DragEvent) => {
+    event.preventDefault()
+    setDragOver(false)
+  }
+
 
   const handleOnDrop = (event: React.DragEvent) => {
     event.preventDefault();
     const article_id = event.dataTransfer.getData("article_id");
     const collection_id = event.currentTarget.id
-    const articles = collections.entities[collection_id].articles
-    if (articles.includes(article_id)) {
-      dispatch(addMessage({message: 'Ссылка уже добавлена в коллекцию', status: 'normal', progressMode: 'timer'}))
+
+    if (collection_id === '6') {
+      deleteArticle(article_id)
+    } else if (collection_id === '3') {
+      const article = all_article.entities[article_id]
+      updateArticle({...article, favorite: true})
     } else {
-      updateMyCollection({collection_id: collection_id, articles: [...articles, article_id]})
-      dispatch(addMessage({message: 'Ссылка добавлена в коллекцию', status: 'success', progressMode: 'timer'}))
+      const articles = collections.entities[collection_id].articles
+      if (articles.includes(article_id)) {
+        dispatch(addMessage({message: 'Ссылка уже добавлена в коллекцию', status: 'system'}))
+      } else {
+        updateMyCollection({collection_id: collection_id, articles: [...articles, article_id]})
+        dispatch(addMessage({message: 'Ссылка добавлена в коллекцию', status: 'success'}))
+      }
     }
+    setDragOver(false)
   }
 
   const handleKebabClick = (event: React.MouseEvent<Element, MouseEvent>) => {
@@ -100,6 +123,24 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
     if (data.isSuccess && !data.isError) refetch()
   }, [data.isSuccess, data.isError])
 
+  useEffect(() => {
+    if (deleteArticleResult.isSuccess) {
+      dispatch(addMessage({message: 'Ссылка перемещена в корзину'}))
+    }
+    if (deleteArticleResult.isError) {
+      dispatch(addMessage({message: 'Произошла ошибка, обратитесь к администратору', status: 'alert'}))
+    }
+  }, [deleteArticleResult])
+
+  useEffect(() => {
+    if (updateArticleResult.isSuccess) {
+      dispatch(addMessage({message: 'Ссылка помечена звездочкой'}))
+    }
+    if (updateArticleResult.isError) {
+      dispatch(addMessage({message: 'Произошла ошибка, обратитесь к администратору', status: 'alert'}))
+    }
+  }, [updateArticleResult])
+
   const items: ContextMenuItemDefault[] = [
     {
       label: 'Переименовать',
@@ -114,12 +155,14 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
   return (
     <div className={`
                 ${item.key === checked ? 'border-s-2 border-sky-600' : ''} 
-                ${isActive && kind === 'string' && item.availableForDrop && 'bg-gradient-to-r from-gray-300'} 
+                ${isActive && kind === 'string' && item.availableForDrop && 'bg-gradient-to-r from-gray-300'}
+                ${dragOver && item.availableForDrop && 'bg-gradient-to-l from-gray-500'}
                 cursor-pointer my-1 flex items-center align-center
               `}
          onClick={() => handleItemClick(item)}
          onDrop={handleOnDrop}
          onDragOver={handleOnDragOver}
+         onDragLeave={handleOnDragLeave}
          id={item.key}
     >
       {Icon && !openRenameField && <><Icon size={'s'} view={'secondary'} className={'m-2'}/><span className={'grow w-24 truncate font-light'} title={item.label}>{item.label}</span></>}

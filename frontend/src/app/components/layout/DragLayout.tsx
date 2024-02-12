@@ -78,11 +78,14 @@ export const DragLayout = () => {
     }
   }, [addFileResult])
 
+  const dragLeaveHandler = () => {
+    dispatch(setDragEvent({isActive: false}))
+  }
+
   if (isActive && kind === 'file' && type === 'application/pdf') {
     return (
-        <div id='dragndrop' className='p-3 absolute w-full h-full left-0 top-0 bg-opacity-75 bg-zinc-200 z-40'>
-          <DragNDropField className='w-full h-full' onDropFiles={setFiles}>
-          </DragNDropField>
+        <div id='dragndrop' className='p-3 absolute w-full h-full left-0 top-0 bg-opacity-75 bg-zinc-200 z-40' onDragLeave={dragLeaveHandler}>
+          <DragNDropField className='w-full h-full' onDropFiles={setFiles} ></DragNDropField>
         </div>
     )
   }

@@ -10,12 +10,16 @@ export const AuthorsCell = ({items}:{items: AuthorIFace[]}) => {
     if (ref.current) ref.current.title = items.map((item) => authorToString(item)).join('\n')
   }, [ref])
 
-  return (
+  if (items) {
+    return (
       <AvatarGroup
         items={items}
         size={'xs'}
         getItemName={(item: AuthorIFace) => `${item.last_name} ${item.first_name} ${item.sur_name}`}
         ref={ref}
       />
-  )
+    )
+  } else {
+    return null
+  }
 }

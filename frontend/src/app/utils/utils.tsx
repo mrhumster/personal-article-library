@@ -5,14 +5,19 @@ import {User} from "@consta/uikit/User";
 
 export const authorsToString = (authors: AuthorIFace[] | null) => {
   let content
-  if (authors && authors.length > 0) {
+  if (authors) {
     const authorsList = authors?.map((author) => authorToString(author))
-    content = authorsList?.map((author, index) =>
-      /*<Text size={'xs'} key={index} className="inline-block mx-1">{author}</Text>*/
-      <User key={index}
-            name={author}
-            info={authorsList.length === 1 ? 'Автор' : 'Cоавтор'}
-      />
+    content = authorsList?.map((author, index) => {
+        if (author) {
+          return (
+          <User key={index}
+                name={author}
+                info={authorsList.length === 1 ? 'Автор' : 'Cоавтор'}
+          />)
+        } else {
+          return <></>
+        }
+      }
     )
   } else {
     content = <span className="ms-1">Добавить информацию об авторе(ах)</span>
@@ -21,8 +26,12 @@ export const authorsToString = (authors: AuthorIFace[] | null) => {
 }
 
 export const authorToString = (author: AuthorIFace) => {
-  const {first_name, last_name, sur_name} = author
-  return `${last_name !== 'null' ? last_name : ''} ${first_name !== 'null' ? first_name : ''} ${sur_name !== null ? sur_name : ''}`
+  if (author) {
+    const {first_name, last_name, sur_name} = author
+    return `${last_name !== null ? last_name : ''} ${first_name !== null ? first_name : ''} ${sur_name !== null ? sur_name : ''}`
+  } else {
+    return null
+  }
 }
 
 export const publicationDetailToString = (details: PublicationDetails | undefined) => {
