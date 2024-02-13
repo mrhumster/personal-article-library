@@ -40,7 +40,7 @@ export const ArticleDetail = () => {
   }, [active_reader_tab, isOpen])
 
     return (
-      <div className='m-4'>
+      <div className='m-4 select-text'>
         { isLoading ? <SkeletonBrick height={30} /> : <ReferenceTypeSelect/>}
         { isLoading ? <SkeletonBrick height={46} className={'my-2'}/> : <TitleEdit/> }
         { isLoading ? <SkeletonBrick height={18} className={'my-2'}/> : <AuthorsEdit/> }

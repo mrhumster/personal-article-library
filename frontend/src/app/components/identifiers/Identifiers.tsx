@@ -1,9 +1,10 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import {IdentifiersExpand} from "./IdentifiersExpand.tsx";
 import {IdentifiersCollapse} from "./IdentifiersCollapse.tsx";
 import {useUpdateArticleMutation} from "../../services/backend";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store";
+import {useClickOutside} from "@consta/uikit/useClickOutside";
 
 export const Identifiers = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
@@ -13,16 +14,13 @@ export const Identifiers = () => {
 
 
   const handleClickOutside = (e: TouchEvent | MouseEvent) => {
-    e.preventDefault()
-    if (expandedRef.current && !expandedRef.current.contains(e.target as Node)) {
-      setIsExpanded(false)
-      updateArticle({...article, identifiers: article?.identifiers})
-    }
+    setIsExpanded(false)
+    updateArticle({...article, identifiers: article?.identifiers})
   }
 
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside)
+  useClickOutside({
+    isActive: !!handleClickOutside,
+    handler: handleClickOutside
   })
 
   return (

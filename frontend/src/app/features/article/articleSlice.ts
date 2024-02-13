@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {ArticleStateIFace} from "../../types";
+import {ArticleStateIFace, AuthorIFace} from "../../types";
 import {backendApi} from "../../services/backend";
 
 const initialState: ArticleStateIFace = {
@@ -50,6 +50,8 @@ export const articleSlice = createSlice({
         state.current_article = payload
       }
     },
+    setCurrentArticleTitle: (state: ArticleStateIFace, {payload}:{payload : string}) => {state.current_article.title = payload},
+    setCurrentAuthors: (state: ArticleStateIFace, {payload}:{payload: AuthorIFace[]}) => {state.current_article.authors = payload},
     resetArticle: () => {
       return initialState
     }
@@ -135,5 +137,7 @@ export const {
   setCurrentArticle,
   setIdentifiers,
   setPublicationDetails,
+  setCurrentArticleTitle,
+  setCurrentAuthors,
   resetArticle
 } = articleSlice.actions

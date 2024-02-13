@@ -8,6 +8,7 @@ import {getAdditionInformationTableByType} from "./getAdditionInformationTableBy
 import {Button} from "@consta/uikit/Button";
 import {IconSelect} from "@consta/icons/IconSelect"
 import {IconSelectOpen} from "@consta/icons/IconSelectOpen"
+import {useClickOutside} from "@consta/uikit/useClickOutside";
 
 export const AdditionalInformationEdit = () => {
   const [active, setActive] = useState<boolean>(false)
@@ -22,21 +23,16 @@ export const AdditionalInformationEdit = () => {
 
 
   const handleClickOutside = (e: TouchEvent | MouseEvent) => {
-    if (formRef.current) {
-      if (!formRef.current.contains(e.target as Node)) {
-        setActive(false);
-        setMoreInfo(true)
-        updateArticle({...current_article, additional_information: current_article?.additional_information})
-      }
-    }
-    if (moreInfoRef.current) {
-      if (!moreInfoRef.current.contains(e.target as Node)) {
-        setActive(false);
-        // setMoreInfo(false)
-        updateArticle({...current_article, additional_information: current_article?.additional_information})
-      }
-    }
+    setActive(false);
+    setMoreInfo(false)
+    updateArticle({...current_article, additional_information: current_article?.additional_information})
   }
+
+  useClickOutside({
+    isActive: !!handleClickOutside,
+    handler: handleClickOutside,
+    ignoreClicksInsideRefs: [moreInfoRef, formRef]
+  })
 
   const handleClickInside = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (lessInfoRef.current && showMoreInfoRef.current) {
@@ -55,11 +51,6 @@ export const AdditionalInformationEdit = () => {
     }
   }
 
-
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  });
 
   const reference_type = useSelector((state: RootState) => state.articles.current_article?.reference_type)
   const additionInformationForm = getAdditionInformationFormByType(reference_type)

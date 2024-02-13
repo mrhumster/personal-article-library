@@ -13,7 +13,6 @@ import {setCurrentArticle} from "../../features/article";
 
 export const RightSideBar = () => {
   const isSidebarOpen = useSelector((state: RootState) => state.ui.rightSideBar.isSidebarOpen)
-  // const article = useSelector((state: RootState) => state.ui.rightSideBar.article)
   const dispatch = useDispatch()
 
   const handleCloseSideBar = () => {

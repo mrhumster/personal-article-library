@@ -26,10 +26,11 @@ export const ArticleUrls = () => {
   const current_timezone = useSelector((state: RootState) => state.ui.timezone)
 
   const handleClickOutside = (e: TouchEvent | MouseEvent) => {
-    e.preventDefault()
     if (expandedRef.current && !expandedRef.current.contains(e.target as Node)) {
       setIsExpanded(false)
+      e.stopImmediatePropagation()
     }
+
   }
 
   useEffect(() => {

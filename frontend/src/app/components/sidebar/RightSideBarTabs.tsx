@@ -35,7 +35,6 @@ export const RightSideBarTabs = () => {
     dispatch(setActiveTab(value.key))
   }
   return (
-
       <BookmarkTabs
         value={items[selectedTab]}
         size='s'

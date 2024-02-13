@@ -6,6 +6,8 @@ export {
   setCurrentArticle,
   setIdentifiers,
   setPublicationDetails,
+  setCurrentArticleTitle,
+  setCurrentAuthors,
   resetArticle,
   articleSlice
 } from './articleSlice.ts'
