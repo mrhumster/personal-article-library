@@ -9,5 +9,6 @@ export {
   setCurrentArticleTitle,
   setCurrentAuthors,
   resetArticle,
+  setCurrentUrls,
   articleSlice
 } from './articleSlice.ts'

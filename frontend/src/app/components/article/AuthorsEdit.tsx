@@ -1,14 +1,12 @@
 import React, {useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
-import {useUpdateArticleMutation} from "../../services/backend";
 import {TextField} from "@consta/uikit/TextField";
 import {AuthorIFace} from "../../types";
 import { Text } from '@consta/uikit/Text';
-import {authorsToString} from "../../utils";
+import {authorsToString, authorToString} from "../../utils";
 import {useClickOutside} from "@consta/uikit/useClickOutside";
 import {setCurrentAuthors} from "../../features/article";
-import {useDebounce} from "@consta/uikit/useDebounce";
 
 
 export const AuthorsEdit = () => {
@@ -16,16 +14,11 @@ export const AuthorsEdit = () => {
   const [value, setValue] = useState<string | null>(null)
   const dispatch = useDispatch()
   const authors = useSelector((state: RootState) => state.articles.current_article?.authors)
-  const article = useSelector((state: RootState) => state.articles.current_article)
-
-  const [updateArticle] = useUpdateArticleMutation()
-  const debounceUpdateArticle = useDebounce(updateArticle, 5000)
   const myRef = useRef<HTMLInputElement>(null);
 
-  const handleClickOutside = (e: TouchEvent | MouseEvent) => {
+  const handleClickOutside = () => {
       handleChange(value)
       setActive(false);
-      debounceUpdateArticle(article)
   }
 
   useClickOutside({
@@ -37,8 +30,7 @@ export const AuthorsEdit = () => {
 
   useEffect(() => {
     if (authors) {
-      const a = authors.map(({first_name, last_name, sur_name}) =>
-        `${last_name}${first_name ? ` ${first_name}` : ''}${sur_name ? ` ${sur_name}` : ''}`)
+      const a = authors.map((author) => authorToString(author))
       setValue(a.join('\n'))
     } else {
       setValue(null)
@@ -47,7 +39,7 @@ export const AuthorsEdit = () => {
 
   const handleChange = (value: string | null) => {
     const authorsList = value?.split('\n')
-    const authors: AuthorIFace[] = []
+    const update_authors: AuthorIFace[] = []
     if (authorsList) {
       authorsList.map((name) => {
         if (name.length > 1) {
@@ -57,11 +49,11 @@ export const AuthorsEdit = () => {
             last_name: last_name,
             sur_name: sur_name
           }
-          authors.push(author)
+          update_authors.push(author)
         }
       })
     }
-    dispatch(setCurrentAuthors(authors))
+    if (JSON.stringify(authors) !== JSON.stringify(update_authors)) dispatch(setCurrentAuthors(update_authors))
   }
 
   const defaultClasses = 'mt-1 mb-1 p-1 pt-0'

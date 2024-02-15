@@ -7,6 +7,7 @@ import {UserMenu} from "./UserMenu.tsx";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {closeReader, openSideBar, setActiveTab} from "../../features/ui";
+import {Updater} from "./updater/Updater.tsx";
 
 
 export const Header = () => {
@@ -39,6 +40,9 @@ export const Header = () => {
                             active={rightSideBar.isSidebarOpen && rightSideBar.activeTab === 2}
                             callback={handlerClickOpenNotebook}
               />
+            </nav>
+            <nav>
+              <Updater />
             </nav>
             <nav className="flex flex-col mb-1">
               <UserMenu />

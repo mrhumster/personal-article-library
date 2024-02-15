@@ -1,8 +1,7 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {TextField} from "@consta/uikit/TextField";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
-import {useUpdateArticleMutation} from "../../services/backend";
 import {useClickOutside} from "@consta/uikit/useClickOutside";
 import {setCurrentArticleTitle} from "../../features/article";
 
@@ -10,14 +9,17 @@ import {setCurrentArticleTitle} from "../../features/article";
 export const TitleEdit = () => {
   const value = useSelector((state: RootState) => state.articles.current_article?.title)
   const [active, setActive] = useState(false)
-  const article = useSelector((state: RootState) => state.articles.current_article)
-  const [updateArticle] = useUpdateArticleMutation()
   const titleRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const [title, setTitle] = useState<string | null | undefined>()
   const dispatch = useDispatch()
 
-  const handleClickOutside = (e: TouchEvent | MouseEvent) => {
-    updateArticle(article)
+  useEffect(()=>{
+    setTitle(value)
+  }, [value])
+
+  const handleClickOutside = () => {
+    if (title && title !== value) dispatch(setCurrentArticleTitle(title))
     setActive(false)
   }
 
@@ -26,10 +28,6 @@ export const TitleEdit = () => {
     handler: handleClickOutside,
     ignoreClicksInsideRefs: [titleRef]
   })
-
-  const handleChange = (value: string | null) => {
-    dispatch(setCurrentArticleTitle(value))
-  }
 
   const defaultClasses = 'mt-1 mb-1 p-1 pt-0 font-bold'
   const activeClasses = 'border rounded border-sky-700'
@@ -50,10 +48,10 @@ export const TitleEdit = () => {
       type={'textarea'}
       minRows={1}
       maxRows={100}
-      value={value}
+      value={title}
       size={'l'}
       onClick={() => setActive(true)}
-      onChange={handleChange}
+      onChange={setTitle}
       ref={titleRef}
       inputContainerRef={inputRef}
     />

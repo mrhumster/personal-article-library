@@ -1,6 +1,7 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {ArticleStateIFace, AuthorIFace} from "../../types";
 import {backendApi} from "../../services/backend";
+import {ArticleURLs} from "../../types/article.types.ts";
 
 const initialState: ArticleStateIFace = {
   articles: {
@@ -50,8 +51,15 @@ export const articleSlice = createSlice({
         state.current_article = payload
       }
     },
-    setCurrentArticleTitle: (state: ArticleStateIFace, {payload}:{payload : string}) => {state.current_article.title = payload},
-    setCurrentAuthors: (state: ArticleStateIFace, {payload}:{payload: AuthorIFace[]}) => {state.current_article.authors = payload},
+    setCurrentArticleTitle: (state: ArticleStateIFace, {payload}:{payload : string}) => {
+      if (state.current_article) state.current_article.title = payload
+    },
+    setCurrentAuthors: (state: ArticleStateIFace, {payload}:{payload: AuthorIFace[]}) => {
+      if (state.current_article) state.current_article.authors = payload
+    },
+    setCurrentUrls: (state: ArticleStateIFace, {payload}:{payload: ArticleURLs}) => {
+      if (state.current_article) state.current_article.urls = payload
+    },
     resetArticle: () => {
       return initialState
     }
@@ -139,5 +147,6 @@ export const {
   setPublicationDetails,
   setCurrentArticleTitle,
   setCurrentAuthors,
+  setCurrentUrls,
   resetArticle
 } = articleSlice.actions

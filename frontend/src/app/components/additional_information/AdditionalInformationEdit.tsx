@@ -1,9 +1,8 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import { Text } from '@consta/uikit/Text'
 import {getAdditionInformationFormByType} from "./getAdditionInformationFormByType.tsx";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store";
-import {useUpdateArticleMutation} from "../../services/backend";
 import {getAdditionInformationTableByType} from "./getAdditionInformationTableByType.tsx";
 import {Button} from "@consta/uikit/Button";
 import {IconSelect} from "@consta/icons/IconSelect"
@@ -19,13 +18,10 @@ export const AdditionalInformationEdit = () => {
   const showMoreInfoRef = useRef<HTMLInputElement>(null)
   const showLessInfoRef = useRef<HTMLInputElement>(null)
   const current_article = useSelector((state: RootState) => state.articles.current_article)
-  const [updateArticle] = useUpdateArticleMutation()
 
-
-  const handleClickOutside = (e: TouchEvent | MouseEvent) => {
+  const handleClickOutside = () => {
     setActive(false);
     setMoreInfo(false)
-    updateArticle({...current_article, additional_information: current_article?.additional_information})
   }
 
   useClickOutside({

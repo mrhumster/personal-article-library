@@ -1,19 +1,17 @@
 import React from "react";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
 import Moment from "react-moment";
 import {IconLink} from "@consta/icons/IconLink";
 import {IconClose} from "@consta/icons/IconClose";
 import {Button} from "@consta/uikit/Button";
-import {useUpdateArticleMutation} from "../../services/backend";
 import {Text} from "@consta/uikit/Text"
-import moment from "moment/moment";
+
+import {setCurrentUrls} from "../../features/article";
 
 export const ArticleUrlsNoExpandedWithUrls = ({setIsExpanded}:{setIsExpanded: React.Dispatch<React.SetStateAction<boolean>>}) => {
-  const article = useSelector((state: RootState) => state.articles.current_article)
   const urls = useSelector((state: RootState) => state.articles.current_article?.urls)
-  const [updateArticle] = useUpdateArticleMutation()
-
+  const dispatch = useDispatch()
   const current_timezone = useSelector((state: RootState) => state.ui.timezone)
 
   const openInNewTab = (url: string) => {
@@ -28,15 +26,18 @@ export const ArticleUrlsNoExpandedWithUrls = ({setIsExpanded}:{setIsExpanded: Re
 
   const handleClickDeleteUrl = (e: React.MouseEvent, url: string) => {
     e.stopPropagation()
-    updateArticle({...article, urls: {
-      date_accessed: moment(urls?.date_accessed).tz(current_timezone).utc(),
-      urls: urls?.urls.filter((u) => u !== url)}})
+    if (urls?.urls) {
+      dispatch(setCurrentUrls(
+        {
+          date_accessed: urls?.date_accessed,
+          urls: urls?.urls.filter((u) => u !== url)
+        }
+      ))
+    }
   }
 
   return (
-    <div className={"border border-dotted border-transparent hover:border-sky-700 bg-zinc-100 rounded p-1"}
-         onClick={() => setIsExpanded(true)}
-    >
+    <div className={"border border-dotted border-transparent hover:border-sky-700 bg-zinc-100 rounded p-1"} onClick={() => setIsExpanded(true)}>
       <div>
         <Text className={"ms-1"} display={'inline'} size={'xs'} weight={'light'}>
           Дата посещения:

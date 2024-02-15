@@ -1,95 +1,84 @@
 import React, {useEffect, useState} from "react";
 import {TextField} from "@consta/uikit/TextField";
 import {Button} from "@consta/uikit/Button";
+import { DatePicker } from '@consta/uikit/DatePicker';
 import {IconAdd} from "@consta/icons/IconAdd";
 import {IconClose} from "@consta/icons/IconClose";
 import moment from "moment/moment";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store";
-
+import {ArticleURLs} from "../../types/article.types.ts";
 
 interface ArticleUrlsExpandedPropsIFace {
   expandedRef : React.RefObject<HTMLDivElement>,
-  datePickerRef : React.RefObject<HTMLDivElement>
-  dateAccessed: string | null,
-  setDateAccessed: React.Dispatch<React.SetStateAction<string | null>>,
-  urls: string[],
-  setUrls: React.Dispatch<React.SetStateAction<string[]>>
+  datePickerRef : React.Ref<HTMLInputElement>,
+  localCurrentUrls: ArticleURLs | undefined,
+  setLocalCurrentUrls: React.Dispatch<React.SetStateAction<ArticleURLs | undefined>>
 }
 
 export const ArticleUrlsExpanded = (props: ArticleUrlsExpandedPropsIFace) => {
   const {
     expandedRef,
     datePickerRef,
-    dateAccessed,
-    setDateAccessed,
-    urls,
-    setUrls
+    localCurrentUrls,
+    setLocalCurrentUrls
   } = props
 
-  const [dateError, setDateError] = useState<string[]>([])
   const [urlError, setUrlError] = useState<{[key: number]:string}>({})
   const current_timezone = useSelector((state: RootState) => state.ui.timezone)
-  const article = useSelector((state: RootState) => state.articles.current_article)
+
 
   useEffect(() => {
-    if (article) {
-      if (!article.urls.date_accessed) {
-        setDateAccessed(moment().tz(current_timezone).format('DD.MM.YYYY'))
-      } else {
-        setDateAccessed(moment.utc(article.urls.date_accessed).tz(current_timezone).format('DD.MM.YYYY'))
+    if (!localCurrentUrls?.date_accessed) setLocalCurrentUrls(
+      {
+        urls: [''],
+        date_accessed: moment().tz(current_timezone).format()
       }
-      if (article.urls.urls.length !== 0) {
-        setUrls(article.urls.urls)
-      } else {
-        setUrls([''])
-      }
-    }
-  }, [article])
+    )
+  }, [localCurrentUrls?.date_accessed])
+
 
   const handleClickAddURL = () => {
-    // Добавляет строчку с пустым URL
-    setUrls(prev => [...prev, ''])
+    setLocalCurrentUrls(prevState => {
+      if (prevState) {
+        return {
+          ...prevState,
+          urls: [...prevState.urls, '']
+        }
+      }
+    })
   }
 
   const handleClickDeleteURL = (index: number) => {
-    // Удаляет строчку с URL
-    const mutateUrls = urls.filter((item, i) => {
-      if (i !== index) return item
+    setLocalCurrentUrls(prevState => {
+      if (prevState) {
+        return {
+          ...prevState,
+          urls: prevState.urls.filter((item, i) => {if (i !== index) return item})
+        }
+      }
     })
-    setUrls(mutateUrls)
   }
 
 
   const handleChangeUrl = (value: string | null, index: number) => {
-    // Обновление локального состояния URLs
-    const mutateUrls = urls.map((url, i) => {
-      if (i === index) {
-        return value === null ? '' : value
-      } else {
-        return url
+    setLocalCurrentUrls(prevState => {
+      if (prevState) {
+        return {
+          ...prevState,
+          urls: prevState.urls.map((item, i) => {
+            if (i === index) return value === null ? '' : value
+            else return item
+          })
+        }
       }
     })
-    setUrls(mutateUrls)
   }
 
-  useEffect(()=>{
-    // Валидация даты посещения
-    if (dateAccessed) {
-      setDateError([])
-      const d = moment.tz(dateAccessed ? dateAccessed : '01.01.1970', 'DD.MM.YYYY', current_timezone)
-      if (!d.isValid()) {
-        setDateError(prev => [...prev, 'Дата должна быть в формате ДД.ММ.ГГГГ'])
-      }
-      if (d.isSameOrAfter(moment(), 'hour')) {
-        setDateError(prev => [...prev, 'Дата не может быть в будущем'])
-      }
-    }
-  }, [dateAccessed])
 
   useEffect(() => {
     // Валидация URLs
-    urls.map((url, index) => {
+    localCurrentUrls?.urls.map((url, index) => {
       if (url) {
         if (!/^(http|https):\/\//.test(url)) {
           setUrlError(prev => ({...prev, [index]: 'Рабочая ссылка должна начинаться с http(s)://'}))
@@ -98,20 +87,31 @@ export const ArticleUrlsExpanded = (props: ArticleUrlsExpandedPropsIFace) => {
         }
       }
     })
-  }, [urls])
+  }, [localCurrentUrls?.urls])
+
+  const dateAccessedChangeHandler = (value: Date | null) => {
+    setLocalCurrentUrls(prevState => {
+      if (prevState && value) {
+        return {
+          ...prevState,
+          date_accessed: value.toString()
+        }
+      }
+    })
+  }
+
+  useEffect(() => {
+    console.log(datePickerRef)
+  }, [datePickerRef])
 
   return (
     <div ref={expandedRef} className={"border border-sky-700 rounded p-4"}>
-      <TextField onChange={setDateAccessed}
-                 label={'Дата доступа'}
-                 placeholder={'ДД.ММ.ГГГГ'}
-                 value={dateAccessed}
-                 ref={datePickerRef}
-                 status={dateError.length > 0 ? "alert" : "success"}
-                 caption={dateError.length > 0 ? dateError.join('\n') : undefined}
-                 size={'s'}
+      <DatePicker
+        value={moment(localCurrentUrls?.date_accessed).toDate()}
+        onChange={dateAccessedChangeHandler}
+        ref={datePickerRef}
       />
-      {urls.map((url, index) => (
+      {localCurrentUrls?.urls.map((url, index) => (
         <div key={index} className={'relative'}>
           <TextField onChange={(value: string | null ) => handleChangeUrl(value, index)}
                      type={'url'}
