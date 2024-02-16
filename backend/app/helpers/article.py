@@ -31,7 +31,8 @@ def article_helper(article) -> dict:
         "delete_date": article["delete_date"],
         "favorite": article["favorite"],
         "read": article["read"],
-        "read_date": datetime_to_str(article['read_date'])
+        "read_date": datetime_to_str(article['read_date']),
+        "notebooks": article["notebooks"]
     }
 
 def isbn_meta_helper(meta) -> dict:

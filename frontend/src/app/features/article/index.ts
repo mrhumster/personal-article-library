@@ -10,5 +10,7 @@ export {
   setCurrentAuthors,
   resetArticle,
   setCurrentUrls,
+  setCurrentNoteBooks,
+  addNoteBook,
   articleSlice
 } from './articleSlice.ts'

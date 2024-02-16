@@ -18,7 +18,11 @@ export {
   useDeleteArticleMutation,
   useGetArticleStringQuery,
   useGetArticleListStringMutation,
-  useUpdateFileMutation
+  useUpdateFileMutation,
+  useGetNoteBookQuery,
+  useUpdateNoteBookMutation,
+  useCreateNoteBookMutation,
+  useDeleteNoteBookMutation
 } from './backendApi.ts'
 
 export {baseQueryWithErrorHandler} from './baseQuery.ts'

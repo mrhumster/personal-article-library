@@ -1,5 +1,5 @@
 import {createApi} from "@reduxjs/toolkit/dist/query/react";
-import {ArticleIFace, ErrorResponse, UserResponse} from "../../types";
+import {ArticleIFace, ErrorResponse, NoteBookIFace, UserResponse} from "../../types";
 import {baseQueryWithErrorHandler} from "./baseQuery.ts";
 import {normalize, schema} from "normalizr";
 import {ResponseWithArticle} from "../../types";
@@ -183,32 +183,6 @@ export const backendApi = createApi({
       },
       transformResponse: (response : { data: CollectionIFace[] }) => {return response.data[0]},
       transformErrorResponse: (response: ErrorResponse) => response.data.detail,
-      /* Пример использования асинхронной функции добавления кеша
-      https://redux-toolkit.js.org/rtk-query/usage/manual-cache-updates#optimistic-updates
-      async onCacheEntryAdded(
-        arg,
-        {
-          dispatch,
-          getState,
-          extra,
-          requestId,
-          cacheEntryRemoved,
-          cacheDataLoaded,
-          getCacheEntry,
-        }
-      ) {
-        const state = getState()
-        const alert: Item = {
-          message: `Коллекция "${state.collections.entities[arg.collection_id].title}" обновилась.`,
-          status: "normal",
-          progressMode: 'timer',
-        }
-        console.log(arg)
-        console.log(getState())
-        dispatch(addMessage(alert))
-      },
-
-       */
     }),
     deleteMyCollection: builder.mutation({
       query: (collection_id) => {
@@ -218,6 +192,37 @@ export const backendApi = createApi({
        }
       },
       transformErrorResponse: (response: ErrorResponse) => response.data.detail
+    }),
+    // NOTEBOOK ENDPOINTS
+    getNoteBook: builder.query({
+      query: (notebook_id) => `/notebooks/${notebook_id}`
+    }),
+    updateNoteBook: builder.mutation({
+      query: (data) => {
+        const { id, ...body } = data
+        return {
+          url: `/notebooks/${id}`,
+          method: 'PUT',
+          body: body
+        }
+      },
+    }),
+    createNoteBook: builder.mutation({
+      query: (body: NoteBookIFace) => {
+        return {
+          url: '/notebooks/',
+          method: 'POST',
+          body: body
+        }
+      }
+    }),
+    deleteNoteBook: builder.mutation({
+      query: (notebook_id) => {
+        return {
+          url: `/notebooks/${notebook_id}`,
+          method: 'DELETE'
+        }
+      }
     })
   }),
 })
@@ -241,5 +246,9 @@ export const {
   useDeleteArticleMutation,
   useGetArticleStringQuery,
   useGetArticleListStringMutation,
-  useUpdateFileMutation
+  useUpdateFileMutation,
+  useGetNoteBookQuery,
+  useUpdateNoteBookMutation,
+  useCreateNoteBookMutation,
+  useDeleteNoteBookMutation
 } = backendApi

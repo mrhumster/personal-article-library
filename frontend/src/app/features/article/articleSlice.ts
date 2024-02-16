@@ -60,6 +60,12 @@ export const articleSlice = createSlice({
     setCurrentUrls: (state: ArticleStateIFace, {payload}:{payload: ArticleURLs}) => {
       if (state.current_article) state.current_article.urls = payload
     },
+    setCurrentNoteBooks: (state: ArticleStateIFace, {payload}:{payload: string[]}) => {
+      if (state.current_article) state.current_article.notebooks = payload
+    },
+    addNoteBook: (state: ArticleStateIFace, {payload}:{payload: string}) =>{
+      if (state.current_article) state.current_article.notebooks = [...state.current_article.notebooks || [], payload]
+    },
     resetArticle: () => {
       return initialState
     }
@@ -148,5 +154,7 @@ export const {
   setCurrentArticleTitle,
   setCurrentAuthors,
   setCurrentUrls,
-  resetArticle
+  resetArticle,
+  setCurrentNoteBooks,
+  addNoteBook
 } = articleSlice.actions
