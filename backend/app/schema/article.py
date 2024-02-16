@@ -141,6 +141,7 @@ class ArticleInDB(BaseModel):
     favorite: Optional[bool] = Field(False)
     read: Optional[bool] = Field(False)
     read_date: Optional[datetime] = Field(None)
+    notebooks: Optional[list[str]] = Field(default=[])
 
     @validator('files')
     def unique_files_id(cls, v):
@@ -219,3 +220,4 @@ class UpdateArticleModel(BaseModel):
     favorite: Optional[bool]
     read: Optional[bool]
     read_date: Optional[datetime] = Field(None)
+    notebooks: Optional[list[str]] = Field(default=[])

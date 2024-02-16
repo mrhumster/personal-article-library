@@ -5,13 +5,13 @@ import {useGetArticleQuery} from "../../services/backend";
 import {ReferenceTypeSelect} from "./ReferenceTypeSelect.tsx";
 import {TitleEdit} from "./TitleEdit.tsx";
 import {AuthorsEdit} from "./AuthorsEdit.tsx";
-import {AdditionalInformationEdit} from "../additional_information/AdditionalInformationEdit.tsx";
-import {ArticleFiles} from "../article_files";
+import {AdditionalInformationEdit} from "./additional_information";
+import {ArticleFiles} from "./files";
 import {setCurrentArticle} from "../../features/article";
-import {ArticleCollectionsEdit} from "../article_collection";
-import {ArticleUrls} from "../article_urls";
-import {Identifiers} from "../identifiers";
-import {PubDetails} from "../publication_details";
+import {ArticleCollectionsEdit} from "./collections";
+import {ArticleUrls} from "./urls";
+import {Identifiers} from "./identifiers";
+import {PubDetails} from "./publication_details";
 import {SkeletonBrick, SkeletonText} from "@consta/uikit/Skeleton";
 
 

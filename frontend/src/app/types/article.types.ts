@@ -83,6 +83,7 @@ export interface ArticleIFace {
   favorite?: boolean
   read?: boolean
   read_date?: string
+  notebooks?: string[]
 }
 
 export interface CreateArticleIFace {

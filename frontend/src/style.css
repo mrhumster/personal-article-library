@@ -52,3 +52,6 @@ body {
   border-radius: 7px;
 }
 
+#notebook {
+    height: calc(100% - 32px);
+}

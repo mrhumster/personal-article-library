@@ -72,7 +72,11 @@ export const AuthorsEdit = () => {
       {!active &&
         <Text className="border rounded border-transparent hover:border-sky-700 hover:border-dotted py-1"
               onClick={() => setActive(true)}>
-          {authors ? authorsToString(authors) : <span className='italic ms-1 font-light text-sm cursor-pointer'>Добавить информацию об авторе(ах)</span>}
+          { authors && authors.length > 0 ?
+            authorsToString(authors) :
+
+            <span className='italic ms-1 font-light text-sm cursor-pointer'>Добавить информацию об авторе(ах)</span>
+          }
         </Text>
       }
       {active &&
