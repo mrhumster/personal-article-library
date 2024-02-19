@@ -1,5 +1,6 @@
 import {ArticleIFace, FileScheme} from "./article.types.ts";
 import {CollectionIFace} from "./collection.types.ts";
+import {NoteBookIFace} from "./notebook.types.ts";
 
 export interface ErrorResponse {
   status: number,
@@ -15,6 +16,10 @@ export interface Response {
 
 export interface ResponseWithCollection extends Response {
   data: CollectionIFace[]
+}
+
+export interface ResponseWithNotebook extends Response {
+  data: NoteBookIFace[]
 }
 
 export interface ResponseWithArticle extends Response{

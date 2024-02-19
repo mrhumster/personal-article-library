@@ -1,7 +1,4 @@
-from schema.collections import CollectionsSchema
-
-
-def collection_helper(data: CollectionsSchema) -> dict:
+def collection_helper(data: dict) -> dict:
     return {
         'id': str(data['_id']),
         'title': data['title'],

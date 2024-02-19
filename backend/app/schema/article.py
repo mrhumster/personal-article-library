@@ -8,24 +8,24 @@ from isbnlib import canonical, is_isbn10, is_isbn13
 from pydantic import BaseModel, Field, validator
 
 class Pages(BaseModel):
-    start: Optional[int] = Field(gt=0, lt=999999)
-    end: Optional[int] = Field(gt=0, lt=999999)
+    start: Optional[int] = Field(1, gt=0, lt=999999)
+    end: Optional[int] = Field(1, gt=0, lt=999999)
 
 class PublicationDetails(BaseModel):
     year: int | None = Field(None, gt=1800, lt=2100)
-    title: Optional[str] = Field(max_length=300)
-    pages: Optional[Pages] = Field(Pages())
-    volume: Optional[str] = Field(max_length=100)
-    issue: Optional[str] = Field(max_length=200)
+    title: Optional[str] = Field(None,max_length=300)
+    pages: Optional[Pages] = Field(None)
+    volume: Optional[str] = Field(None, max_length=100)
+    issue: Optional[str] = Field(None, max_length=200)
 
 class AuthorSchema(BaseModel):
-    first_name: Optional[str] = Field(max_length=100)
-    last_name: Optional[str] = Field(max_length=100)
-    sur_name: Optional[str] = Field(max_length=100)
+    first_name: Optional[str] = Field(None, max_length=100)
+    last_name: Optional[str] = Field(None, max_length=100)
+    sur_name: Optional[str] = Field(None, max_length=100)
 
     @property
     def short_surname(self) -> str:
-        return self.sur_name[0]+"." if self.sur_name is not None else ""
+        return self.sur_name[0]+"." if self.sur_name else ""
 
     @property
     def short_firstname(self) -> str:
@@ -88,12 +88,12 @@ class EditorsSchema(BaseModel):
     sur_name: Optional[str] = Field(max_length=100)
 
 class AdditionalInformationBook(BaseModel):
-    edition: Optional[str] = Field(max_length=200)
-    editors: Optional[list[EditorsSchema]] = Field(max_items=5)
-    city: Optional[str] = Field(max_length=100)
-    publisher: Optional[str] = Field(max_length=200)
-    month: Optional[int] = Field(gt=0, lt=13)
-    day: Optional[int] = Field(gt=0, lt=32)
+    edition: Optional[str] = Field(None, max_length=200)
+    editors: Optional[list[EditorsSchema]] = Field(None, max_items=5)
+    city: Optional[str] = Field(None, max_length=100)
+    publisher: Optional[str] = Field(None, max_length=200)
+    month: Optional[int] = Field(0, gt=0, lt=13)
+    day: Optional[int] = Field(0, gt=0, lt=32)
 
     @property
     def City(self):
@@ -108,7 +108,7 @@ class MetaScheme(BaseModel):
 
 class ISBN(BaseModel):
     value: Optional[str] = Field(min_length=10, max_length=17)
-    meta: Optional[MetaScheme]
+    meta: Optional[MetaScheme] = Field(None)
 
     @validator('value')
     def isbn_validate(cls, v):
@@ -127,21 +127,21 @@ class ArticleInDB(BaseModel):
     owner: str = Field(...)
     added: datetime = Field(...)
     files: Optional[list[str]] = Field(default=[], min_items=0, max_items=100)
-    publication: Optional[PublicationDetails] = Field(PublicationDetails())
+    publication: Optional[PublicationDetails] = Field(None)
     title: Optional[str] = Field(max_length=300)
-    authors: Optional[list[AuthorSchema]] = Field(max_items=10)
-    source: Optional[str] = Field(max_length=200)
-    reference_type: int = 0
-    additional_information: Optional[AdditionalInformationBook] = Field(AdditionalInformationBook())
-    urls: Optional[ArticleURLs] = Field(ArticleURLs())
-    identifiers: Optional[Identifiers]
-    description: Optional[str] = Field(max_length=2999)
-    deleted: Optional[bool]
-    delete_date: Optional[datetime]
+    authors: Optional[list[AuthorSchema]] = Field(None, max_items=10)
+    source: Optional[str] = Field(None, max_length=200)
+    reference_type: int = Field(0)
+    additional_information: Optional[AdditionalInformationBook] = Field(None)
+    urls: Optional[ArticleURLs] = Field(None)
+    identifiers: Optional[Identifiers] = Field(None)
+    description: Optional[str] = Field(None, max_length=2999)
+    deleted: Optional[bool] = Field(False)
+    delete_date: Optional[datetime] = Field(None)
     favorite: Optional[bool] = Field(False)
     read: Optional[bool] = Field(False)
     read_date: Optional[datetime] = Field(None)
-    notebooks: Optional[list[str]] = Field(default=[])
+    notebooks: Optional[list[str]] = Field([])
 
     @validator('files')
     def unique_files_id(cls, v):
@@ -209,15 +209,15 @@ class UpdateArticleModel(BaseModel):
     title: Optional[str]
     authors: Optional[list[AuthorSchema]]
     source: Optional[str]
-    reference_type: Optional[str]
+    reference_type: Optional[int] = Field(0)
     additional_information: Optional[AdditionalInformationBook]
     files: Optional[list[str]] = Field(default=[], min_items=0, max_items=100)
     urls: Optional[ArticleURLs]
     identifiers: Optional[Identifiers]
-    description: Optional[str] = Field(max_length=2999)
+    description: Optional[str] = Field(None, max_length=2999)
     deleted: Optional[bool]
     delete_date: Optional[datetime]
     favorite: Optional[bool]
     read: Optional[bool]
     read_date: Optional[datetime] = Field(None)
-    notebooks: Optional[list[str]] = Field(default=[])
+    notebooks: Optional[list[str]]

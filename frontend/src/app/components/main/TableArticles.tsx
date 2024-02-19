@@ -12,7 +12,7 @@ import {
 } from '@consta/uikit/Table';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
-import {openSideBar, setActiveTab, setDragEvent} from "../../features/ui";
+import {openSideBar, setDragEvent} from "../../features/ui";
 import Moment from "react-moment";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
 import {ArticleIFace, AuthorIFace} from "../../types";
@@ -41,7 +41,7 @@ type TableArticlesIFace = {
 export const TableArticles = ({filter, title}: TableArticlesIFace) => {
   const {refetch} = useGetArticlesQuery({}, {pollingInterval: 5000})
   const {ids, entities} = useSelector((state: RootState) => state.articles.articles)
-  const selectedRow = useSelector((state: RootState) => state.articles.current_article?.id)
+  const selectedRow = useSelector((state: RootState) => state.ui.rightSideBar.article?.id)
   const ref = useRef<HTMLDivElement>(null)
   const selected_menu_item = useSelector((state: RootState) => state.ui.checked)
   const [rows, setRows] = useState<ArticleIFace[]>()
@@ -281,7 +281,6 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
 
   const handleRowClick = (arg: { id?: string | undefined; e?: React.SyntheticEvent<Element, Event> | undefined }) => {
     dispatch(openSideBar({id: arg.id}))
-    dispatch(setActiveTab(0))
   }
 
   const display = (event: React.DragEvent<HTMLDivElement>) => {

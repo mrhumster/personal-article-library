@@ -33,8 +33,11 @@ services:
     restart: always
     networks:
       - pal-network
+    ports:
+      - "8000:8000"
     depends_on:
       - mongo
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --root-path /api --reload
   mongo:
     image: mongo
     restart: always

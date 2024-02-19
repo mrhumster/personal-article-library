@@ -46,14 +46,14 @@ async def upload(attach: UploadFile,
         f.write(contents)
 
     attach.file.close()
-    logger.info(current_user)
     new_file_metadata = FileWithOwner.parse_obj({
         'owner': current_user['username'],
         'file_name':  attach.filename,
         'file_uuid': filename,
         'extension': file_extension[1:],
         'created': datetime.datetime.fromtimestamp(os.path.getatime(file_path)),
-        'size': len(contents)
+        'size': len(contents),
+        'history': None
     })
 
     new_file = await add_file(new_file_metadata)

@@ -16,6 +16,7 @@ export const initialState: uiState = {
   rightSideBar: {
     activeTab: 0,
     isSidebarOpen: false,
+    activeNotebook: undefined
   },
   uploadProgress: {
     show: false,
@@ -62,7 +63,7 @@ export const uiSlice = createSlice({
     },
     closeSideBar: (state: uiState) => {
       state.rightSideBar.isSidebarOpen = false
-      //state.rightSideBar.article = undefined
+      state.rightSideBar.article = undefined
     },
     setActiveTab: (state: uiState, action) => {
       state.rightSideBar.activeTab = action.payload
@@ -97,6 +98,9 @@ export const uiSlice = createSlice({
     setActiveReaderTab: (state: uiState, action) => {
       state.reader.activeTab = action.payload
     },
+    setActiveNotebook: (state: uiState, {payload}:{payload: string | undefined}) => {
+      state.rightSideBar.activeNotebook = payload
+    },
     resetUi: () => {
       return initialState
     }
@@ -129,5 +133,6 @@ export const {
   openFile,
   closeFile,
   setActiveReaderTab,
-  resetUi
+  resetUi,
+  setActiveNotebook
 } = uiSlice.actions

@@ -107,6 +107,23 @@ export const articleSlice = createSlice({
       }
     )
     builder.addMatcher(
+      backendApi.endpoints.getArticle.matchFulfilled,
+      (state: ArticleStateIFace, action) => {
+        if (action.payload) {
+          const id = action.payload.id
+          if (id) {
+            if (state.articles.ids.indexOf(id) === -1) {
+              state.articles.ids.push(id)
+            }
+            state.articles.entities[id] = action.payload
+            if (id === state.current_article?.id) {
+              state.current_article = action.payload
+            }
+          }
+        }
+      }
+    )
+    builder.addMatcher(
       backendApi.endpoints.deleteArticle.matchFulfilled,
       (state: ArticleStateIFace, action) => {
         if (action.payload) {

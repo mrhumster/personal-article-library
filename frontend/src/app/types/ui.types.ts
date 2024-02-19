@@ -24,6 +24,7 @@ export interface uiState {
       id: string
     }
     activeTab: number
+    activeNotebook?: string
   }
   uploadProgress: {
     show: boolean,

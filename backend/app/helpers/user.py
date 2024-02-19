@@ -1,7 +1,4 @@
-from uvicorn.server import logger
-
-
-def user_helper(user) -> dict:
+def user_helper(user: dict) -> dict:
     return {
         "id": str(user["_id"]),
         "username": user["username"],

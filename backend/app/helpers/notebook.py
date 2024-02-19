@@ -1,6 +1,4 @@
-from schema.notebook import NotebookWithOwner as modelSchema
-
-def helper(data: modelSchema) -> dict:
+def helper(data: dict) -> dict:
     return {
         'id': str(data['_id']),
         'owner': data['owner'],

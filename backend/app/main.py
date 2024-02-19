@@ -18,6 +18,7 @@ origins = [
     "https://base",
     "https://0.0.0.0",
     "https://localhost",
+    "https://backend",
     f"https://{Config.HOSTNAME}"
 ]
 

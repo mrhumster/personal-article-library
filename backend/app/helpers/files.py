@@ -1,4 +1,4 @@
-def file_helper(file) -> dict:
+def file_helper(file: dict) -> dict:
     return {
         "id": str(file["_id"]),
         "file_name": file["file_name"],

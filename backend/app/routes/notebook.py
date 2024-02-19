@@ -2,11 +2,10 @@ import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Body
 from starlette import status
-from starlette.responses import JSONResponse
 
+from authorisation.auth import get_current_active_user
 from helpers.response import ResponseModel
 from requests.notebook import add, retrieve, refresh, remove
-from authorisation.auth import get_current_active_user
 from schema.notebook import Notebook as modelSchema
 from schema.notebook import NotebookWithOwner as modelSchemaWithOwner
 from schema.user import User
@@ -44,7 +43,7 @@ async def read(object_id: str, current_user: User = Depends(get_current_active_u
     readable_object = await check_permission(object_id, current_user)
     return ResponseModel(readable_object, 'Notebook retrieved')
 
-@router.post('/{object_id}')
+@router.put('/{object_id}')
 async def update(object_id: str, req: modelSchema = Body(...), current_user: User = Depends(get_current_active_user)):
     await check_permission(object_id, current_user)
     req = {k: v for k, v in req.dict().items() if v is not None}
@@ -57,9 +56,7 @@ async def delete(object_id: str, current_user: User = Depends(get_current_active
     await check_permission(object_id, current_user)
     removed = await remove(object_id)
     if removed:
-        return JSONResponse(
-            status_code=status.HTTP_200_OK,
-            content={'message': 'Notebook is deleted'})
+        return ResponseModel(data=removed, message='Notebook deleted successfully')
     HTTPException(
         status_code=status.HTTP_204_NO_CONTENT,
         headers={'WWW-Authenticate': 'Bearer'}

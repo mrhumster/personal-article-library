@@ -5,6 +5,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../store";
 import {useUpdateArticleMutation} from "../../../services/backend";
 import {useDebounce} from "@consta/uikit/useDebounce";
+import { ProgressSpin } from '@consta/uikit/ProgressSpin';
 
 export const Updater = () => {
   const current_article = useSelector((state: RootState) => state.articles.current_article)
@@ -22,6 +23,13 @@ export const Updater = () => {
 
 
   return (
-    <Button loading={isLoading} view={'ghost'} onlyIcon iconLeft={IconRestart}/>
+    <>
+    {!isLoading && <Button width={'full'} view={'ghost'} onlyIcon iconLeft={IconRestart}/>}
+    { isLoading &&
+        <div className='rounded flex items-center justify-center bg-neutral-700/90 w-10 h-10'>
+          <ProgressSpin/>
+        </div>
+    }
+    </>
   )
 }

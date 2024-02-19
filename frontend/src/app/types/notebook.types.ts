@@ -1,4 +1,8 @@
 export interface NoteBookIFace {
-  title?: string
-  body?: string
+  id: string
+  created: string
+  changed: string
+  owner: string
+  title: string | null
+  body: string | null
 }

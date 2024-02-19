@@ -14,5 +14,6 @@ export {
   closeReader,
   openReader,
   setActiveReaderTab,
+  setActiveNotebook,
   resetUi,
 } from './uiSlice.ts'

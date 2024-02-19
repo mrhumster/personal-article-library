@@ -1,5 +1,5 @@
 import {createApi} from "@reduxjs/toolkit/dist/query/react";
-import {ArticleIFace, ErrorResponse, NoteBookIFace, UserResponse} from "../../types";
+import {ArticleIFace, ErrorResponse, NoteBookIFace, ResponseWithNotebook, UserResponse} from "../../types";
 import {baseQueryWithErrorHandler} from "./baseQuery.ts";
 import {normalize, schema} from "normalizr";
 import {ResponseWithArticle} from "../../types";
@@ -195,7 +195,8 @@ export const backendApi = createApi({
     }),
     // NOTEBOOK ENDPOINTS
     getNoteBook: builder.query({
-      query: (notebook_id) => `/notebooks/${notebook_id}`
+      query: (notebook_id) => `/notebooks/${notebook_id}`,
+      transformResponse: (response: ResponseWithNotebook) => response.data[0]
     }),
     updateNoteBook: builder.mutation({
       query: (data) => {

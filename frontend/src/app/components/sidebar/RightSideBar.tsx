@@ -18,6 +18,7 @@ export const RightSideBar = () => {
   const handleCloseSideBar = () => {
     dispatch(closeSideBar())
     dispatch(setCurrentArticle({}))
+    dispatch(set)
   }
 
   return (

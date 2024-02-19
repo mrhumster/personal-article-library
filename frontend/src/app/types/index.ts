@@ -1,4 +1,11 @@
-export type {ErrorResponse, ResponseWithArticle, VolumeIFace, IndustryIdentifiersIFace} from './api.types.ts'
+export type {
+  ErrorResponse,
+  ResponseWithArticle,
+  VolumeIFace,
+  IndustryIdentifiersIFace,
+  ResponseWithNotebook,
+  ResponseWithCollection
+} from './api.types.ts'
 export type {UserResponse, UserIFace, AuthState, UserDataIFace} from './auth.types.ts'
 export type {
   ArticleIFace, AuthorIFace, ArticleStateIFace, ReferenceTypeItem, PublicationDetails, FileScheme,
