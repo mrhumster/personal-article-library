@@ -21,7 +21,7 @@ export const AdditionalInformationEdit = () => {
 
   const handleClickOutside = () => {
     setActive(false);
-    setMoreInfo(false)
+    // setMoreInfo(false)
   }
 
   useClickOutside({

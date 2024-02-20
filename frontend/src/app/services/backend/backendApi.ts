@@ -174,9 +174,9 @@ export const backendApi = createApi({
     }),
     updateMyCollection: builder.mutation({
       query: (data) => {
-        const { collection_id, ...body } = data
+        const { id, ...body } = data
         return {
-          url: `/collections/${collection_id}`,
+          url: `/collections/${id}`,
           method: 'PUT',
           body: body
         }

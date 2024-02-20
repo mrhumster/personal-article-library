@@ -28,7 +28,7 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
   const {isActive, kind} = useSelector((state: RootState) => state.ui.dragndrop)
   const checked = useSelector((state: RootState) => state.ui.checked.id)
   const collections: CollectionStateIFace = useSelector((state: RootState) => state.collections)
-  const [updateMyCollection, data] = useUpdateMyCollectionMutation()
+  const [updateMyCollection, updateMyCollectionResult] = useUpdateMyCollectionMutation()
   const [deleteMyCollection] = useDeleteMyCollectionMutation()
   const [openRenameField, setOpenRenameField] = useState<boolean>(false)
   const [changeCollectionName, setChangeCollectionName] = useState<string | null>(null)
@@ -37,10 +37,17 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
   const all_article = useSelector((state: RootState) => state.articles.articles)
   const [ deleteArticle, deleteArticleResult] = useDeleteArticleMutation()
   const [ updateArticle, updateArticleResult ] = useUpdateArticleMutation()
-
   const dispatch = useDispatch()
-
   const kebabRef = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    if (updateMyCollectionResult.isSuccess) dispatch(addMessage({message: 'Ссылка добавлена в коллекцию', status: 'success'}))
+    if (updateMyCollectionResult.isError) dispatch(addMessage({message: 'Возникла ошибка, обратитесь к администратору', status: 'alert'}))
+  }, [updateMyCollectionResult.isSuccess, updateMyCollectionResult.isError])
+
+  useEffect(() => {
+    if (updateMyCollectionResult.isSuccess && !updateMyCollectionResult.isError) refetch()
+  }, [updateMyCollectionResult.isSuccess, updateMyCollectionResult.isError])
 
   const handleItemClick = (item: Item) => dispatch(setSelectedMenuItem({id: item.key, group: item.groupId}))
 
@@ -70,8 +77,8 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
       if (articles.includes(article_id)) {
         dispatch(addMessage({message: 'Ссылка уже добавлена в коллекцию', status: 'system'}))
       } else {
-        updateMyCollection({collection_id: collection_id, articles: [...articles, article_id]})
-        dispatch(addMessage({message: 'Ссылка добавлена в коллекцию', status: 'success'}))
+        const collection = collections.entities[collection_id]
+        updateMyCollection({...collection, articles: [...articles, article_id]})
       }
     }
     setDragOver(false)
@@ -102,7 +109,8 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
       } else {
         if (item.key) {
           const articles = collections.entities[item.key].articles
-          updateMyCollection({collection_id: item.key, title: changeCollectionName, articles: articles})
+          const collection = collections.entities[item.key]
+          updateMyCollection({...collection, title: changeCollectionName, articles: articles})
         }
         setOpenRenameField(false)
       }
@@ -119,10 +127,6 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
     setOpenRenameField(true)
     setChangeCollectionName(item.label)
   }
-
-  useEffect(() => {
-    if (data.isSuccess && !data.isError) refetch()
-  }, [data.isSuccess, data.isError])
 
   useEffect(() => {
     if (deleteArticleResult.isSuccess) {
@@ -182,7 +186,7 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
       }
       {item.groupId === 2 && !openRenameField &&
           <>
-            {!data.isLoading ?
+            {!updateMyCollectionResult.isLoading ?
               <>
                 <Button
                   ref={kebabRef}

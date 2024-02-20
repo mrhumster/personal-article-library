@@ -1,12 +1,13 @@
 from typing import Optional
-from pydantic import BaseModel, validator, Field
+
+from pydantic import BaseModel, Field, field_validator
 
 
 class CollectionsSchema(BaseModel):
-    title: Optional[str] = Field(max_length=100)
+    title: Optional[str] = Field(None, max_length=100)
     articles: Optional[list[str]] = []
 
-    @validator('articles')
+    @field_validator('articles')
     def unique_articles_id(cls, v):
         return list(set(v))
 

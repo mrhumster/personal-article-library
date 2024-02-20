@@ -1,17 +1,20 @@
 import React, {useEffect} from "react";
 import {Button} from "@consta/uikit/Button";
 import {IconRestart} from "@consta/icons/IconRestart"
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store";
 import {useUpdateArticleMutation} from "../../../services/backend";
 import {useDebounce} from "@consta/uikit/useDebounce";
 import { ProgressSpin } from '@consta/uikit/ProgressSpin';
+import {addMessage} from "../../../features/alert";
 
 export const Updater = () => {
   const current_article = useSelector((state: RootState) => state.articles.current_article)
   const articles = useSelector((state: RootState) => state.articles.articles)
-  const [updateArticle, {isLoading}] = useUpdateArticleMutation()
+  const [updateArticle, {isLoading, isError, isSuccess, error}] = useUpdateArticleMutation()
   const debounceUpdateArticle = useDebounce(updateArticle, 1000)
+  const dispatch = useDispatch()
+
   useEffect(()=>{
     const id = current_article?.id
     if (id) {
@@ -21,6 +24,10 @@ export const Updater = () => {
     }
   }, [current_article])
 
+  useEffect(() => {
+    if (isError) dispatch(addMessage({message: `Произошла ошибка. Обратитесь к администратору`, status: 'alert'}))
+    console.log(error)
+  }, [isError, isSuccess])
 
   return (
     <>

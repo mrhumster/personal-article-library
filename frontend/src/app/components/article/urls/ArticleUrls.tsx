@@ -21,7 +21,24 @@ export const ArticleUrls = () => {
   const datePickerRef = useRef<HTMLInputElement>(null)
   const dispatch = useDispatch()
   const [localCurrentUrls, setLocalCurrentUrls] = useState<ArticleURLs | undefined>(undefined)
+  const [dateString, setDateString] = useState<string | null>()
   const currentUrls = useSelector((state: RootState) => state.articles.current_article?.urls)
+  const tz = useSelector((state: RootState) => state.ui.timezone)
+
+  useEffect(()=>{
+    if (currentUrls?.date_accessed) setDateString(moment.utc(currentUrls.date_accessed).tz(tz).format('DD.MM.YYYY'))
+  }, [currentUrls])
+
+  useEffect(() => {
+    if (dateString && moment(dateString, 'DD.MM.YYYY').isValid()) setLocalCurrentUrls(prevState => {
+      if (prevState) {
+        return {
+          ...prevState,
+          date_accessed: moment(dateString, 'DD.MM.YYYY').tz(tz).toISOString()
+        }
+      }
+    })
+  }, [dateString])
 
   const handleClickOutside = () => {
     setIsExpanded(false)
@@ -35,14 +52,12 @@ export const ArticleUrls = () => {
   }
 
 
-  useEffect(() => {
-    if (currentUrls) setLocalCurrentUrls(currentUrls)
-  }, [currentUrls])
+  useEffect(() => {if (currentUrls) setLocalCurrentUrls(currentUrls)}, [currentUrls])
 
   useClickOutside({
     isActive: !!handleClickOutside,
     handler: handleClickOutside,
-    ignoreClicksInsideRefs: [expandedRef, datePickerRef]
+    ignoreClicksInsideRefs: [expandedRef]
   })
 
   return (
@@ -51,10 +66,13 @@ export const ArticleUrls = () => {
       {  isExpanded && <ArticleUrlsExpanded datePickerRef={datePickerRef}
                                             expandedRef={expandedRef}
                                             localCurrentUrls={localCurrentUrls}
-                                            setLocalCurrentUrls={setLocalCurrentUrls}/>
+                                            setLocalCurrentUrls={setLocalCurrentUrls}
+                                            dateString={dateString}
+                                            setDateString={setDateString}
+      />
       }
       { !isExpanded && storeUrls && storeUrls.urls.length > 0 && <ArticleUrlsNoExpandedWithUrls setIsExpanded={setIsExpanded}/>}
-      { !isExpanded && storeUrls && storeUrls.urls.length === 0 && <ArticleUrlsNoExpandedNoUrls setIsExpanded={setIsExpanded}/>}
+      { !isExpanded && (!storeUrls || storeUrls.urls.length === 0) && <ArticleUrlsNoExpandedNoUrls setIsExpanded={setIsExpanded}/>}
     </>
   )
 }

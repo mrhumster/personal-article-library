@@ -5,15 +5,18 @@ from typing import Optional
 
 from fastapi import Form
 from isbnlib import canonical, is_isbn10, is_isbn13
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, validator, field_validator
+
+from utils.classes import CustomDatetime
+
 
 class Pages(BaseModel):
-    start: Optional[int] = Field(1, gt=0, lt=999999)
-    end: Optional[int] = Field(1, gt=0, lt=999999)
+    start: Optional[int] = Field(None, gt=0, lt=999999)
+    end: Optional[int] = Field(None, gt=0, lt=999999)
 
 class PublicationDetails(BaseModel):
     year: int | None = Field(None, gt=1800, lt=2100)
-    title: Optional[str] = Field(None,max_length=300)
+    title: Optional[str] = Field(None, max_length=300)
     pages: Optional[Pages] = Field(None)
     volume: Optional[str] = Field(None, max_length=100)
     issue: Optional[str] = Field(None, max_length=200)
@@ -53,10 +56,10 @@ class AuthorSchema(BaseModel):
         return f'{self.short_firstname}{self.short_surname} {self.lastname}'
 
 class ArticleURLs(BaseModel):
-    date_accessed: Optional[datetime]
+    date_accessed: Optional[CustomDatetime]
     urls: Optional[list[str]] = Field(default=[], max_items=100)
 
-    @validator('urls')
+    @field_validator('urls')
     def unique_url(cls, v):
         pattern = re.compile("^(http|https)://")
         for url in v:
@@ -64,8 +67,8 @@ class ArticleURLs(BaseModel):
                 raise ValueError(f"Строчка '{url}' не похожа на ссылку")
         return list(set(v))
 
-    @validator('date_accessed')
-    def validate_date(cls, v: datetime):
+    @field_validator('date_accessed')
+    def validate_date(cls, v: CustomDatetime):
         if not v:
             return None
         if v > datetime.now(timezone.utc):
@@ -75,7 +78,7 @@ class ArticleURLs(BaseModel):
 @dataclass
 class ArticleSchema:
     owner: str = Form(...)
-    added: datetime = Form(...)
+    added: CustomDatetime = Form(...)
     file_name: str = Form(...)
     year: int = Form(...)
     title: str = Form(...)
@@ -110,7 +113,7 @@ class ISBN(BaseModel):
     value: Optional[str] = Field(min_length=10, max_length=17)
     meta: Optional[MetaScheme] = Field(None)
 
-    @validator('value')
+    @field_validator('value')
     def isbn_validate(cls, v):
         if v:
             isbn = canonical(v)
@@ -125,7 +128,7 @@ class Identifiers(BaseModel):
 
 class ArticleInDB(BaseModel):
     owner: str = Field(...)
-    added: datetime = Field(...)
+    added: CustomDatetime = Field(...)
     files: Optional[list[str]] = Field(default=[], min_items=0, max_items=100)
     publication: Optional[PublicationDetails] = Field(None)
     title: Optional[str] = Field(max_length=300)
@@ -137,13 +140,13 @@ class ArticleInDB(BaseModel):
     identifiers: Optional[Identifiers] = Field(None)
     description: Optional[str] = Field(None, max_length=2999)
     deleted: Optional[bool] = Field(False)
-    delete_date: Optional[datetime] = Field(None)
+    delete_date: Optional[CustomDatetime] = Field(None)
     favorite: Optional[bool] = Field(False)
     read: Optional[bool] = Field(False)
-    read_date: Optional[datetime] = Field(None)
+    read_date: Optional[CustomDatetime] = Field(None)
     notebooks: Optional[list[str]] = Field([])
 
-    @validator('files')
+    @field_validator('files')
     def unique_files_id(cls, v):
         if v:
             return list(set(v))
@@ -199,7 +202,7 @@ class NewArticleSchema(BaseModel):
     title: str = Field(max_length=200)
     files: Optional[list[str]]
 
-    @validator('files')
+    @field_validator('files')
     def unique_files_id(cls, v):
         return list(set(v))
 
@@ -216,8 +219,8 @@ class UpdateArticleModel(BaseModel):
     identifiers: Optional[Identifiers]
     description: Optional[str] = Field(None, max_length=2999)
     deleted: Optional[bool]
-    delete_date: Optional[datetime]
+    delete_date: Optional[CustomDatetime]
     favorite: Optional[bool]
     read: Optional[bool]
-    read_date: Optional[datetime] = Field(None)
+    read_date: Optional[CustomDatetime] = Field(None)
     notebooks: Optional[list[str]]
