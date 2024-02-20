@@ -86,17 +86,17 @@ class ArticleSchema:
     reference_type: str = Form(...)
 
 class EditorsSchema(BaseModel):
-    last_name: Optional[str] = Field(max_length=100)
-    first_name: Optional[str] = Field(max_length=100)
-    sur_name: Optional[str] = Field(max_length=100)
+    last_name: Optional[str] = Field(None, max_length=100)
+    first_name: Optional[str] = Field(None, max_length=100)
+    sur_name: Optional[str] = Field(None, max_length=100)
 
 class AdditionalInformationBook(BaseModel):
     edition: Optional[str] = Field(None, max_length=200)
     editors: Optional[list[EditorsSchema]] = Field(None, max_items=5)
     city: Optional[str] = Field(None, max_length=100)
     publisher: Optional[str] = Field(None, max_length=200)
-    month: Optional[int] = Field(0, gt=0, lt=13)
-    day: Optional[int] = Field(0, gt=0, lt=32)
+    month: Optional[int] = Field(None, gt=0, lt=13)
+    day: Optional[int] = Field(None, gt=0, lt=32)
 
     @property
     def City(self):

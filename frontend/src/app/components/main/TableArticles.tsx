@@ -13,7 +13,6 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {openSideBar, setDragEvent} from "../../features/ui";
-import Moment from "react-moment";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
 import {ArticleIFace, AuthorIFace} from "../../types";
 import {customDenormalize} from "../../services/helpers.ts";
@@ -265,9 +264,10 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
       renderCell: (row: ArticleIFace) =>
         <Text className={'mt-auto mb-auto'}
               size={'xs'}
+              view={'secondary'}
               truncate
               onContextMenu={showContextMenu}>
-          <Moment date={row.added} format="DD.MM.YYYY"/>
+          {moment(row.added).fromNow()}
         </Text>
     },
     {

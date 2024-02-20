@@ -6,7 +6,11 @@ import {setIdentifiers} from "../../../features/article";
 import {Button} from "@consta/uikit/Button";
 import {IconSave} from "@consta/icons/IconSave"
 
-export const ISBNField = () => {
+interface propsIFace {
+  setIsExpanded: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export const ISBNField = ({setIsExpanded}: propsIFace) => {
   const [localValue, setLocalValue] = useState<string | null>(null)
   const value = useSelector((state: RootState) => state.articles.current_article?.identifiers?.isbn.value)
   const dispatch = useDispatch()
@@ -17,7 +21,8 @@ export const ISBNField = () => {
   }, [value])
 
   const handleSubmit = () => {
-    dispatch(setIdentifiers({isbn: {value: localValue}}))
+    dispatch(setIdentifiers({isbn: {value: localValue?.trim()}}))
+    setIsExpanded(false)
   }
 
 

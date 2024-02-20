@@ -15,7 +15,8 @@ from helpers.response import ResponseModel
 from requests.article import add_article, retrieve_articles, retrieve_article, update_article, delete_article_perm
 from schema.article import ArticleInDB, UpdateArticleModel, NewArticleSchema
 from schema.user import User
-from utils.environment import Config
+from utils.classes import CustomDatetime
+from utils.environment import Config, DT_FORMAT
 from utils.validators import validate_files
 
 router = APIRouter()
@@ -40,7 +41,7 @@ async def analyzeFile(file_uuid, user, meta):
     if meta['article'] is None:
         article = ArticleInDB.parse_obj({
             'owner': user['username'],
-            'added': datetime.datetime.now(),
+            'added': CustomDatetime.now().strftime(DT_FORMAT),
             'files': [{
                 'file_uuid': file_uuid,
                 'file_name': meta['original_name'],
@@ -93,7 +94,7 @@ async def upload(attach: UploadFile, background_tasks: BackgroundTasks, article:
     with open(file_path, 'wb') as f:
         f.write(contents)
 
-    meta['created'] = datetime.datetime.fromtimestamp(os.path.getatime(file_path))
+    meta['created'] = CustomDatetime.fromtimestamp(os.path.getatime(file_path))
 
     background_tasks.add_task(analyzeFile, file_uuid=filename, user=current_user, meta=meta)
     attach.file.close()
@@ -110,7 +111,7 @@ async def create_article(article_data: NewArticleSchema, current_user: User = De
             return HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f'Files validate fails: {e}')
 
     data['owner'] = current_user['username']
-    data['added'] = datetime.datetime.now()
+    data['added'] = CustomDatetime.now().strftime(DT_FORMAT)
     article_data = ArticleInDB.parse_obj(data)
     article = await add_article(article_data)
     return article if article else HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
@@ -162,7 +163,7 @@ async def delete_article(article_id: str, user: User = Depends(get_current_activ
         deleted = await delete_article_perm(article_id)
         if deleted:
             return ResponseModel(article, "article deleted permanent")
-    mark_article_as_deleted = await update_article(article_id, {'deleted': True, 'delete_date': datetime.datetime.now()})
+    mark_article_as_deleted = await update_article(article_id, {'deleted': True, 'delete_date': CustomDatetime.now().strftime(DT_FORMAT)})
     if mark_article_as_deleted:
         return ResponseModel(mark_article_as_deleted, "Article mark as deleted")
     else:

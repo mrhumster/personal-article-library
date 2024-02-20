@@ -17,7 +17,7 @@ def article_helper(article: dict) -> dict:
     return {
         "id": str(article["_id"]),
         "owner": article["owner"],
-        "added": article["added"].strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
+        "added": article["added"],
         "files": article["files"],
         "publication": article["publication"],
         "title": article["title"],
