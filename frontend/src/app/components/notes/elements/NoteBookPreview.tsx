@@ -29,7 +29,6 @@ export const NoteBookPreview = ({id}:NoteBookPreviewPropsIFace) => {
   const [articleId, setArticleId] = useState<string | undefined>(undefined)
   const getArticle = useGetArticleQuery(articleId, {skip: !articleId})
   const activeNotebook = useSelector((state: RootState) => state.ui.rightSideBar.activeNotebook)
-  const current_timezone = useSelector((state: RootState) => state.ui.timezone)
 
   useEffect(() => {
     if (!activeNotebook) refetch()
@@ -64,9 +63,9 @@ export const NoteBookPreview = ({id}:NoteBookPreviewPropsIFace) => {
   return (
     <Card className='h-20 border cursor-pointer relative flex flex-col my-2' horizontalSpace={'s'} verticalSpace={'s'} onClick={() => clickHandler()}>
       {isPopOverVisible &&
-        <Popover anchorRef={kebabRef} placeholder='Открыть' direction='leftDown' offset={10} arrowOffset={12} onClickOutside={setIsPopOverVisible.off}>
+        <Popover className={'bg-white shadow'} anchorRef={kebabRef} placeholder='Открыть' direction='leftDown' offset={10} arrowOffset={12} onClickOutside={setIsPopOverVisible.off}>
           <div className='flex flex-col border rounded'>
-            <Button width='full' size='s' label='Удалить страницу' view='clear' onClick={deleteHandler}/>
+            <Button width='full' size='s' label='Удалить страницу' view='secondary' onClick={deleteHandler}/>
           </div>
         </Popover>
       }
@@ -75,9 +74,18 @@ export const NoteBookPreview = ({id}:NoteBookPreviewPropsIFace) => {
       </div>
       { data &&
         <>
-            <Text className='grow' size='m' weight='semibold'>{data.title || 'Нет заголовка'}</Text>
-            <Text size='xs' weight='light'>{moment(data.created).fromNow()}</Text>
-            <Text size='xs' weight='light'>{moment(data.created).format()}</Text>
+            <div className={'flex grow items-stretch'}>
+                <Text view={data.title ? undefined :'secondary'}
+                      className={'w-96'}
+                      size='m'
+                      truncate
+                      weight='regular'
+                >{data.title || 'Нет заголовка'}</Text>
+            </div>
+            <div className={'flex items-stretch'} title={'Последняя правка'}>
+                <Text view={'secondary'} size='xs' weight='light'>{moment(data.changed).fromNow()}</Text>
+            </div>
+
         </>
       }
       { isLoading &&

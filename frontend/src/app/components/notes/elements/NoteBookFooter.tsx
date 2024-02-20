@@ -9,16 +9,9 @@ export const NoteBookFooter = () => {
   const [createNoteBook,{isSuccess, data}] = useCreateNoteBookMutation()
   const dispatch = useDispatch()
 
-  useEffect(() => {
+  useEffect(() => {if (data) {dispatch(addNoteBook(data.id))}}, [isSuccess, data])
 
-    if (data) {
-      dispatch(addNoteBook(data.id))
-    }
-  }, [isSuccess, data])
-
-  const handleClick = () => {
-    createNoteBook({title: 'Без заголовка', body: ''})
-  }
+  const handleClick = () => {createNoteBook({title: null, body: null})}
 
   return (
     <div className='flex items-center h-14 px-2 bg-zinc-200'>

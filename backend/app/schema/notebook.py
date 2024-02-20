@@ -1,6 +1,8 @@
 from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, Field
+
+from utils.classes import CustomDatetime
 from utils.environment import Config
 import pytz
 
@@ -11,7 +13,7 @@ class Notebook(BaseModel):
 
 class NotebookWithOwner(Notebook):
     owner: str = Field(...)
-    created: datetime = Field(default=datetime.now(tz=pytz.timezone(Config.TZ)))
-    changed: datetime = Field(...)
+    created: CustomDatetime
+    changed: CustomDatetime
 
 

@@ -3,6 +3,8 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv('.env'))
 
+DT_FORMAT = '%Y-%m-%dT%H:%M:%S.%fZ'
+
 class Config:
     APP_PASSWORD = os.environ.get('APP_PASSWORD')
     SECRET_KEY = os.environ.get('SECRET_KEY', 'secret')
