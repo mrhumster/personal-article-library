@@ -13,7 +13,7 @@ import {ArticleUrls} from "./urls";
 import {Identifiers} from "./identifiers";
 import {PubDetails} from "./publication_details";
 import {SkeletonBrick, SkeletonText} from "@consta/uikit/Skeleton";
-
+import {Text} from "@consta/uikit/Text"
 
 export const ArticleDetail = () => {
   const selected_article = useSelector((state: RootState) => state.ui.rightSideBar.article?.id)
@@ -39,7 +39,7 @@ export const ArticleDetail = () => {
     }
   }, [active_reader_tab, isOpen])
 
-    return (
+    if (selected_article) return (
       <div className='m-4 select-text'>
         { isLoading ? <SkeletonBrick height={30} /> : <ReferenceTypeSelect/>}
         { isLoading ? <SkeletonBrick height={46} className={'my-2'}/> : <TitleEdit/> }
@@ -52,4 +52,9 @@ export const ArticleDetail = () => {
         { isLoading ? <SkeletonBrick height={40} className={'my-4'}/> : <Identifiers/> }
       </div>
     )
+  if (!selected_article) return (
+    <div className='m-4 flex justify-center items-center h-full'>
+      <Text align={'center'} weight={'thin'} size={'xl'}>Выберете ссылку из таблицы</Text>
+    </div>
+  )
 }
