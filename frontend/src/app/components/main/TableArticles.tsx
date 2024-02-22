@@ -57,14 +57,32 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
   const dragImage = new Image()
   dragImage.src = line
 
-  const sortBy = (rows: ArticleIFace[], settings: SortByProps<ArticleIFace> | null) => {
+  const sortBy = (rows: ArticleIFace[] | undefined, settings: SortByProps<ArticleIFace> | null) => {
     if (settings?.sortingBy === 'publication') {
-      return rows.sort((a, b) => {
+      return rows?.sort((a, b) => {
         const [firstYear, secondYear] = settings.sortOrder === 'asc' ? [a.publication?.year, b.publication?.year] : [b.publication?.year, a.publication?.year];
         return Number(firstYear) - Number(secondYear)
       });
     }
+    if (settings?.sortingBy === 'title') {
+      return rows?.sort((a, b) => {
+        const [firstTitle, secondTitle] = settings.sortOrder === 'asc' ? [a.title, b.title] : [b.title, a.title]
+        if (firstTitle && secondTitle) {
+          if (firstTitle.toLowerCase() > secondTitle.toLowerCase()) return 1;
+          if (firstTitle.toLowerCase() < secondTitle.toLowerCase()) return -1;
+        }
+        return 0;
+      });
+    }
     return rows
+  }
+
+  const search = (rows: ArticleIFace[] | undefined, searchValue: string) => {
+    return rows?.filter(row =>
+        row.title?.toLowerCase().includes(searchValue.toLowerCase()) ||
+        row.publication?.year?.toString().includes(searchValue.toLowerCase()) ||
+        row.authors.map(author => authorToString(author)).join(' ').toLowerCase().includes(searchValue.toLowerCase())
+    )
   }
 
   useEffect(() => {
@@ -100,17 +118,11 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
     const allArticles = customDenormalize(ids, entities)
     if (filter) setRows(allArticles.filter((value: ArticleIFace) => filter.includes(value.id)).filter((value: ArticleIFace) => !value.deleted))
     if (!filter) setRows(allArticles.filter((value: ArticleIFace) => !value.deleted))
-
     if (selected_menu_item.id === '1') setRows((prevState) => prevState?.filter((row) => moment(row.added).isAfter(moment().subtract(7, 'days'))))
     if (selected_menu_item.id === '3') setRows(prevState => prevState?.filter(row => row.favorite))
     if (selected_menu_item.id === '2') setRows(prevState => prevState?.filter(row => row.read && moment(row.read_date).isAfter(moment().subtract(7, 'days'))))
-    if (searchValue) setRows(prevState => prevState?.filter(row =>
-        row.title?.toLowerCase().includes(searchValue.toLowerCase()) ||
-        row.publication?.year?.toString().includes(searchValue.toLowerCase()) ||
-        row.authors.map(author => authorToString(author)).join(' ').toLowerCase().includes(searchValue.toLowerCase())
-      )
-    )
-    setRows((prevState) => {if (prevState) return sortBy(prevState, sortSetting)})
+    if (searchValue) setRows(prevState => search(prevState, searchValue))
+    setRows((prevState) => sortBy(prevState, sortSetting))
   }, [ids, entities, filter, selected_menu_item, searchValue, sortSetting])
 
   const drag = (e: React.DragEvent<HTMLDivElement>) => {
@@ -255,6 +267,7 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
     {
       title: 'Название',
       accessor: 'title',
+      sortable: true,
       renderCell: (row: ArticleIFace) =>
         <Text truncate
               size={'xs'}
