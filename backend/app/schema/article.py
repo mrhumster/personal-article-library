@@ -1,7 +1,7 @@
 import re
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import Optional
+from typing import Optional, Annotated
 
 from fastapi import Form
 from isbnlib import canonical, is_isbn10, is_isbn13
@@ -15,7 +15,7 @@ class Pages(BaseModel):
     end: Optional[int] = Field(None, gt=0, lt=999999)
 
 class PublicationDetails(BaseModel):
-    year: int | None = Field(None, gt=1800, lt=2100)
+    year: Optional[Annotated[int, None]] = Field(None, gt=1800, lt=2100)
     title: Optional[str] = Field(None, max_length=300)
     pages: Optional[Pages] = Field(None)
     volume: Optional[str] = Field(None, max_length=100)
@@ -130,7 +130,7 @@ class ArticleInDB(BaseModel):
     owner: str = Field(...)
     added: CustomDatetime = Field(...)
     files: Optional[list[str]] = Field(default=[], min_items=0, max_items=100)
-    publication: Optional[PublicationDetails] = Field(None)
+    publication: Optional[PublicationDetails] = Field(PublicationDetails())
     title: Optional[str] = Field(max_length=300)
     authors: Optional[list[AuthorSchema]] = Field(None, max_items=10)
     source: Optional[str] = Field(None, max_length=200)
@@ -208,7 +208,7 @@ class NewArticleSchema(BaseModel):
 
 
 class UpdateArticleModel(BaseModel):
-    publication: Optional[PublicationDetails]
+    publication: Optional[PublicationDetails] = Field(PublicationDetails())
     title: Optional[str]
     authors: Optional[list[AuthorSchema]]
     source: Optional[str]
@@ -224,3 +224,9 @@ class UpdateArticleModel(BaseModel):
     read: Optional[bool]
     read_date: Optional[CustomDatetime] = Field(None)
     notebooks: Optional[list[str]]
+
+    @field_validator('publication')
+    def publication_validate(cls, value):
+        if not value:
+            return PublicationDetails()
+        return value

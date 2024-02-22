@@ -5,18 +5,14 @@ import {
   useGetArticlesQuery,
   useGetArticleStringQuery
 } from "../../services/backend";
-import {
-  Table,
-  TableColumn, TableFilters,
-  TableTextFilter
-} from '@consta/uikit/Table';
+import {SortByProps, Table, TableColumn, TableFilters, TableTextFilter} from '@consta/uikit/Table';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {openSideBar, setDragEvent} from "../../features/ui";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
 import {ArticleIFace, AuthorIFace} from "../../types";
 import {customDenormalize} from "../../services/helpers.ts";
-import { Text } from '@consta/uikit/Text';
+import {Text} from '@consta/uikit/Text';
 import {DragLayout} from "../layout";
 import {authorToString, copyTextToClipboard} from '../../utils'
 import line from '../../../assets/images/line.svg'
@@ -38,7 +34,7 @@ type TableArticlesIFace = {
 }
 
 export const TableArticles = ({filter, title}: TableArticlesIFace) => {
-  const {refetch} = useGetArticlesQuery({}, {pollingInterval: 5000})
+  const {refetch} = useGetArticlesQuery({}, {pollingInterval: 50000})
   const {ids, entities} = useSelector((state: RootState) => state.articles.articles)
   const selectedRow = useSelector((state: RootState) => state.ui.rightSideBar.article?.id)
   const ref = useRef<HTMLDivElement>(null)
@@ -53,11 +49,23 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
   const articleString = useGetArticleStringQuery(idForRequest, {skip: !idForRequest})
   const [getArticleListString, getArticleListStringResult] = useGetArticleListStringMutation()
   const headerCheckBox = useRef(null)
-  const dispatch = useDispatch()
   const [searchValue, setSearchValue] = useState<string | undefined | null>(undefined)
+  const [sortSetting, setSortSetting] = useState<SortByProps<ArticleIFace> | null>(null);
+  const dispatch = useDispatch()
+
 
   const dragImage = new Image()
   dragImage.src = line
+
+  const sortBy = (rows: ArticleIFace[], settings: SortByProps<ArticleIFace> | null) => {
+    if (settings?.sortingBy === 'publication') {
+      return rows.sort((a, b) => {
+        const [firstYear, secondYear] = settings.sortOrder === 'asc' ? [a.publication?.year, b.publication?.year] : [b.publication?.year, a.publication?.year];
+        return Number(firstYear) - Number(secondYear)
+      });
+    }
+    return rows
+  }
 
   useEffect(() => {
     if (getArticleListStringResult.data) {
@@ -102,7 +110,8 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
         row.authors.map(author => authorToString(author)).join(' ').toLowerCase().includes(searchValue.toLowerCase())
       )
     )
-  }, [ids, entities, filter, selected_menu_item, searchValue])
+    setRows((prevState) => {if (prevState) return sortBy(prevState, sortSetting)})
+  }, [ids, entities, filter, selected_menu_item, searchValue, sortSetting])
 
   const drag = (e: React.DragEvent<HTMLDivElement>) => {
     const article_id = (e.target as HTMLElement).getAttribute('data-article-id')
@@ -235,8 +244,9 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
     },
     {
       title: 'Год',
-      accessor: 'year',
+      accessor: 'publication',
       width: 80,
+      sortable: true,
       renderCell: (row: ArticleIFace) =>
         <Text className={'mt-auto mb-auto'} truncate size={'xs'} draggable="true" onContextMenu={showContextMenu}>
           {row.publication?.year}
@@ -373,6 +383,7 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
                   activeRow={{id: selectedRow, onChange: handleRowClick}}
                   emptyRowsPlaceholder={<Text>Здесь пока нет данных</Text>}
                   filters={filters}
+                  onSortBy={setSortSetting}
               />
           }
         </div>

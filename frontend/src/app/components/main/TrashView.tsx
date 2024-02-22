@@ -8,12 +8,12 @@ import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
 import {ArticleIFace} from "../../types";
 import {customDenormalize} from "../../services/helpers.ts";
 import { Text } from '@consta/uikit/Text';
-import {authorsToString} from '../../utils'
 import {ContextMenu, ContextMenuItemDefault} from "@consta/uikit/ContextMenu";
 import {IconTrash} from "@consta/icons/IconTrash";
 import {IconPaste} from "@consta/icons/IconPaste";
 import {TableTitle} from "./TableTitle.tsx";
 import {SelectedPanel} from "./SelectedPanel.tsx";
+import {AuthorsCell} from "./table_cells";
 
 
 export const TrashView = () => {
@@ -122,8 +122,7 @@ export const TrashView = () => {
       align: 'center',
       sortable: true,
       width: 200,
-      renderCell: (row: ArticleIFace) => <div>{row.authors ? authorsToString(row.authors) :
-        <div className={"italic"}>Пусто</div>}</div>
+      renderCell: (row: ArticleIFace) => <AuthorsCell items={row.authors}/>
     },
     {
       title: 'Год',

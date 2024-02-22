@@ -111,7 +111,7 @@ export type PagesType = {
 };
 
 export type PublicationDetails = {
-  year: string | null;
+  year: number | null;
   title: string | null; // book title, encyclopedia title, conference title
   pages: PagesType;
   volume: string | null;
