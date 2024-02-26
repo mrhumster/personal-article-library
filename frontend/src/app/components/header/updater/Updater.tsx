@@ -11,7 +11,7 @@ import {addMessage} from "../../../features/alert";
 export const Updater = () => {
   const current_article = useSelector((state: RootState) => state.articles.current_article)
   const articles = useSelector((state: RootState) => state.articles.articles)
-  const [updateArticle, {isLoading, isError, isSuccess, error}] = useUpdateArticleMutation()
+  const [updateArticle, {isLoading, isError, isSuccess}] = useUpdateArticleMutation()
   const debounceUpdateArticle = useDebounce(updateArticle, 1000)
   const dispatch = useDispatch()
 
@@ -26,7 +26,6 @@ export const Updater = () => {
 
   useEffect(() => {
     if (isError) dispatch(addMessage({message: `Произошла ошибка. Обратитесь к администратору`, status: 'alert'}))
-    console.log(error)
   }, [isError, isSuccess])
 
   return (

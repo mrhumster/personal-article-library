@@ -145,10 +145,10 @@ export const PDFViewer = () => {
   };
 
   const jumpToNote = (note: Note) => {
-    //activateTab(0);
+    activateTab(0);
     const notesContainer = notesContainerRef.current;
     if (noteEles.has(note.id) && notesContainer) {
-      notesContainer.scrollTop = noteEles.get(note.id).getBoundingClientRect().top;
+      notesContainer.scrollTop = (noteEles.get(note.id) as HTMLDivElement).getBoundingClientRect().top;
     }
   };
 
