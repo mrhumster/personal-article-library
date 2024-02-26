@@ -79,9 +79,9 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
 
   const search = (rows: ArticleIFace[] | undefined, searchValue: string) => {
     return rows?.filter(row =>
-        row.title?.toLowerCase().includes(searchValue.toLowerCase()) ||
-        row.publication?.year?.toString().includes(searchValue.toLowerCase()) ||
-        row.authors.map(author => authorToString(author)).join(' ').toLowerCase().includes(searchValue.toLowerCase())
+      row.title?.toLowerCase().includes(searchValue.toLowerCase()) ||
+      row.publication?.year?.toString().includes(searchValue.toLowerCase()) ||
+      row.authors.map(author => authorToString(author)).join(' ').toLowerCase().includes(searchValue.toLowerCase())
     )
   }
 
