@@ -1,4 +1,4 @@
-import {ArticleIFace, FileScheme} from "./article.types.ts";
+import {ArticleIFace, FileScheme, HighlightScheme} from "./article.types.ts";
 import {CollectionIFace} from "./collection.types.ts";
 import {NoteBookIFace} from "./notebook.types.ts";
 
@@ -20,6 +20,10 @@ export interface ResponseWithCollection extends Response {
 
 export interface ResponseWithNotebook extends Response {
   data: NoteBookIFace[]
+}
+
+export interface ResponseWithHighlight extends Response {
+  data: HighlightScheme[]
 }
 
 export interface ResponseWithArticle extends Response{

@@ -7,5 +7,5 @@ def file_helper(file: dict) -> dict:
         "size": file["size"],
         "created": file["created"],
         "owner": file["owner"],
-        "history": file["history"] if "history" in file else None
+        "history": file["history"] if "history" in file else None,
     }

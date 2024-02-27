@@ -1,6 +1,6 @@
-def ResponseModel(data: dict, message: str) -> dict:
+def ResponseModel(data: dict | list, message: str) -> dict:
     return {
-        "data": [data],
+        "data": [data] if type(data) == dict else data,
         "code": 200,
         "message": message
     }

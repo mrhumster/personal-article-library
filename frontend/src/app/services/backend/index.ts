@@ -22,7 +22,12 @@ export {
   useGetNoteBookQuery,
   useUpdateNoteBookMutation,
   useCreateNoteBookMutation,
-  useDeleteNoteBookMutation
+  useDeleteNoteBookMutation,
+  useCreateHighlightMutation,
+  useGetHighlightQuery,
+  useDeleteHighlightMutation,
+  useUpdateHighlightMutation,
+  useGetHighlightByFileQuery
 } from './backendApi.ts'
 
 export {baseQueryWithErrorHandler} from './baseQuery.ts'

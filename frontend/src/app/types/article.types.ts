@@ -1,3 +1,5 @@
+import {HighlightArea} from "@react-pdf-viewer/highlight";
+
 export interface AuthorIFace {
   first_name?: string
   last_name?: string
@@ -29,6 +31,15 @@ export interface WasOpeningScheme {
 export interface FileHistoryScheme {
   wasOpening: {[key: string]: WasOpeningScheme}
 }
+
+export interface HighlightScheme {
+    id: number;
+    content: string;
+    highlightAreas: HighlightArea[];
+    quote: string;
+    file: string;
+}
+
 
 export interface FileScheme {
   id: string;

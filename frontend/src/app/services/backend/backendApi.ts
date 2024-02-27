@@ -4,7 +4,8 @@ import {baseQueryWithErrorHandler} from "./baseQuery.ts";
 import {normalize, schema} from "normalizr";
 import {ResponseWithArticle} from "../../types";
 import {CollectionIFace} from "../../types";
-import {ResponseWithFile} from "../../types/api.types.ts";
+import {ResponseWithFile, ResponseWithHighlight} from "../../types/api.types.ts";
+import {HighlightScheme} from "../../types/article.types.ts";
 
 export const articleEntity = new schema.Entity('articles')
 export const collectionsEntity = new schema.Entity('collections')
@@ -224,7 +225,43 @@ export const backendApi = createApi({
           method: 'DELETE'
         }
       }
-    })
+    }),
+    // HIGHLIGHT ENDPOINTS
+    getHighlight: builder.query({
+      query: (highlight_id) => `/highlights/${highlight_id}`,
+      transformResponse: (response: ResponseWithNotebook) => response.data[0]
+    }),
+    updateHighlight: builder.mutation({
+      query: (data) => {
+        const { id, ...body } = data
+        return {
+          url: `/highlights/${id}`,
+          method: 'PUT',
+          body: body
+        }
+      },
+    }),
+    createHighlight: builder.mutation({
+      query: (body: HighlightScheme) => {
+        return {
+          url: '/highlights/',
+          method: 'POST',
+          body: body
+        }
+      }
+    }),
+    deleteHighlight: builder.mutation({
+      query: (highlight_id) => {
+        return {
+          url: `/highlights/${highlight_id}`,
+          method: 'DELETE'
+        }
+      }
+    }),
+    getHighlightByFile: builder.query({
+      query: (file_id) => `/highlights/by-file/${file_id}`,
+      transformResponse: (response: ResponseWithHighlight) => response.data
+    }),
   }),
 })
 
@@ -251,5 +288,10 @@ export const {
   useGetNoteBookQuery,
   useUpdateNoteBookMutation,
   useCreateNoteBookMutation,
-  useDeleteNoteBookMutation
+  useDeleteNoteBookMutation,
+  useGetHighlightQuery,
+  useUpdateHighlightMutation,
+  useCreateHighlightMutation,
+  useDeleteHighlightMutation,
+  useGetHighlightByFileQuery
 } = backendApi

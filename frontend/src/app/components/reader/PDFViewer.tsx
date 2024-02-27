@@ -16,10 +16,14 @@ import {
 import ru_RU from '@react-pdf-viewer/locales/lib/ru_RU.json'
 import '@react-pdf-viewer/core/lib/styles/index.css'
 import '@react-pdf-viewer/default-layout/lib/styles/index.css'
-import {useGetFileQuery, useUpdateFileMutation} from "../../services/backend";
+import {
+  useCreateHighlightMutation,
+  useGetFileQuery,
+  useGetHighlightByFileQuery,
+  useUpdateFileMutation
+} from "../../services/backend";
 import moment from "moment";
 import {
-  HighlightArea,
   highlightPlugin,
   MessageIcon,
   RenderHighlightContentProps, RenderHighlightsProps,
@@ -30,13 +34,10 @@ import '@react-pdf-viewer/highlight/lib/styles/index.css';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import {renderToolbar} from "./Toolbar.tsx";
+import {Note} from "../../types";
+import {HighlightScheme} from "../../types/article.types.ts";
 
-interface Note {
-    id: number;
-    content: string;
-    highlightAreas: HighlightArea[];
-    quote: string;
-}
+
 
 
 export const PDFViewer = () => {
@@ -49,24 +50,23 @@ export const PDFViewer = () => {
   const [page, setPage] = useState<number>(0)
   const [fileUrl, setFileUrl] = useState<string | null>(null)
   const tz = useSelector((state: RootState) => state.ui.timezone)
-
   const [message, setMessage] = React.useState('');
-  const [notes, setNotes] = React.useState<Note[]>([]);
+  const [notes, setNotes] = React.useState<HighlightScheme[]>([]);
   const notesContainerRef = React.useRef<HTMLDivElement | null>(null);
   let noteId = notes.length;
-
   const noteEles: Map<number, HTMLElement> = new Map();
   const [currentDoc, setCurrentDoc] = React.useState<PdfJs.PdfDocument | null>(null);
 
+  const [createHighlight, createHighlightResult] = useCreateHighlightMutation()
+  const {data: dataHighlights, refetch: refetchHighlights} = useGetHighlightByFileQuery(file?.id, {skip: !file?.id})
+
   useEffect(() => setFileUrl(`/media/${file?.file_uuid}`), [file])
 
-  const handleDocumentLoad = (e: DocumentLoadEvent) => {
-    setCurrentDoc(e.doc);
-    if (currentDoc && currentDoc !== e.doc) {
-      // User opens new document
-      setNotes([]);
-    }
-  };
+  useEffect(()=>{if (dataHighlights) setNotes(dataHighlights)}, [dataHighlights])
+
+  useEffect(()=>{if (createHighlightResult.isSuccess) refetchHighlights()}, [createHighlightResult.isSuccess])
+
+  const handleDocumentLoad = (e: DocumentLoadEvent) => {setCurrentDoc(e.doc)};
 
   const renderHighlightTarget = (props: RenderHighlightTargetProps) => (
     <div
@@ -95,15 +95,17 @@ export const PDFViewer = () => {
 
   const renderHighlightContent = (props: RenderHighlightContentProps) => {
     const addNote = () => {
-      if (message !== '') {
-        const note: Note = {
+      if (message !== '' && file?.id) {
+        const note: HighlightScheme = {
           id: ++noteId,
           content: message,
           highlightAreas: props.highlightAreas,
           quote: props.selectedText,
+          file: file?.id
         };
         setNotes(notes.concat([note]));
         props.cancel();
+        createHighlight(note)
       }
     };
 
@@ -185,11 +187,7 @@ export const PDFViewer = () => {
 
   const { jumpToHighlightArea } = highlightPluginInstance;
 
-  useEffect(() => {
-    return () => {
-      noteEles.clear();
-    };
-  }, []);
+  useEffect(() => {return () => {noteEles.clear()}}, []);
 
   const sidebarNotes = (
     <div
@@ -254,6 +252,8 @@ export const PDFViewer = () => {
       const user_page = data.history?.wasOpening[username].page
       if (user_page) setPage(user_page)
     }
+
+    console.log(data)
   }, [data, username])
 
   useEffect(() => {

@@ -1,7 +1,7 @@
 from datetime import datetime
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 class WasOpeningScheme(BaseModel):
     lastOpeningDate: datetime

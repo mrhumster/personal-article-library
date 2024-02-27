@@ -9,7 +9,7 @@ export type {
 export type {UserResponse, UserIFace, AuthState, UserDataIFace} from './auth.types.ts'
 export type {
   ArticleIFace, AuthorIFace, ArticleStateIFace, ReferenceTypeItem, PublicationDetails, FileScheme,
-  EditorsIFace, AdditionalInformationIFace, CreateArticleIFace} from './article.types.ts'
+  EditorsIFace, AdditionalInformationIFace, CreateArticleIFace, Note} from './article.types.ts'
 export type {RightSideBarTabsItem, uiState} from './ui.types.ts'
 export type {CollectionStateIFace, CollectionIFace} from './collection.types.ts'
 export type {NoteBookIFace} from './notebook.types.ts'
