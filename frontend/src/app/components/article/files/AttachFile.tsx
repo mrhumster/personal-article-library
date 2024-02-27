@@ -15,10 +15,6 @@ import {openFile} from "../../../features/ui/uiSlice.ts";
 import {Informer} from "@consta/uikit/Informer";
 import {truncateString} from "../../../utils";
 
-
-
-
-
 const getFileDescription = (file: FileScheme) => {
   return `${file.extension} | ${filesize(file.size, {standard: "jedec"})} | ${moment(file.created).format('DD MMMM YYYY')}`
 }
@@ -50,8 +46,7 @@ export const AttachFile = ({file_id}:{file_id: string}) => {
 
   const handleClickAttachment = () => {
     dispatch(openReader())
-    dispatch(openFile(data))
-    //dispatch(closeSideBar())
+    dispatch(openFile({file:data, article_id: current_article?.id}))
   }
 
   return (

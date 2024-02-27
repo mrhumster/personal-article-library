@@ -53,8 +53,7 @@ export const PDFViewer = () => {
   const [message, setMessage] = React.useState('');
   const [notes, setNotes] = React.useState<HighlightScheme[]>([]);
   const notesContainerRef = React.useRef<HTMLDivElement | null>(null);
-  let noteId = notes.length;
-  const noteEles: Map<number, HTMLElement> = new Map();
+  const noteElements: Map<number, HTMLElement> = new Map();
   const [currentDoc, setCurrentDoc] = React.useState<PdfJs.PdfDocument | null>(null);
 
   const [createHighlight, createHighlightResult] = useCreateHighlightMutation()
@@ -97,13 +96,11 @@ export const PDFViewer = () => {
     const addNote = () => {
       if (message !== '' && file?.id) {
         const note: HighlightScheme = {
-          id: ++noteId,
           content: message,
           highlightAreas: props.highlightAreas,
           quote: props.selectedText,
           file: file?.id
         };
-        setNotes(notes.concat([note]));
         props.cancel();
         createHighlight(note)
       }
@@ -149,8 +146,8 @@ export const PDFViewer = () => {
   const jumpToNote = (note: Note) => {
     activateTab(0);
     const notesContainer = notesContainerRef.current;
-    if (noteEles.has(note.id) && notesContainer) {
-      notesContainer.scrollTop = (noteEles.get(note.id) as HTMLDivElement).getBoundingClientRect().top;
+    if (noteElements.has(note.id) && notesContainer) {
+      notesContainer.scrollTop = (noteElements.get(note.id) as HTMLDivElement).getBoundingClientRect().top;
     }
   };
 
@@ -187,7 +184,7 @@ export const PDFViewer = () => {
 
   const { jumpToHighlightArea } = highlightPluginInstance;
 
-  useEffect(() => {return () => {noteEles.clear()}}, []);
+  useEffect(() => {return () => {noteElements.clear()}}, []);
 
   const sidebarNotes = (
     <div
@@ -209,7 +206,9 @@ export const PDFViewer = () => {
             }}
             onClick={() => jumpToHighlightArea(note.highlightAreas[0])}
             ref={(ref): void => {
-              noteEles.set(note.id, ref as HTMLElement);
+              if (note.id) {
+                noteElements.set(note.id, ref as HTMLElement);
+              }
             }}
           >
             <blockquote
@@ -252,8 +251,6 @@ export const PDFViewer = () => {
       const user_page = data.history?.wasOpening[username].page
       if (user_page) setPage(user_page)
     }
-
-    console.log(data)
   }, [data, username])
 
   useEffect(() => {

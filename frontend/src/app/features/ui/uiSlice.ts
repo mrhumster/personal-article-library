@@ -7,7 +7,8 @@ export const initialState: uiState = {
   reader: {
     isReaderOpen: false,
     activeTab: undefined,
-    files: []
+    files: [],
+    dictArticleByFile: {}
   },
   checked: {
     id: '0',
@@ -81,13 +82,17 @@ export const uiSlice = createSlice({
       state.reader.isReaderOpen = false
     },
     openFile: (state: uiState, action) => {
-      if (state.reader.files.map(file => file.id).indexOf(action.payload.id) === -1) {
-        state.reader.files = [...state.reader.files, action.payload]
+      console.log(action.payload)
+      const {file, article_id} = action.payload
+      state.reader.dictArticleByFile[file.id] = article_id
+      if (state.reader.files.map(f => f.id).indexOf(file.id) === -1) {
+        state.reader.files = [...state.reader.files, file]
       }
-      state.reader.activeTab = action.payload
+      state.reader.activeTab = file
     },
     closeFile: (state: uiState, action) => {
       state.reader.files = state.reader.files.filter((file) => file.id !== action.payload.id)
+      delete state.reader.dictArticleByFile[action.payload.id]
       if (state.reader.activeTab?.id === action.payload.id) {
         state.reader.activeTab = state.reader.files[0]
       }

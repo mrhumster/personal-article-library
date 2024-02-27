@@ -12,7 +12,10 @@ export interface uiState {
   reader: {
     isReaderOpen: boolean
     activeTab?: FileScheme
-    files: FileScheme[]
+    files: FileScheme[],
+    dictArticleByFile: {
+      [key: string]: string
+    }
   },
   checked: {
     id: string,

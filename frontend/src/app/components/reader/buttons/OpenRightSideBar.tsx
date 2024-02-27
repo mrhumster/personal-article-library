@@ -6,14 +6,22 @@ import {Icon, MinimalButton, Position, Tooltip} from "@react-pdf-viewer/core";
 
 export const OpenRightSideBar = () => {
   const dispatch = useDispatch()
-  const article = useSelector((state: RootState) => state.ui.rightSideBar.article)
+  const article_id = useSelector((state: RootState) => {
+    const file_id_from_active_tab = state.ui.reader.activeTab?.id
+    if (file_id_from_active_tab) {
+      return state.ui.reader.dictArticleByFile[file_id_from_active_tab]
+    }
+  })
   const isOpen = useSelector((state: RootState) => state.ui.rightSideBar.isSidebarOpen)
 
   const clickHandler = () => {
     if (isOpen) {
       dispatch(closeSideBar())
     } else {
-      dispatch(openSideBar(article))
+      if (article_id) {
+        dispatch(openSideBar({id: article_id}))
+      }
+
     }
   }
 

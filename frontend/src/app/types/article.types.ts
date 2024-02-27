@@ -33,7 +33,7 @@ export interface FileHistoryScheme {
 }
 
 export interface HighlightScheme {
-    id: number;
+    id?: number;
     content: string;
     highlightAreas: HighlightArea[];
     quote: string;

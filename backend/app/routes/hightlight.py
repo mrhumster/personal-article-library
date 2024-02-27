@@ -66,9 +66,4 @@ async def delete(object_id: str, current_user: User = Depends(get_current_active
 @router.get('/by-file/{file_id}')
 async def get_by_file(file_id: str, current_user: User = Depends(get_current_active_user)):
     data = await retrieveByFile(owner=current_user['username'], file_id=file_id)
-    if data:
-        return ResponseModel(data=data, message='Highlights retrieved')
-    HTTPException(
-        status_code=status.HTTP_204_NO_CONTENT,
-        headers={'WWW-Authenticate': 'Bearer'}
-    )
+    return ResponseModel(data=data, message='Highlights retrieved')
