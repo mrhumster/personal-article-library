@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {uiState} from "../../types";
+import {FileScheme, uiState} from "../../types";
 import {backendApi} from "../../services/backend";
 
 export const initialState: uiState = {
@@ -81,19 +81,18 @@ export const uiSlice = createSlice({
     closeReader: (state: uiState) => {
       state.reader.isReaderOpen = false
     },
-    openFile: (state: uiState, action) => {
-      console.log(action.payload)
-      const {file, article_id} = action.payload
+    openFile: (state: uiState, {payload}:{payload: {file: FileScheme, article_id: string}}) => {
+      const {file, article_id} = payload
       state.reader.dictArticleByFile[file.id] = article_id
       if (state.reader.files.map(f => f.id).indexOf(file.id) === -1) {
         state.reader.files = [...state.reader.files, file]
       }
       state.reader.activeTab = file
     },
-    closeFile: (state: uiState, action) => {
-      state.reader.files = state.reader.files.filter((file) => file.id !== action.payload.id)
-      delete state.reader.dictArticleByFile[action.payload.id]
-      if (state.reader.activeTab?.id === action.payload.id) {
+    closeFile: (state: uiState, {payload}:{payload: {id: string}}) => {
+      state.reader.files = state.reader.files.filter((file) => file.id !== payload.id)
+      delete state.reader.dictArticleByFile[payload.id]
+      if (state.reader.activeTab?.id === payload.id) {
         state.reader.activeTab = state.reader.files[0]
       }
       if (state.reader.files.length === 0) {

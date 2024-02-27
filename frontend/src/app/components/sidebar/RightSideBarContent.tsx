@@ -3,7 +3,8 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {ArticleDetail} from "../article";
 import {Notes} from "../notes";
-import {Text} from '@consta/uikit/Text'
+import {Annotations} from "../annotations";
+
 
 export const RightSideBarContent = () => {
   const selectedTab = useSelector((state: RootState) => state.ui.rightSideBar.activeTab)
@@ -11,7 +12,7 @@ export const RightSideBarContent = () => {
     case 0:
       return <ArticleDetail />
     case 1:
-      return <Text>Annotation</Text>
+      return <Annotations />
     case 2:
       return <Notes />
   }

@@ -1,0 +1,1 @@
+export {HighlightsFromFile} from './HighlightsFromFile'
