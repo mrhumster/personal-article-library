@@ -1,5 +1,5 @@
 import {IconComponent} from "@consta/icons/Icon";
-import {FileScheme} from "./article.types.ts";
+import {FileScheme, HighlightScheme} from "./article.types.ts";
 
 export type RightSideBarTabsItem = {
   key: number;
@@ -15,7 +15,8 @@ export interface uiState {
     files: FileScheme[],
     dictArticleByFile: {
       [key: string]: string
-    }
+    },
+    showHighlight?: HighlightScheme
   },
   checked: {
     id: string,

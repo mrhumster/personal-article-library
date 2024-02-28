@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {
   DocumentLoadEvent,
@@ -34,14 +34,16 @@ import '@react-pdf-viewer/highlight/lib/styles/index.css';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import {renderToolbar} from "./Toolbar.tsx";
-import {Note} from "../../types";
 import {HighlightScheme} from "../../types/article.types.ts";
+import {showHighlight} from "../../features/ui";
+import {Annotation} from "../annotations/elements/Annotation.tsx";
 
 
 
 
 export const PDFViewer = () => {
   const file = useSelector((state: RootState) => state.ui.reader.activeTab)
+  const noteForJump = useSelector((state: RootState) => state.ui.reader.showHighlight)
   const [updateFile] = useUpdateFileMutation()
   const {data, refetch} = useGetFileQuery(file?.id, {skip: !file?.id})
   const username = useSelector((state: RootState) => state.auth.username)
@@ -55,15 +57,22 @@ export const PDFViewer = () => {
   const notesContainerRef = React.useRef<HTMLDivElement | null>(null);
   const noteElements: Map<number, HTMLElement> = new Map();
   const [currentDoc, setCurrentDoc] = React.useState<PdfJs.PdfDocument | null>(null);
-
   const [createHighlight, createHighlightResult] = useCreateHighlightMutation()
   const {data: dataHighlights, refetch: refetchHighlights} = useGetHighlightByFileQuery(file?.id, {skip: !file?.id})
+  const dispatch = useDispatch()
 
   useEffect(() => setFileUrl(`/media/${file?.file_uuid}`), [file])
 
   useEffect(()=>{if (dataHighlights) setNotes(dataHighlights)}, [dataHighlights])
 
   useEffect(()=>{if (createHighlightResult.isSuccess) refetchHighlights()}, [createHighlightResult.isSuccess])
+
+  useEffect(() => {
+    if (noteForJump) {
+      jumpToHighlightArea(noteForJump.highlightAreas[0])
+      dispatch(showHighlight(undefined))
+    }
+  }, [noteForJump])
 
   const handleDocumentLoad = (e: DocumentLoadEvent) => {setCurrentDoc(e.doc)};
 
@@ -86,7 +95,7 @@ export const PDFViewer = () => {
             <MessageIcon/>
           </Button>
         }
-        content={() => <div style={{width: '100px'}}>Новая аннотация</div>}
+        content={() => <div style={{width: '100px'}}>Новая комментарий</div>}
         offset={{left: 10, top: 0}}
       />
     </div>
@@ -143,10 +152,10 @@ export const PDFViewer = () => {
     );
   };
 
-  const jumpToNote = (note: Note) => {
-    activateTab(0);
+  const jumpToNote = (note: HighlightScheme) => {
+    activateTab(3);
     const notesContainer = notesContainerRef.current;
-    if (noteElements.has(note.id) && notesContainer) {
+    if (note.id && noteElements.has(note.id) && notesContainer) {
       notesContainer.scrollTop = (noteElements.get(note.id) as HTMLDivElement).getBoundingClientRect().top;
     }
   };
@@ -160,14 +169,7 @@ export const PDFViewer = () => {
             .map((area, idx) => (
               <div
                 key={idx}
-                style={Object.assign(
-                  {},
-                  {
-                    background: 'yellow',
-                    opacity: 0.4,
-                  },
-                  props.getCssProperties(area, props.rotation)
-                )}
+                style={Object.assign({}, {background: 'yellow', opacity: 0.4,}, props.getCssProperties(area, props.rotation))}
                 onClick={() => jumpToNote(note)}
               />
             ))}

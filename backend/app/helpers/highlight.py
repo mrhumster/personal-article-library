@@ -5,5 +5,7 @@ def helper(instance: dict) -> dict:
         "quote": instance["quote"],
         "content": instance["content"],
         "owner": instance["owner"],
-        "file": instance["file"]
+        "file": instance["file"],
+        "created": instance["created"],
+        "changed": instance["changed"]
     }

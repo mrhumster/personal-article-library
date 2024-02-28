@@ -1,6 +1,7 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {FileScheme, uiState} from "../../types";
 import {backendApi} from "../../services/backend";
+import {HighlightScheme} from "../../types/article.types.ts";
 
 export const initialState: uiState = {
   timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -8,7 +9,8 @@ export const initialState: uiState = {
     isReaderOpen: false,
     activeTab: undefined,
     files: [],
-    dictArticleByFile: {}
+    dictArticleByFile: {},
+    showHighlight: undefined
   },
   checked: {
     id: '0',
@@ -105,6 +107,9 @@ export const uiSlice = createSlice({
     setActiveNotebook: (state: uiState, {payload}:{payload: string | undefined}) => {
       state.rightSideBar.activeNotebook = payload
     },
+    showHighlight: (state: uiState, {payload}:{payload: HighlightScheme | undefined}) => {
+      state.reader.showHighlight = payload
+    },
     resetUi: () => {
       return initialState
     }
@@ -138,5 +143,6 @@ export const {
   closeFile,
   setActiveReaderTab,
   resetUi,
-  setActiveNotebook
+  setActiveNotebook,
+  showHighlight
 } = uiSlice.actions

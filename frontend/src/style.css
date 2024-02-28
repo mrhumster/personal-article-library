@@ -55,3 +55,7 @@ body {
 #notebook {
     height: calc(100% - 32px);
 }
+
+#annotations {
+    height: calc(100% - 32px);
+}

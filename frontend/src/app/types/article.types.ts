@@ -38,6 +38,9 @@ export interface HighlightScheme {
     highlightAreas: HighlightArea[];
     quote: string;
     file: string;
+    owner?: string;
+    created?: string;
+    changed?: string;
 }
 
 

@@ -4,7 +4,6 @@ import {RootState} from "../../store";
 import {HighlightsFromFile} from "./elements";
 import {useGetArticleQuery} from "../../services/backend";
 import {setCurrentArticle} from "../../features/article";
-import {Text} from "@consta/uikit/Text";
 
 export const Annotations = () => {
   const files = useSelector((state: RootState) => state.articles.current_article?.files)
@@ -15,13 +14,9 @@ export const Annotations = () => {
   useEffect(() => {if (selected_article && !isUninitialized) refetch()}, [selected_article, isUninitialized])
 
 
-  useEffect(()=>{
-    console.log(files)
-  }, [files])
-
   return (
-    <div className={'p-5'} key={selected_article}>
-      <span className='ms-1 text-zinc-500/90 uppercase text-xs font-semibold tracking-[.1em]'>Комментарии</span>
+    <div id='annotations' className={'flex flex-col p-5'} key={selected_article}>
+      <span className='ms-1 mb-4 text-zinc-500/90 uppercase text-xs font-semibold tracking-[.1em]'>Комментарии</span>
       {files && files.map((file_id, index) =>
         <HighlightsFromFile file_id={file_id} key={index} />
       )}

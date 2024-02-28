@@ -1,4 +1,8 @@
 import React, {useEffect, useRef, useState} from "react";
+import moment from "moment-timezone";
+import {useDispatch, useSelector} from "react-redux";
+import {setActiveNotebook} from "../../../features/ui";
+import {RootState} from "../../../store";
 import {
   useDeleteNoteBookMutation,
   useGetArticleQuery,
@@ -6,15 +10,12 @@ import {
 } from "../../../services/backend";
 import {Card} from "@consta/uikit/Card";
 import {Text} from "@consta/uikit/Text"
-import moment from "moment-timezone";
-import {SkeletonText} from "@consta/uikit/Skeleton";
-import {IconKebab} from "@consta/icons/IconKebab"
 import {Button} from "@consta/uikit/Button";
-import {useFlag} from "@consta/uikit/useFlag";
 import {Popover} from "@consta/uikit/Popover";
-import {useDispatch, useSelector} from "react-redux";
-import {setActiveNotebook} from "../../../features/ui";
-import {RootState} from "../../../store";
+import {SkeletonText} from "@consta/uikit/Skeleton";
+import {useFlag} from "@consta/uikit/useFlag";
+import {IconKebab} from "@consta/icons/IconKebab"
+import {IconDocDelete} from "@consta/icons/IconDocDelete"
 
 
 interface NoteBookPreviewPropsIFace {
@@ -64,8 +65,8 @@ export const NoteBookPreview = ({id}:NoteBookPreviewPropsIFace) => {
     <Card className='h-20 border cursor-pointer relative flex flex-col my-2' horizontalSpace={'s'} verticalSpace={'s'} onClick={() => clickHandler()}>
       {isPopOverVisible &&
         <Popover className={'bg-white shadow'} anchorRef={kebabRef} placeholder='Открыть' direction='leftDown' offset={10} arrowOffset={12} onClickOutside={setIsPopOverVisible.off}>
-          <div className='flex flex-col border rounded'>
-            <Button width='full' size='s' label='Удалить страницу' view='secondary' onClick={deleteHandler}/>
+          <div className='grid grid-cols-1 gap-1 p-1 border rounded shadow-2xl'>
+            <Button width='full' size='xs' label='Удалить страницу' view='clear' onClick={deleteHandler} iconLeft={IconDocDelete}/>
           </div>
         </Popover>
       }
