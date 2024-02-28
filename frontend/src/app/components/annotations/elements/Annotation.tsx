@@ -62,7 +62,13 @@ export const Annotation = ({instance}:AnnotationPropsIFace) => {
   return (
     <Card className={'relative'} verticalSpace={'xs'} horizontalSpace={'xs'}>
       {isPopOverVisible &&
-        <Popover className={'bg-white shadow'} anchorRef={kebabRef} placeholder='Открыть' direction='leftDown' offset={10} arrowOffset={12} onClickOutside={setIsPopOverVisible.off}>
+        <Popover className={'bg-white shadow'}
+                 anchorRef={kebabRef}
+                 placeholder='Открыть'
+                 direction='leftDown'
+                 offset={10}
+                 arrowOffset={12}
+                 onClickOutside={setIsPopOverVisible.off}>
           <div className='grid grid-cols-1 gap-1 p-1 border rounded shadow-2xl'>
             <Button width='full' size='xs' label='Показать' view='clear' onClick={showCommentHandler} iconLeft={IconCommentStroked}/>
             <Button width='full' size='xs' label='Удалить' view='clear' onClick={deleteHandler} iconLeft={IconCommentDeleteFilled}/>

@@ -21,7 +21,7 @@ export const HighlightsFromFile = ({file_id}:{file_id: string}) => {
   } = useGetFileQuery(file_id, {skip: !file_id})
 
   return (
-    <div className={'flex flex-col h-full'}>
+    <div className={'flex flex-col h-full select-none'}>
       {isSuccessFile && dataHighlights && dataHighlights.length !== 0 && dataFile?.file_name &&
         <Tag className={'mb-3'} mode={'info'} icon={IconDocFilled} label={dataFile?.file_name} />
       }

@@ -37,6 +37,7 @@ import {renderToolbar} from "./Toolbar.tsx";
 import {HighlightScheme} from "../../types/article.types.ts";
 import {showHighlight} from "../../features/ui";
 import {Annotation} from "../annotations/elements/Annotation.tsx";
+import {HighlightText} from "./HighlightText.tsx";
 
 
 
@@ -95,7 +96,7 @@ export const PDFViewer = () => {
             <MessageIcon/>
           </Button>
         }
-        content={() => <div style={{width: '100px'}}>Новая комментарий</div>}
+        content={() => <div className={'text-xs'} style={{width: '150px'}}>Новая комментарий</div>}
         offset={{left: 10, top: 0}}
       />
     </div>
@@ -160,23 +161,12 @@ export const PDFViewer = () => {
     }
   };
 
-  const renderHighlights = (props: RenderHighlightsProps) => (
+  const renderHighlights = (props: RenderHighlightsProps) => {
+    return (
     <div>
-      {notes.map((note) => (
-        <React.Fragment key={note.id}>
-          {note.highlightAreas
-            .filter((area) => area.pageIndex === props.pageIndex)
-            .map((area, idx) => (
-              <div
-                key={idx}
-                style={Object.assign({}, {background: 'yellow', opacity: 0.4,}, props.getCssProperties(area, props.rotation))}
-                onClick={() => jumpToNote(note)}
-              />
-            ))}
-        </React.Fragment>
-      ))}
+      {notes.map((note) => <HighlightText key={note.id} note={note} props={props} jumpToNote={jumpToNote} />)}
     </div>
-  );
+  )};
 
   const highlightPluginInstance = highlightPlugin({
     renderHighlightTarget,

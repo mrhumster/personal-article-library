@@ -16,7 +16,7 @@ export const Annotations = () => {
 
   return (
     <div id='annotations' className={'flex flex-col p-5'} key={selected_article}>
-      <span className='ms-1 mb-4 text-zinc-500/90 uppercase text-xs font-semibold tracking-[.1em]'>Комментарии</span>
+      <span className='ms-1 mb-4 text-zinc-500/90 uppercase text-xs font-semibold tracking-[.1em] select-none'>Комментарии</span>
       {files && files.map((file_id, index) =>
         <HighlightsFromFile file_id={file_id} key={index} />
       )}
