@@ -14,6 +14,8 @@ import {openReader} from "../../../features/ui";
 import {openFile} from "../../../features/ui/uiSlice.ts";
 import {Informer} from "@consta/uikit/Informer";
 import {truncateString} from "../../../utils";
+import {IconTrash} from "@consta/icons/IconTrash";
+import {IconDownload} from "@consta/icons/IconDownload";
 
 const getFileDescription = (file: FileScheme) => {
   return `${file.extension} | ${filesize(file.size, {standard: "jedec"})} | ${moment(file.created).format('DD MMMM YYYY')}`
@@ -34,19 +36,34 @@ export const AttachFile = ({file_id}:{file_id: string}) => {
     }
   }
 
+  const downloadHandler = (file: FileScheme | undefined) => {
+    if (file) {
+      const downloadUrl =`/media/${file.file_uuid}`
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      if (file.file_name) link.download = file.file_name
+      link.click()
+    }
+  }
+
   const items: ContextMenuItemDefault[] = [
     {
       label: 'Удалить',
+      leftIcon: IconTrash,
       onClick: () => removeFile(data)
     },
     {
-      label: 'Скачать'
+      label: 'Скачать',
+      leftIcon: IconDownload,
+      onClick: () => downloadHandler(data)
     }
   ]
 
   const handleClickAttachment = () => {
-    dispatch(openReader())
-    dispatch(openFile({file:data, article_id: current_article?.id}))
+    if (data && current_article?.id) {
+      dispatch(openReader())
+      dispatch(openFile({file: data, article_id: current_article?.id}))
+    }
   }
 
   return (
