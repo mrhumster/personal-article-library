@@ -38,11 +38,7 @@ export const AddNewFileButton = ({ text, article }:{text: ReactNode, article?: s
       }))
   }
 
-  useEffect(() => {
-    if (isSuccess) {
-      getArticles.refetch()
-    }
-  }, [isSuccess])
+  useEffect(() => {if (isSuccess) {getArticles.refetch()}}, [isSuccess])
 
   useEffect(() => {
     if (addFileResult.data) {
@@ -51,9 +47,7 @@ export const AddNewFileButton = ({ text, article }:{text: ReactNode, article?: s
         files: [addFileResult.data.id]
       }
       if (article) {
-        if (data && data.files) {
-          updateArticle({id: data?.id, files: [...data.files, addFileResult.data.id]})
-        }
+        if (data && data.files) updateArticle({...data, files: [...data.files, addFileResult.data.id]})
       } else {
         addArticle(newArticle)
       }
