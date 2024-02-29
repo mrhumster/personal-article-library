@@ -7,7 +7,7 @@ from uvicorn.server import logger
 
 from authorisation.auth import authenticate_user, create_access_token, create_password_hash, get_current_active_user
 from helpers.response import ResponseModel, ErrorResponseModel
-from requests.user import add_user, retrieve_user, retrieve_users, update_user, get_user
+from db_requests.user import add_user, retrieve_user, retrieve_users, update_user, get_user
 from schema.user import UserSchema, User, UpdateUserModel, Token, UserRegister
 from utils.environment import Config
 

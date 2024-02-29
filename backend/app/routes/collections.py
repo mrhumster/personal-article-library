@@ -4,7 +4,7 @@ from starlette.responses import JSONResponse
 
 from authorisation.auth import get_current_active_user
 from helpers.response import ResponseModel
-from requests.collections import retrieve_my_collections, add_collection, retrieve_collection, update_collection, \
+from db_requests.collections import retrieve_my_collections, add_collection, retrieve_collection, update_collection, \
     delete_collection
 from schema.collections import CollectionsSchema, CollectionsSchemaWithOwner
 from schema.user import User

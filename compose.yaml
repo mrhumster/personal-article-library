@@ -6,6 +6,7 @@ networks:
 volumes:
   node_modules:
   uploads:
+  data_es:
 
 services:
   frontend:
@@ -28,6 +29,7 @@ services:
     volumes:
       - ./backend/app:/app
       - uploads:/uploads/
+      - ./logs/backend:/var/log/backend
     env_file:
       - .env
     restart: always
@@ -72,5 +74,15 @@ services:
       - frontend
       - mongo
       - mongo-express
+    networks:
+      - pal-network
+
+  es:
+    image: 'bitnami/elasticsearch:latest'
+    container_name: es
+    volumes:
+      - data_es:/bitnami/elasticsearch/data
+    ports:
+      - "9200:9200"
     networks:
       - pal-network

@@ -12,7 +12,7 @@ from uvicorn.main import logger
 
 from authorisation.auth import get_current_active_user
 from helpers.response import ResponseModel
-from requests.article import add_article, retrieve_articles, retrieve_article, update_article, delete_article_perm
+from db_requests.article import add_article, retrieve_articles, retrieve_article, update_article, delete_article_perm
 from schema.article import ArticleInDB, UpdateArticleModel, NewArticleSchema
 from schema.user import User
 from utils.classes import CustomDatetime

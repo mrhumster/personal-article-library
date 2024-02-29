@@ -1,7 +1,7 @@
 from bson.errors import InvalidId
 
-from requests.article import retrieve_article
-from requests.files import retrieve_file
+from db_requests.article import retrieve_article
+from db_requests.files import retrieve_file
 from schema.user import User
 
 

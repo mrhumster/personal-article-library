@@ -5,7 +5,7 @@ from starlette import status
 
 from authorisation.auth import get_current_active_user
 from helpers.response import ResponseModel
-from requests.notebook import add, retrieve, refresh, remove
+from db_requests.notebook import add, retrieve, refresh, remove
 from schema.notebook import Notebook as modelSchema
 from schema.notebook import NotebookWithOwner as modelSchemaWithOwner
 from schema.user import User

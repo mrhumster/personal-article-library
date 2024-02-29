@@ -3,7 +3,7 @@ from starlette import status
 
 from authorisation.auth import get_current_active_user
 from helpers.response import ResponseModel
-from requests.highlight import add, retrieve, refresh, remove, retrieveByFile
+from db_requests.highlight import add, retrieve, refresh, remove, retrieveByFile
 from schema.highlight import HighlightScheme as modelSchema
 from schema.highlight import HighlightWithOwnerScheme as modelSchemaWithOwner
 from schema.user import User
