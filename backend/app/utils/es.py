@@ -1,67 +1,48 @@
 import logging
-
 import PyPDF2
-import re
-
+from elasticsearch import Elasticsearch
 from pydantic import BaseModel
 
-import requests
-import json
-import os
-from datetime import date
-
+from schema.files import FileWithOwner
 from utils.environment import Config
 
 UPLOADS = Config.UPLOADS
 logging.basicConfig(filename='/var/log/backend/es.log', format='%(levelname)s:%(message)s', level=logging.INFO)
 
 
-class ElasticModel1(BaseModel):
-    name: str
-    msg: str
+class ElasticModel(BaseModel):
+    file_uuid: str
+    content: str
+    page: int
 
-class ElasticModel:
-
-    name = ""
-    msg = ""
-
-    def toJSON(self):
-        return json.dumps(self, sort_keys=True, indent=4)
 
 def readPDF(path):
     pdf_file_obj = open(path, 'rb')
     pdf_reader = PyPDF2.PdfReader(pdf_file_obj)
-    page_obj = pdf_reader.pages[0]
-    line = page_obj.extract_text()
-    line = line.replace("\n","")
-    return line
+    array_with_extracted_text = []
+    for page, content in enumerate(pdf_reader.pages):
+        array_with_extracted_text.append(
+            {
+                "page": page,
+                "content": content.extract_text().replace("\n", "")
+            }
+        )
+    return array_with_extracted_text
 
 
-#line = pageObj.extractText()
-
-def __prepareElasticModel__(line, name):
-    model = {'name': name, 'msg': line}
-    model = ElasticModel1.parse_obj(model)
+def __prepareElasticModel__(content, file: FileWithOwner):
+    model = {
+        'page': content['page'],
+        'content': content['content'],
+        'file_uuid': file.file_uuid
+    }
+    model = ElasticModel.parse_obj(model)
     return model
 
 
-def __sendToElasticSearch__(elasticModel: ElasticModel1):
-    print("Name : " + str(elasticModel))
-
-############################################
-####  #CHANGE INDEX NAME IF NEEDED
-#############################################
-    index = "articles_pdf"
-
-    url = "http://es:9200/" + index +"/_doc?pretty"
-    data = elasticModel.json()
-    #data = serialize(eModel)
-    response = requests.post(url, data=data, headers={
-                    'Content-Type':'application/json',
-                    'Accept-Language':'en'
-                })
-    logging.info("Url : " + url)
-    logging.info("Data : " + str(data))
-
-    logging.info("Request : " + str(requests))
-    logging.info("Response : " + str(response))
+def __sendToElasticSearch__(model: ElasticModel):
+    client = Elasticsearch("http://es:9200")
+    index = "pdf"
+    model_id = f'{model.file_uuid}-{model.page}'
+    data = model.json()
+    client.index(index=index, id=model_id, document=data)
