@@ -15,6 +15,7 @@ from helpers.response import ResponseModel
 from db_requests.article import add_article, retrieve_articles, retrieve_article, update_article, delete_article_perm
 from schema.article import ArticleInDB, UpdateArticleModel, NewArticleSchema
 from schema.user import User
+from utils.analyze_document import update_article_in_es, delete_article_in_es, create_article_in_es
 from utils.classes import CustomDatetime
 from utils.environment import Config, DT_FORMAT
 from utils.validators import validate_files
@@ -101,7 +102,10 @@ async def upload(attach: UploadFile, background_tasks: BackgroundTasks, article:
     return {'meta': meta}
 
 @router.post("/")
-async def create_article(article_data: NewArticleSchema, current_user: User = Depends(get_current_active_user)):
+async def create_article(
+        article_data: NewArticleSchema,
+        background_tasks: BackgroundTasks,
+        current_user: User = Depends(get_current_active_user)):
     data = article_data.dict()
 
     if data['files']:
@@ -114,6 +118,8 @@ async def create_article(article_data: NewArticleSchema, current_user: User = De
     data['added'] = CustomDatetime.now().strftime(DT_FORMAT)
     article_data = ArticleInDB.parse_obj(data)
     article = await add_article(article_data)
+    if article:
+        background_tasks.add_task(create_article_in_es, article)
     return article if article else HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
 
 @router.get("/", response_description="Статьи")
@@ -143,11 +149,16 @@ async def get_article_string(article_id: str, current_user: User = Depends(get_c
     return JSONResponse({'link': a.to_string()})
 
 @router.put("/{article_id}", response_description='Статья')
-async def update_article_data(article_id: str, req: UpdateArticleModel = Body(...), current_user: User = Depends(get_current_active_user)):
+async def update_article_data(
+        article_id: str,
+        background_tasks: BackgroundTasks,
+        req: UpdateArticleModel = Body(...),
+        current_user: User = Depends(get_current_active_user)):
     article = await get_article_permission(article_id, current_user)
     req = {k: v for k, v in req.dict().items() if v is not None}
     updated_article = await update_article(article_id, req)
     if updated_article:
+        background_tasks.add_task(update_article_in_es, updated_article)
         return ResponseModel(updated_article, "Article updated successfully")
     else:
         raise HTTPException(
@@ -156,7 +167,10 @@ async def update_article_data(article_id: str, req: UpdateArticleModel = Body(..
 
 
 @router.delete("/{article_id}")
-async def delete_article(article_id: str, user: User = Depends(get_current_active_user)):
+async def delete_article(
+        article_id: str,
+        background_tasks: BackgroundTasks,
+        user: User = Depends(get_current_active_user)):
     article = await get_article_permission(article_id, user)
     logger.info(article)
     if article and article['deleted'] == True:
@@ -165,6 +179,7 @@ async def delete_article(article_id: str, user: User = Depends(get_current_activ
             return ResponseModel(article, "article deleted permanent")
     mark_article_as_deleted = await update_article(article_id, {'deleted': True, 'delete_date': CustomDatetime.now().strftime(DT_FORMAT)})
     if mark_article_as_deleted:
+        background_tasks.add_task(delete_article_in_es, article_id)
         return ResponseModel(mark_article_as_deleted, "Article mark as deleted")
     else:
         raise HTTPException(

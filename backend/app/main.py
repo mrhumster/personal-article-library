@@ -6,6 +6,7 @@ from routes.files import router as files_router
 from routes.collections import router as collections_router
 from routes.notebook import router as notebooks_router
 from routes.hightlight import router as highlights_router
+from routes.search import router as search_router
 from utils.environment import Config
 
 
@@ -37,6 +38,7 @@ app.include_router(files_router, tags=['Files'], prefix='/files')
 app.include_router(collections_router, tags=['Collections'], prefix='/collections')
 app.include_router(notebooks_router, tags=['Notebooks'], prefix='/notebooks')
 app.include_router(highlights_router, tags=['Highlights'], prefix='/highlights')
+app.include_router(search_router, tags=['Elastic search'], prefix='/search')
 
 @app.get("/", tags=["Root"])
 async def read_root():

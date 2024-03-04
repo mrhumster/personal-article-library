@@ -5,15 +5,13 @@ import uuid
 from fastapi import APIRouter, UploadFile, Depends, HTTPException, Body
 from starlette import status
 from starlette.background import BackgroundTasks
-from uvicorn.server import logger
 
 from authorisation.auth import get_current_active_user
-from helpers.files import file_helper
-from helpers.response import ResponseModel
 from db_requests.files import add_file, retrieve_file, update_file
+from helpers.response import ResponseModel
 from schema.files import FileWithOwner, FileScheme
 from schema.user import User
-from utils.analyze_document import prepare_for_es, add_pdf_to_es
+from utils.analyze_document import add_pdf_to_es
 from utils.environment import Config
 from utils.validators import validate_files
 
@@ -58,7 +56,7 @@ async def upload(attach: UploadFile,
     })
 
     new_file = await add_file(new_file_metadata)
-    background_tasks.add_task(add_pdf_to_es, new_file_metadata)
+    background_tasks.add_task(add_pdf_to_es, new_file)
     return new_file
 
 @router.get('/{file_id}')

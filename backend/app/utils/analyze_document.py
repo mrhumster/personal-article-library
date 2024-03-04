@@ -1,34 +1,38 @@
 import base64
-import json
 import logging
-import cbor2
-import requests
-from schema.files import FileWithOwner
+
+from elasticsearch import Elasticsearch, NotFoundError
+
 from utils.environment import Config
-from utils.es import readPDF, __prepareElasticModel__, __sendToElasticSearch__
 
 UPLOADS = Config.UPLOADS
 logging.basicConfig(filename='/var/log/backend/background_task.log', format='%(levelname)s:%(message)s', level=logging.INFO)
-
-def prepare_for_es(file: FileWithOwner):
-    file_path = f'{UPLOADS}{file.file_uuid}'
-    array_with_extracted_text = readPDF(file_path)
-    for i in array_with_extracted_text:
-        model = __prepareElasticModel__(i, file)
-        __sendToElasticSearch__(model)
+client = Elasticsearch("http://es:9200")
+article_index = 'articles'
+files_index = 'files'
 
 
-def add_pdf_to_es(file: FileWithOwner):
-    file_path = f'{UPLOADS}{file.file_uuid}'
-    headers = {'content-type': 'application/json'}
+def add_pdf_to_es(file: dict):
+    file_path = f'{UPLOADS}{file["file_uuid"]}'
+    file_id = file['id']
     with open(file_path, 'rb') as f:
         file_b64 = base64.b64encode(f.read())
-        doc = {
-            'data': file_b64.decode('utf-8')
-        }
-        resp = requests.put(
-            f'http://es:9200/my-index-000001/_doc/{file.file_uuid}?pipeline=attachment',
-            data=json.dumps(doc),
-            headers=headers
-        )
-        logging.info(resp.text)
+        file['data'] = file_b64.decode('utf-8')
+        response = client.index(index=files_index, id=file_id, document=file, pipeline='attachment')
+        logging.info(response.text)
+
+def update_article_in_es(article: dict):
+    article_id = article['id']
+    try:
+        client.get(index=article_index, id=article_id)
+        client.update(index=article_index, id=article_id, doc=article)
+    except NotFoundError:
+        client.index(index=article_index, id=article_id, document=article)
+
+
+def delete_article_in_es(article_id: str):
+    client.delete(index=article_index, id=article_id)
+
+def create_article_in_es(article: dict):
+    article_id = article['id']
+    client.index(index=article_index, id=article_id, document=article)
