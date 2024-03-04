@@ -19,7 +19,6 @@ def add_pdf_to_es(file: dict):
         file_b64 = base64.b64encode(f.read())
         file['data'] = file_b64.decode('utf-8')
         response = client.index(index=files_index, id=file_id, document=file, pipeline='attachment')
-        logging.info(response.text)
 
 def update_article_in_es(article: dict):
     article_id = article['id']

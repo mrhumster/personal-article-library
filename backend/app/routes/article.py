@@ -172,7 +172,6 @@ async def delete_article(
         background_tasks: BackgroundTasks,
         user: User = Depends(get_current_active_user)):
     article = await get_article_permission(article_id, user)
-    logger.info(article)
     if article and article['deleted'] == True:
         deleted = await delete_article_perm(article_id)
         if deleted:

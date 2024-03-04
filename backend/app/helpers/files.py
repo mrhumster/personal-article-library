@@ -8,4 +8,5 @@ def file_helper(file: dict) -> dict:
         "created": file["created"],
         "owner": file["owner"],
         "history": file["history"] if "history" in file else None,
+        "articles": file["articles"] if "articles" in file else None,
     }

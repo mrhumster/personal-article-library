@@ -2,7 +2,9 @@ import motor.motor_asyncio
 from bson import ObjectId
 from uvicorn.server import logger
 
+from db_requests.files import files_collection
 from helpers.article import article_helper
+from helpers.files import file_helper
 from schema.article import ArticleInDB
 from schema.user import User
 from utils.environment import Config
@@ -52,7 +54,6 @@ async def delete_article_perm(article_id: str):
             collections_with_this_article.append(collection['_id'])
 
         for collection in collections_with_this_article:
-
             await collections.update_one({"_id": collection}, {"$pull": {"articles": article_id}})
 
         await article_collection.delete_one({"_id": ObjectId(article_id)})
