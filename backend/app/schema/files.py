@@ -18,6 +18,7 @@ class FileScheme(BaseModel):
     size: int = Field(lte=0)
     created: datetime
     history: Optional[FileHistoryScheme]
+    articles: Optional[List[str]] = Field([])
 
 class FileWithOwner(FileScheme):
     owner: str = Field(max_length=100)

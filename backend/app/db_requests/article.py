@@ -2,7 +2,7 @@ import motor.motor_asyncio
 from bson import ObjectId
 from uvicorn.server import logger
 
-from db_requests.files import files_collection
+from db_requests.files import files_collection, add_article_to_file, remove_article_from_file
 from helpers.article import article_helper
 from helpers.files import file_helper
 from schema.article import ArticleInDB
@@ -17,7 +17,11 @@ collections = database.get_collection("collections")
 async def add_article(article_data: ArticleInDB) -> dict:
     article = await article_collection.insert_one(article_data.dict())
     new_article = await article_collection.find_one({"_id": article.inserted_id})
-    return article_helper(new_article)
+    article = article_helper(new_article)
+    if article['files']:
+        for file_id in article['files']:
+            await add_article_to_file(file_id, article['id'])
+    return article
 
 async def retrieve_articles(user: User) -> list[dict]:
     articles = []
@@ -44,18 +48,24 @@ async def update_article(article_id: str, data: dict):
         )
         if updated_article:
             article = await article_collection.find_one({"_id": ObjectId(article_id)})
+            if article['files']:
+                for file_id in article['files']:
+                    await add_article_to_file(file_id, article_id)
             return article_helper(article)
 
 async def delete_article_perm(article_id: str):
     article = await article_collection.find_one({"_id": ObjectId(article_id)})
     if article:
+        """
+        Обновление ссылок на Articles в коллекциях и файлах
+        """
         collections_with_this_article = []
         async for collection in collections.find({"articles": { "$in" : [article_id]} }):
             collections_with_this_article.append(collection['_id'])
-
         for collection in collections_with_this_article:
             await collections.update_one({"_id": collection}, {"$pull": {"articles": article_id}})
-
+        for file_id in article['files']:
+            await remove_article_from_file(file_id, article_id)
         await article_collection.delete_one({"_id": ObjectId(article_id)})
         return True
     return False
