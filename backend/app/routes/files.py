@@ -5,9 +5,10 @@ import uuid
 from fastapi import APIRouter, UploadFile, Depends, HTTPException, Body
 from starlette import status
 from starlette.background import BackgroundTasks
+from uvicorn.main import logger
 
 from authorisation.auth import get_current_active_user
-from db_requests.files import add_file, retrieve_file, update_file
+from db_requests.files import add_file, retrieve_file, update_file, isFileExists
 from helpers.response import ResponseModel
 from schema.files import FileWithOwner, FileScheme
 from schema.user import User
@@ -35,6 +36,17 @@ async def upload(attach: UploadFile,
             headers={'WWW-Authenticate': 'Bearer'}
         )
     filename = f'{uuid.uuid4()}{file_extension}'
+
+    exist = await isFileExists(
+        owner=current_user['username'],
+        file_name=attach.filename,
+        extension=file_extension[1:],
+        size=len(contents)
+    )
+
+
+    if exist:
+        return exist
 
     if not os.path.exists(UPLOADS):
         os.mkdir(UPLOADS)

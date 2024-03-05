@@ -15,6 +15,24 @@ files_collection = database.get_collection("files_collection")
 
 UPLOADS = Config.UPLOADS
 
+async def isFileExists(owner: str, file_name: str, extension: str, size: int) -> bool | dict:
+    logger.info(f'{owner=}')
+    logger.info(f'{file_name=}')
+    logger.info(f'{extension=}')
+    logger.info(f'{size=}')
+    founded = await files_collection.find_one({
+        "owner": owner,
+        "file_name": file_name,
+        "extension": extension,
+        "size": size
+    })
+    if founded:
+        return file_helper(founded)
+    return False
+
+
+
+
 async def add_file(data: FileWithOwner) -> dict:
     file = await files_collection.insert_one(data.dict())
     new_file = await files_collection.find_one({"_id": file.inserted_id})

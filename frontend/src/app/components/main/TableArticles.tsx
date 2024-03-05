@@ -268,6 +268,7 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
       title: 'Название',
       accessor: 'title',
       sortable: true,
+      width: 'auto',
       renderCell: (row: ArticleIFace) =>
         <Text truncate
               size={'xs'}

@@ -147,16 +147,6 @@ export const articleSlice = createSlice({
         if (id) state.current_article = state.articles.entities[id]
       }
     )
-    builder.addMatcher(
-      backendApi.endpoints.addArticleFile.matchFulfilled,
-      (state: ArticleStateIFace, action) => {
-        const updatedArticleId = action.meta.arg.originalArgs.get('article')
-        if (updatedArticleId === state.current_article?.id) {
-          console.log('Похоже наша ссылка обогатилась файлом')
-          // articleSlice.caseReducers.setCurrentArticle(state, {payload: updatedArticleId})
-        }
-      }
-    )
   }
 })
 

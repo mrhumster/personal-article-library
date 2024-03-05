@@ -109,18 +109,6 @@ export const backendApi = createApi({
       },
       transformResponse: (response: {data: {articles_string: string[]}[] }) => {return response.data[0]}
     }),
-    addArticleFile: builder.mutation({
-      // TODO: Надо убирать
-      query: (body) => {
-        return {
-          url: '/articles/upload',
-          method: 'POST',
-          body: body,
-          formData: true
-        }
-      },
-      transformErrorResponse: (response: ErrorResponse) => {response.data}
-    }),
     checkUsername: builder.query({
       query: (username) => `/users/${username}`,
       transformResponse: (response: { data: UserResponse[] }) => response.data[0],
@@ -269,7 +257,6 @@ export const {
   useCheckUsernameQuery ,
   useGetTokenMutation,
   useCreateUserMutation,
-  useAddArticleFileMutation,
   useGetArticlesQuery,
   useGetArticleQuery,
   useUpdateArticleMutation,

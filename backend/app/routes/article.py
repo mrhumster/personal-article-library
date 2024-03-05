@@ -11,6 +11,7 @@ from starlette.responses import JSONResponse
 from uvicorn.main import logger
 
 from authorisation.auth import get_current_active_user
+from db_requests.files import isFileExists
 from helpers.response import ResponseModel
 from db_requests.article import add_article, retrieve_articles, retrieve_article, update_article, delete_article_perm
 from schema.article import ArticleInDB, UpdateArticleModel, NewArticleSchema
@@ -35,71 +36,6 @@ async def get_article_permission(article_id: str, current_user: User):
     else:
         return article
 
-async def analyzeFile(file_uuid, user, meta):
-    """
-    Create
-    """
-    if meta['article'] is None:
-        article = ArticleInDB.parse_obj({
-            'owner': user['username'],
-            'added': CustomDatetime.now().strftime(DT_FORMAT),
-            'files': [{
-                'file_uuid': file_uuid,
-                'file_name': meta['original_name'],
-                'extension': meta['extension'],
-                'size': meta['size'],
-                'created': meta['created']
-            }],
-            'title': meta['original_name'],
-            'authors': [],
-        })
-        article = await add_article(article)
-        return article
-    else:
-        article = await retrieve_article(meta['article'])
-        updated_article = await update_article(meta['article'], {
-            'files': [{
-                'file_uuid': file_uuid,
-                'file_name': meta['original_name'],
-                'extension': meta['extension'],
-                'size': meta['size'],
-                'created': meta['created']
-            }]+article['files']})
-        return updated_article
-
-@router.post("/upload", status_code=201)
-async def upload(attach: UploadFile, background_tasks: BackgroundTasks, article: Optional[str] = Form(None), current_user: User = Depends(get_current_active_user)):
-    meta = {}
-    contents = attach.file.read()
-    title, file_extension = os.path.splitext(attach.filename)
-    if file_extension.lower() not in ['.pdf']:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail='Допускается загрузка только файлов формата PDF.',
-            headers={'WWW-Authenticate': 'Bearer'}
-        )
-    filename = f'{uuid.uuid4()}{file_extension}'
-    meta['original_name'] = attach.filename
-    meta['title'] = title
-    meta['author'] = current_user['username']
-    meta['article'] = article
-    meta['extension'] = file_extension[1:]
-    meta['size'] = len(contents)
-
-
-    if not os.path.exists(UPLOADS):
-        os.mkdir(UPLOADS)
-
-    file_path = f'{UPLOADS}{filename}'
-
-    with open(file_path, 'wb') as f:
-        f.write(contents)
-
-    meta['created'] = CustomDatetime.fromtimestamp(os.path.getatime(file_path))
-
-    background_tasks.add_task(analyzeFile, file_uuid=filename, user=current_user, meta=meta)
-    attach.file.close()
-    return {'meta': meta}
 
 @router.post("/")
 async def create_article(
@@ -175,10 +111,10 @@ async def delete_article(
     if article and article['deleted'] == True:
         deleted = await delete_article_perm(article_id)
         if deleted:
+            background_tasks.add_task(delete_article_in_es, article_id)
             return ResponseModel(article, "article deleted permanent")
     mark_article_as_deleted = await update_article(article_id, {'deleted': True, 'delete_date': CustomDatetime.now().strftime(DT_FORMAT)})
     if mark_article_as_deleted:
-        background_tasks.add_task(delete_article_in_es, article_id)
         return ResponseModel(mark_article_as_deleted, "Article mark as deleted")
     else:
         raise HTTPException(
