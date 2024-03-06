@@ -13,6 +13,7 @@ import {resetCollection} from "../../features/collections";
 import {resetUi} from "../../features/ui";
 import {resetArticle} from "../../features/article";
 import {addMessage} from "../../features/alert";
+import { useNavigate } from "react-router-dom";
 
 
 export const UserMenu = () => {
@@ -21,6 +22,8 @@ export const UserMenu = () => {
   const [showTooltip, setShowTooltip] = useState<boolean>(false)
   const auth = useSelector((state: RootState) => state.auth)
   const dispatch = useDispatch()
+  const navigate = useNavigate();
+
   const handleClickExit = () => {
     dispatch(clearAuthData())
     dispatch(resetCollection())
@@ -28,6 +31,7 @@ export const UserMenu = () => {
     dispatch(resetArticle())
     dispatch(addMessage({'message': 'Вы вышли из системы'}))
     logout()
+    navigate('/login')
   }
   const items: ContextMenuItemDefault[] = [
     {

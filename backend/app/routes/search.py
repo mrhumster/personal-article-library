@@ -7,23 +7,13 @@ from schema.user import User
 router = APIRouter()
 client = AsyncElasticsearch('http://es:9200')
 
-@router.post("/")
+@router.get("/")
 async def get_result_from_es(query: str, current_user: User = Depends(get_current_active_user)):
-    response = await client.search(
+    return await client.search_template(
         index='articles,files',
-        body={
-          "query": {
-            "simple_query_string": {
-              "query": query,
-              "fields": [
-                "title",
-                "attachment.content",
-                "attachment.title",
-                "authors*"
-              ]
-            }
-          },
-          "_source": False
-        },
-        size=10)
-    return response
+        id='pal-search-template',
+        params={
+            "query_string": query,
+            "owner": current_user['username']
+        }
+    )

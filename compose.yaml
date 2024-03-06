@@ -85,6 +85,8 @@ services:
       - data_es:/bitnami/elasticsearch/data
     ports:
       - "9200:9200"
+    environment:
+      - ELASTICSEARCH_HEAP_SIZE=2G
     networks:
       - pal-network
   kibana:

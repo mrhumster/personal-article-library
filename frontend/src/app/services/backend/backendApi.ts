@@ -1,5 +1,12 @@
 import {createApi} from "@reduxjs/toolkit/dist/query/react";
-import {ArticleIFace, ErrorResponse, NoteBookIFace, ResponseWithNotebook, UserResponse} from "../../types";
+import {
+  ArticleIFace,
+  ErrorResponse, FileScheme,
+  NoteBookIFace,
+  ResponseWithNotebook,
+  SearchResponse,
+  UserResponse
+} from "../../types";
 import {baseQueryWithErrorHandler} from "./baseQuery.ts";
 import {normalize, schema} from "normalizr";
 import {ResponseWithArticle} from "../../types";
@@ -250,6 +257,15 @@ export const backendApi = createApi({
       query: (file_id) => `/highlights/by-file/${file_id}`,
       transformResponse: (response: ResponseWithHighlight) => response.data
     }),
+    search: builder.query({
+      query: (query) => {
+        return {
+          url: '/search/',
+          params: query
+        }
+      },
+      transformResponse: (response: SearchResponse<ArticleIFace | FileScheme>) => response.hits.hits
+    })
   }),
 })
 
@@ -280,5 +296,6 @@ export const {
   useUpdateHighlightMutation,
   useCreateHighlightMutation,
   useDeleteHighlightMutation,
-  useGetHighlightByFileQuery
+  useGetHighlightByFileQuery,
+  useSearchQuery
 } = backendApi

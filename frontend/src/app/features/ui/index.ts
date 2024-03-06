@@ -17,4 +17,6 @@ export {
   setActiveNotebook,
   showHighlight,
   resetUi,
+  openSearchDialog,
+  closeSearchDialog
 } from './uiSlice.ts'

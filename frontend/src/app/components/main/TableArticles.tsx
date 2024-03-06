@@ -25,7 +25,7 @@ import {addMessage, Item} from "../../features/alert";
 import {SelectedPanel} from "./SelectedPanel.tsx";
 import {AuthorsCell, FavoriteCell, ReadCell} from "./table_cells";
 import moment from "moment";
-import {SearchDialog} from "./search";
+import {ElasticSearch, SearchModal} from "./search";
 
 
 type TableArticlesIFace = {
@@ -49,7 +49,6 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
   const articleString = useGetArticleStringQuery(idForRequest, {skip: !idForRequest})
   const [getArticleListString, getArticleListStringResult] = useGetArticleListStringMutation()
   const headerCheckBox = useRef(null)
-  const [searchValue, setSearchValue] = useState<string | undefined | null>(undefined)
   const [sortSetting, setSortSetting] = useState<SortByProps<ArticleIFace> | null>(null);
   const dispatch = useDispatch()
 
@@ -75,14 +74,6 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
       });
     }
     return rows
-  }
-
-  const search = (rows: ArticleIFace[] | undefined, searchValue: string) => {
-    return rows?.filter(row =>
-      row.title?.toLowerCase().includes(searchValue.toLowerCase()) ||
-      row.publication?.year?.toString().includes(searchValue.toLowerCase()) ||
-      row.authors.map(author => authorToString(author)).join(' ').toLowerCase().includes(searchValue.toLowerCase())
-    )
   }
 
   useEffect(() => {
@@ -121,9 +112,8 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
     if (selected_menu_item.id === '1') setRows((prevState) => prevState?.filter((row) => moment(row.added).isAfter(moment().subtract(7, 'days'))))
     if (selected_menu_item.id === '3') setRows(prevState => prevState?.filter(row => row.favorite))
     if (selected_menu_item.id === '2') setRows(prevState => prevState?.filter(row => row.read && moment(row.read_date).isAfter(moment().subtract(7, 'days'))))
-    if (searchValue) setRows(prevState => search(prevState, searchValue))
     setRows((prevState) => sortBy(prevState, sortSetting))
-  }, [ids, entities, filter, selected_menu_item, searchValue, sortSetting])
+  }, [ids, entities, filter, selected_menu_item, sortSetting])
 
   const drag = (e: React.DragEvent<HTMLDivElement>) => {
     const article_id = (e.target as HTMLElement).getAttribute('data-article-id')
@@ -381,7 +371,7 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
         <div className={`h-[5%] flex items-center border-b border-slate-300 justify-items-stretch`}>
           <TableTitle title={title}/>
           <div id='buttons' className={`flex`}>
-            <SearchDialog searchValue={searchValue} setSearchValue={setSearchValue}/>
+            <ElasticSearch />
           </div>
         </div>
         <div id='tableContainer' className={`grow overflow-y-auto ${selected.length > 0 ? 'h-[88%]' : 'h-[95%]'}`}>
@@ -415,6 +405,7 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
               onClickOutside={() => setIsOpenContextMenu(false)}
           />
       }
+      <SearchModal />
     </Theme>
   )
 }

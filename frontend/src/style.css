@@ -59,3 +59,9 @@ body {
 #annotations {
     height: calc(100% - 32px);
 }
+
+em {
+    background-color: rgba(34, 194, 141, 0.37);
+    padding:0.1em 0.2em;
+    font-style: normal;
+}

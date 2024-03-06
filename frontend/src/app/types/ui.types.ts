@@ -45,5 +45,8 @@ export interface uiState {
     isActive: boolean
     type?: string
     kind?: string
+  },
+  search: {
+    showDialog: boolean
   }
 }

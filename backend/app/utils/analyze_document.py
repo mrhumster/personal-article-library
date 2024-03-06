@@ -1,6 +1,7 @@
 import base64
 import logging
 
+import elastic_transport
 from elasticsearch import Elasticsearch, NotFoundError, AsyncElasticsearch
 from uvicorn.main import logger
 
@@ -13,6 +14,13 @@ async_client = AsyncElasticsearch('http://es:9200')
 article_index = 'articles'
 files_index = 'files'
 
+def check_if_the_file_is_in_the_index(file_id: str) -> bool:
+    try:
+        client.get(index=files_index, id=file_id)
+        return True
+    except NotFoundError:
+        return False
+
 
 def add_pdf_to_es(file: dict):
     file_path = f'{UPLOADS}{file["file_uuid"]}'
@@ -21,6 +29,13 @@ def add_pdf_to_es(file: dict):
         file_b64 = base64.b64encode(f.read())
         file['data'] = file_b64.decode('utf-8')
         response = client.index(index=files_index, id=file_id, document=file, pipeline='attachment')
+
+async def update_file_in_es(file: dict):
+    file_id = file['id']
+    try:
+        await async_client.update(index=files_index, id=file_id, doc=file)
+    except NotFoundError:
+        add_pdf_to_es(file)
 
 async def remove_file_from_es(file_id: str):
     try:
@@ -42,4 +57,7 @@ def delete_article_in_es(article_id: str):
 
 def create_article_in_es(article: dict):
     article_id = article['id']
-    client.index(index=article_index, id=article_id, document=article)
+    try:
+        client.index(index=article_index, id=article_id, document=article)
+    except elastic_transport.ConnectionError:
+        logger.info('Elastic search not available')

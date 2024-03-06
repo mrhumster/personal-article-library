@@ -32,6 +32,9 @@ export const initialState: uiState = {
     isActive: false,
     kind: undefined,
     type: undefined,
+  },
+  search: {
+    showDialog: false
   }
 }
 
@@ -112,6 +115,12 @@ export const uiSlice = createSlice({
     },
     resetUi: () => {
       return initialState
+    },
+    openSearchDialog: (state: uiState) => {
+      state.search.showDialog = true
+    },
+    closeSearchDialog: (state: uiState) => {
+      state.search.showDialog = false
     }
   },
   extraReducers: (builder) => {
@@ -144,5 +153,7 @@ export const {
   setActiveReaderTab,
   resetUi,
   setActiveNotebook,
-  showHighlight
+  showHighlight,
+  openSearchDialog,
+  closeSearchDialog
 } = uiSlice.actions

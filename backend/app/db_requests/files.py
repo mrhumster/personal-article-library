@@ -6,7 +6,7 @@ from uvicorn.main import logger
 
 from helpers.files import file_helper
 from schema.files import FileWithOwner
-from utils.analyze_document import remove_file_from_es
+from utils.analyze_document import remove_file_from_es, update_file_in_es
 from utils.environment import Config
 
 client = motor.motor_asyncio.AsyncIOMotorClient(Config.MONGO_URI)
@@ -16,10 +16,7 @@ files_collection = database.get_collection("files_collection")
 UPLOADS = Config.UPLOADS
 
 async def isFileExists(owner: str, file_name: str, extension: str, size: int) -> bool | dict:
-    logger.info(f'{owner=}')
-    logger.info(f'{file_name=}')
-    logger.info(f'{extension=}')
-    logger.info(f'{size=}')
+
     founded = await files_collection.find_one({
         "owner": owner,
         "file_name": file_name,
@@ -29,9 +26,6 @@ async def isFileExists(owner: str, file_name: str, extension: str, size: int) ->
     if founded:
         return file_helper(founded)
     return False
-
-
-
 
 async def add_file(data: FileWithOwner) -> dict:
     file = await files_collection.insert_one(data.dict())
@@ -64,6 +58,8 @@ async def add_article_to_file(file_id: str, article_id: str) -> bool:
     if not await fileIsExists(file_id):
         return False
     if await files_collection.update_one({"_id": ObjectId(file_id)}, {"$addToSet" : {"articles": article_id}}):
+        file = await retrieve_file(file_id)
+        await update_file_in_es(file)
         return True
 
 

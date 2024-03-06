@@ -11,12 +11,13 @@ from starlette.responses import JSONResponse
 from uvicorn.main import logger
 
 from authorisation.auth import get_current_active_user
-from db_requests.files import isFileExists
+from db_requests.files import isFileExists, retrieve_file
 from helpers.response import ResponseModel
 from db_requests.article import add_article, retrieve_articles, retrieve_article, update_article, delete_article_perm
 from schema.article import ArticleInDB, UpdateArticleModel, NewArticleSchema
 from schema.user import User
-from utils.analyze_document import update_article_in_es, delete_article_in_es, create_article_in_es
+from utils.analyze_document import update_article_in_es, delete_article_in_es, create_article_in_es, \
+    check_if_the_file_is_in_the_index, add_pdf_to_es
 from utils.classes import CustomDatetime
 from utils.environment import Config, DT_FORMAT
 from utils.validators import validate_files
@@ -94,6 +95,10 @@ async def update_article_data(
     req = {k: v for k, v in req.dict().items() if v is not None}
     updated_article = await update_article(article_id, req)
     if updated_article:
+        for file_id in updated_article['files']:
+            if not check_if_the_file_is_in_the_index(file_id):
+                file = await retrieve_file(file_id)
+                background_tasks.add_task(add_pdf_to_es, file)
         background_tasks.add_task(update_article_in_es, updated_article)
         return ResponseModel(updated_article, "Article updated successfully")
     else:
