@@ -82,7 +82,7 @@ export const PDFViewer = () => {
   }, [noteForJump])
 
   useEffect(() => {
-    if (isDocumentLoaded) {
+    if (isDocumentLoaded && search_query) {
         highlight({
             keyword: search_query,
             matchCase: true,

@@ -15,7 +15,7 @@ export const FoundFiles = ({item, query}:{item: any, query: string}) => {
   const dispatch = useDispatch()
   const label = <div>
     <p className={'pb-3'}>{item.fields.file_name}</p>
-    {item.highlight['attachment.content'].map((highlight: string, key: number) => {
+    {item.highlight['attachment.content'] && item.highlight['attachment.content'].map((highlight: string, key: number) => {
       return <div className={'border rounded shadow p-2 my-2 font-light'} key={key}
                   dangerouslySetInnerHTML={{__html: prettyHighlight(highlight) }}/>
     })}

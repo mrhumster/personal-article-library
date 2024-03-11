@@ -9,13 +9,25 @@ import {useGetArticlesQuery} from "../../services/backend";
 
 export const UploadProgress = () => {
   const uploadProgress = useSelector((state: RootState) => state.ui.uploadProgress)
-
   const {refetch} = useGetArticlesQuery({})
+
   const dispatch = useDispatch()
 
   const handleClick = () => dispatch(closeUploadProgress())
 
-  useEffect(() => {if (uploadProgress.success) refetch()}, [uploadProgress.success])
+  useEffect(() => {
+    if (uploadProgress.success) refetch()
+  }, [uploadProgress.success])
+
+  useEffect(() => {
+    if (uploadProgress.show) {
+      const timer = setTimeout(() => {
+        dispatch(closeUploadProgress())
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+
+  }, [uploadProgress.show]);
 
   return (
     <>

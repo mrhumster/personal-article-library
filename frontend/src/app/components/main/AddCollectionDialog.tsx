@@ -39,6 +39,7 @@ export const AddCollectionDialog = (props: AddCollectionDialogPropsIFace) => {
 
   const addClickHandler = () => {
     if (value) value.map((v) => {
+      console.log(v)
       if (v.key) updateMyCollection({collection_id: v.key, articles: [...entities[v.key].articles, ...props.items]})
     })
     setValue([])

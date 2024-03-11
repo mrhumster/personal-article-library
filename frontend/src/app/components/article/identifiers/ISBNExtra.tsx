@@ -70,7 +70,7 @@ export const ISBNExtra = (props: ISBNExtraPropsIFace) => {
         <ISBNExtraRow label='Дата публикации'
                       content={moment(new Date(volumeItem.volumeInfo.publishedDate)).format('DD.MM.YYYY')}
                       callback={handleClickCopyPublishedDate}/>
-        <ISBNExtraRow label='Количество страниц' content={volumeItem.volumeInfo.pageCount.toString()} callback={handleClickCopyPages}/>
+        <ISBNExtraRow label='Количество страниц' content={volumeItem.volumeInfo.pageCount && volumeItem.volumeInfo.pageCount.toString()} callback={handleClickCopyPages}/>
         <ISBNExtraRow label='Категория' content={volumeItem.volumeInfo.categories}/>
         <ISBNExtraRow label='Язык' content={volumeItem.volumeInfo.language}/>
         <ISBNExtraRow label='ISBN 13' content={getISBNFromData('ISBN_13', volumeItem)}/>

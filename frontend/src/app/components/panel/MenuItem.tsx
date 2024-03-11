@@ -49,7 +49,9 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
     if (updateMyCollectionResult.isSuccess && !updateMyCollectionResult.isError) refetch()
   }, [updateMyCollectionResult.isSuccess, updateMyCollectionResult.isError])
 
-  const handleItemClick = (item: Item) => dispatch(setSelectedMenuItem({id: item.key, group: item.groupId}))
+  const handleItemClick = (item: Item) => {
+    if (item.key && item.groupId) dispatch(setSelectedMenuItem({id: item.key, group: item.groupId}))
+  }
 
   const handleOnDragOver = (event: React.DragEvent) => {
     event.preventDefault();
@@ -78,7 +80,7 @@ export const MenuItem = (props: MenuItemPropsIFace) => {
         dispatch(addMessage({message: 'Ссылка уже добавлена в коллекцию', status: 'system'}))
       } else {
         const collection = collections.entities[collection_id]
-        updateMyCollection({...collection, articles: [...articles, article_id]})
+        updateMyCollection({collection_id: collection.id, ...collection, articles: [...articles, article_id]})
       }
     }
     setDragOver(false)
