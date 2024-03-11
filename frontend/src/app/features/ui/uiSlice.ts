@@ -10,7 +10,8 @@ export const initialState: uiState = {
     activeTab: undefined,
     files: [],
     dictArticleByFile: {},
-    showHighlight: undefined
+    showHighlight: undefined,
+    searchQueryByFile: {}
   },
   checked: {
     id: '0',
@@ -42,8 +43,8 @@ export const uiSlice = createSlice({
   name: 'ui',
   initialState,
   reducers: {
-    setSelectedMenuItem: (state: uiState, action) => {
-      void (state.checked = action.payload)
+    setSelectedMenuItem: (state: uiState, {payload}:{payload: {id: string, group: number}}) => {
+      void (state.checked = payload)
     },
     showUploadProgress: (state: uiState, action) => {
       state.uploadProgress.show = action.payload
@@ -86,17 +87,19 @@ export const uiSlice = createSlice({
     closeReader: (state: uiState) => {
       state.reader.isReaderOpen = false
     },
-    openFile: (state: uiState, {payload}:{payload: {file: FileScheme, article_id: string}}) => {
-      const {file, article_id} = payload
+    openFile: (state: uiState, {payload}:{payload: {file: FileScheme, article_id: string, search_query: string | undefined}}) => {
+      const {file, article_id, search_query} = payload
       state.reader.dictArticleByFile[file.id] = article_id
       if (state.reader.files.map(f => f.id).indexOf(file.id) === -1) {
         state.reader.files = [...state.reader.files, file]
       }
       state.reader.activeTab = file
+      if (search_query) state.reader.searchQueryByFile[file.id] = search_query
     },
     closeFile: (state: uiState, {payload}:{payload: {id: string}}) => {
       state.reader.files = state.reader.files.filter((file) => file.id !== payload.id)
       delete state.reader.dictArticleByFile[payload.id]
+      delete state.reader.searchQueryByFile[payload.id]
       if (state.reader.activeTab?.id === payload.id) {
         state.reader.activeTab = state.reader.files[0]
       }

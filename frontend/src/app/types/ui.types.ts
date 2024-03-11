@@ -16,6 +16,9 @@ export interface uiState {
     dictArticleByFile: {
       [key: string]: string
     },
+    searchQueryByFile: {
+      [key: string]: string
+    }
     showHighlight?: HighlightScheme
   },
   checked: {

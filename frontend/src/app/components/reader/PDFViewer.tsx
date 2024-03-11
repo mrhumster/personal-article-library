@@ -36,10 +36,10 @@ import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import {renderToolbar} from "./Toolbar.tsx";
 import {HighlightScheme} from "../../types/article.types.ts";
 import {showHighlight} from "../../features/ui";
-import {Annotation} from "../annotations/elements/Annotation.tsx";
 import {HighlightText} from "./HighlightText.tsx";
 
-
+import { searchPlugin } from '@react-pdf-viewer/search';
+import '@react-pdf-viewer/search/lib/styles/index.css';
 
 
 export const PDFViewer = () => {
@@ -60,7 +60,13 @@ export const PDFViewer = () => {
   const [currentDoc, setCurrentDoc] = React.useState<PdfJs.PdfDocument | null>(null);
   const [createHighlight, createHighlightResult] = useCreateHighlightMutation()
   const {data: dataHighlights, refetch: refetchHighlights} = useGetHighlightByFileQuery(file?.id, {skip: !file?.id})
+  const search_query = useSelector((state: RootState) => state.ui.reader.searchQueryByFile[file?.id])
+  const [isDocumentLoaded, setDocumentLoaded] = React.useState(false);
+
+  const searchPluginInstance = searchPlugin();
+  const { highlight } = searchPluginInstance;
   const dispatch = useDispatch()
+
 
   useEffect(() => setFileUrl(`/media/${file?.file_uuid}`), [file])
 
@@ -75,7 +81,19 @@ export const PDFViewer = () => {
     }
   }, [noteForJump])
 
-  const handleDocumentLoad = (e: DocumentLoadEvent) => {setCurrentDoc(e.doc)};
+  useEffect(() => {
+    if (isDocumentLoaded) {
+        highlight({
+            keyword: search_query,
+            matchCase: true,
+        });
+    }
+}, [isDocumentLoaded]);
+
+  const handleDocumentLoad = (e: DocumentLoadEvent) => {
+    setCurrentDoc(e.doc)
+    setDocumentLoaded(true)
+  };
 
   const renderHighlightTarget = (props: RenderHighlightTargetProps) => (
     <div
@@ -275,7 +293,7 @@ export const PDFViewer = () => {
             <Viewer
                 fileUrl={fileUrl}
                 localization={ru_RU as unknown as LocalizationMap}
-                plugins={[defaultLayoutPluginInstance, highlightPluginInstance]}
+                plugins={[defaultLayoutPluginInstance, highlightPluginInstance, searchPluginInstance]}
                 theme={'dark'}
                 initialPage={page}
                 defaultScale={scale}

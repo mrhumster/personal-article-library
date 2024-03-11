@@ -21,15 +21,7 @@ export const SearchModal = () => {
   const dispatch = useDispatch()
   const closeDialog = () => dispatch(closeSearchDialog())
 
-  useEffect(()=>{
-    if (isSuccess) {
-      console.log(data)
-    }
-  }, [data, isSuccess])
-
-  useEffect(() => {
-    debounceSetSearchValue(value)
-  }, [value])
+  useEffect(() => {debounceSetSearchValue(value)}, [value])
 
   return (
     <Modal className={'border p-3 w-1/2'}
@@ -40,6 +32,7 @@ export const SearchModal = () => {
            position={'top'}
     >
         <TextField size={'s'}
+                   autoFocus
                    leftSide={IconSearchStroked}
                    withClearButton={true}
                    value={value}
@@ -48,13 +41,13 @@ export const SearchModal = () => {
         {data && isSuccess &&
           <div className={'grid grid-col-1 gap-3 mt-3'}>
             {data.filter(item => item._index === 'articles').length !==0 && <Text className={'m-2'} weight={'semibold'} view={'secondary'}>Ссылки</Text>}
-            {data.filter(item => item._index === 'articles').map(item => <FoundArticle key={item._id} item={item} />)}
+            {data.filter(item => item._index === 'articles').map(item => <FoundArticle key={item._id} item={item} query={query}/>)}
             {data.filter(item => item._index === 'files').length !==0 && <Text className={'m-2'} weight={'semibold'} view={'secondary'}>Файлы</Text>}
-            {data.filter(item => item._index === 'files').map(item => <FoundFiles key={item._id} item={item} />)}
+            {data.filter(item => item._index === 'files').map(item => <FoundFiles key={item._id} item={item} query={query}/>)}
           </div>
         }
       {
-        !data &&
+        (!data || data.length === 0) &&
           <div className={'w-full h-60 flex flex-col items-center justify-center'}>
             <Text size='xl' weight='semibold' view='secondary'>Ничего не нашли</Text>
             <Text weight='light' view='secondary' align='center'>Попробуйте спросить по другому</Text>
