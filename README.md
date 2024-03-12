@@ -44,16 +44,14 @@ PUT _scripts/pal-search-template
                   "attachment.title",
                   "authors*",
                   "file_name"
-                ]
-              }
-            },
-            
-            {
-              "match": {
-                "owner": "{{owner}}"
+                ],
+                "default_operator": "and"
               }
             }
-          ]  
+          ],
+          "filter": [
+              {"term": {"owner" : "{{owner}}"} }
+            ]
         }
       },
       "_source": false,
@@ -61,6 +59,7 @@ PUT _scripts/pal-search-template
         "title",
         "attachment.title",
         "file_name",
+        "extension",
         "articles",
         "owner"
       ],
