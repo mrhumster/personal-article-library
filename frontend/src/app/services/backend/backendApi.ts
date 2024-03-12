@@ -1,8 +1,7 @@
 import {createApi} from "@reduxjs/toolkit/dist/query/react";
 import {
   ArticleIFace,
-  ErrorResponse, FileScheme,
-  NoteBookIFace,
+  ErrorResponse, FileScheme, NoteBookIFace,
   ResponseWithNotebook,
   SearchResponse,
   UserResponse

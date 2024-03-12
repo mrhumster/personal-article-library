@@ -1,18 +1,18 @@
 import React from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store";
-import {IconBook} from "@consta/icons/IconBook";
 import {Informer} from "@consta/uikit/Informer";
 import {closeSearchDialog, openSideBar, setSelectedMenuItem} from "../../../features/ui";
+import {FoundArticleItemIFace} from "../../../types";
 
 
-export const FoundArticle = ({item, query}: {item: any, query: string}) => {
+export const FoundArticle = ({item}: {item: FoundArticleItemIFace, query?: string}) => {
   const article = useSelector((state: RootState) => state.articles.articles.entities[item._id])
   const dispatch = useDispatch()
 
   const getTitle = () => {
     if (item && item.highlight && 'title' in item.highlight) {
-      return <div dangerouslySetInnerHTML={{__html: item.highlight.title[0]}} />
+      return <div className={'card'} dangerouslySetInnerHTML={{__html: item.highlight.title[0]}} />
     }
     return article.title
   }
@@ -24,10 +24,9 @@ export const FoundArticle = ({item, query}: {item: any, query: string}) => {
   }
 
   return (
-    <Informer className={'cursor-pointer hover:bg-gray-100'}
+    <Informer className={'cursor-pointer border border-green-100 hover:border-sky-500'}
               label={getTitle()}
               status={'success'}
-              icon={IconBook}
               view={'bordered'}
               size={'s'}
               onClick={handleClick}

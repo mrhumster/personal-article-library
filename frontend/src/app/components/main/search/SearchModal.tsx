@@ -24,30 +24,31 @@ export const SearchModal = () => {
   useEffect(() => {debounceSetSearchValue(value)}, [value])
 
   return (
-    <Modal className={'border p-3 w-1/2'}
+    <Modal className={'border border-zinc-400 w-full h-[80%] sm:w-7/8 md:w-5/6 lg:w-4/6 xl:w-4/6 2xl:w-1/2'}
            isOpen={isOpen}
            onEsc={() => closeDialog()}
            onClickOutside={() => closeDialog()}
            hasOverlay={false}
            position={'top'}
     >
-        <TextField size={'s'}
+        <TextField className={'p-3'}
+                   size={'s'}
                    autoFocus
                    leftSide={IconSearchStroked}
                    withClearButton={true}
                    value={value}
                    onChange={setValue}
         />
-        {data && isSuccess &&
-          <div className={'grid grid-col-1 gap-3 mt-3'}>
-            {data.filter(item => item._index === 'articles').length !==0 && <Text className={'m-2'} weight={'semibold'} view={'secondary'}>Ссылки</Text>}
-            {data.filter(item => item._index === 'articles').map(item => <FoundArticle key={item._id} item={item} query={query}/>)}
-            {data.filter(item => item._index === 'files').length !==0 && <Text className={'m-2'} weight={'semibold'} view={'secondary'}>Файлы</Text>}
+        {data && isSuccess && query &&
+          <div className={'grid grid-col-1 gap-3 content-start mt-0 overflow-y-auto h-[90%] px-3 m-0 pb-10'}>
+            {data.filter(item => item._index === 'articles').length !==0 && <Text className={'m-2'} weight={'light'} view={'secondary'}>Ссылки</Text>}
+            {data.filter(item => item._index === 'articles').map((item) => <FoundArticle key={item._id} item={item} query={query}/>)}
+            {data.filter(item => item._index === 'files').length !==0 && <Text className={'m-2'} weight={'light'} view={'secondary'}>Файлы</Text>}
             {data.filter(item => item._index === 'files').map(item => <FoundFiles key={item._id} item={item} query={query}/>)}
           </div>
         }
       {
-        (!data || data.length === 0) &&
+        (!data || data.length === 0 || !query) &&
           <div className={'w-full h-60 flex flex-col items-center justify-center'}>
             <Text size='xl' weight='semibold' view='secondary'>Ничего не нашли</Text>
             <Text weight='light' view='secondary' align='center'>Попробуйте спросить по другому</Text>

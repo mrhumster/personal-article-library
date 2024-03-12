@@ -131,3 +131,34 @@ export type PublicationDetails = {
   volume: string | null;
   issue: string | null;
 };
+
+
+export interface FoundIFace {
+  _id: string,
+  _ignored?: string[],
+  _index: string,
+  _score: number,
+}
+
+export interface FoundFileItemIFace extends FoundIFace {
+  fields?: {
+    articles: string[],
+    "attachment.title": string[],
+    extension: string[],
+    file_name: string[],
+    owner: string[]
+  },
+  highlight?: {
+    "attachment.content": string[],
+  }
+}
+
+export interface FoundArticleItemIFace extends FoundIFace {
+  fields?: {
+    title: string[]
+    owner: string[]
+  },
+  highlight?: {
+    "title": string[],
+  }
+}
