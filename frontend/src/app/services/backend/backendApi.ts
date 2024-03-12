@@ -264,6 +264,16 @@ export const backendApi = createApi({
         }
       },
       transformResponse: (response: SearchResponse<ArticleIFace | FileScheme>) => response.hits.hits
+    }),
+    suggest: builder.query({
+      query: (arg) => {
+        const {prefix, field_name} = arg
+        return {
+          url: '/search/suggest',
+          params: {prefix, field_name}
+        }
+      },
+      transformResponse: (response: SearchResponse<ArticleIFace | FileScheme>) => response.suggest['song-suggest'][0]['options']
     })
   }),
 })
@@ -296,5 +306,6 @@ export const {
   useCreateHighlightMutation,
   useDeleteHighlightMutation,
   useGetHighlightByFileQuery,
-  useSearchQuery
+  useSearchQuery,
+  useSuggestQuery
 } = backendApi

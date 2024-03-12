@@ -28,15 +28,13 @@ services:
       target: builder
     volumes:
       - ./backend/app:/app
-      - uploads:/uploads/
+      - ./media/:/uploads/
       - ./logs/backend:/var/log/backend
     env_file:
       - .env
     restart: always
     networks:
       - pal-network
-    ports:
-      - "8000:8000"
     depends_on:
       - mongo
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --root-path /api --reload
@@ -48,7 +46,7 @@ services:
     networks:
       - pal-network
     volumes:
-      - ./data:/data/db
+      - ./mongo/data:/data/db
 
   mongo-express:
     image: mongo-express
@@ -66,7 +64,7 @@ services:
       - ./nginx/ssl/key.pem:/root/ssl/key.pem
       - ./nginx/ssl/cert.pem:/root/ssl/cert.pem
       - ./logs/nginx:/var/log/nginx/
-      - uploads:/www/media/
+      - ./media/:/www/media/
     ports:
       - "443:443"
     depends_on:
@@ -75,6 +73,7 @@ services:
       - mongo
       - mongo-express
       - es
+      - kibana
     networks:
       - pal-network
 
@@ -84,20 +83,18 @@ services:
     volumes:
       - data_es:/bitnami/elasticsearch/data
       - ./elasticsearch/my_elasticsearch.yml:/opt/bitnami/elasticsearch/config/my_elasticsearch.yml
-    ports:
-      - "9200:9200"
-    environment:
-      - ELASTICSEARCH_HEAP_SIZE=2G
+    env_file:
+      - .es.env
     networks:
       - pal-network
   kibana:
     image: 'bitnami/kibana:latest'
     container_name: kibana
-    ports:
-      - "5601:5601"
-    environment:
-      - KIBANA_ELASTICSEARCH_URL=es
+    env_file:
+      - .es.env
     depends_on:
       - es
     networks:
       - pal-network
+    ports:
+      - "5601:5601"

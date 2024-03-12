@@ -93,5 +93,6 @@ export interface SearchResponse<T> {
       sort?: string[];
     }>;
   };
+  suggest?: any;
   aggregations?: any;
 }

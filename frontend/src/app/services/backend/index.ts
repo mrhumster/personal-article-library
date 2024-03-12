@@ -27,7 +27,8 @@ export {
   useDeleteHighlightMutation,
   useUpdateHighlightMutation,
   useGetHighlightByFileQuery,
-  useSearchQuery
+  useSearchQuery,
+  useSuggestQuery
 } from './backendApi.ts'
 
 export {baseQueryWithErrorHandler} from './baseQuery.ts'

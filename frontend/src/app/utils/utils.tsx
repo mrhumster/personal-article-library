@@ -28,7 +28,7 @@ export const authorsToString = (authors: AuthorIFace[] | null) => {
 export const authorToString = (author: AuthorIFace) => {
   if (author) {
     const {first_name, last_name, sur_name} = author
-    return `${last_name !== null ? last_name : ''} ${first_name !== null ? first_name : ''} ${sur_name !== null ? sur_name : ''}`
+    return `${last_name ? last_name : ''} ${first_name ? first_name : ''} ${sur_name ? sur_name : ''}`
   } else {
     return null
   }

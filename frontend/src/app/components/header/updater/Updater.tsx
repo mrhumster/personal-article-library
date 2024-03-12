@@ -12,7 +12,7 @@ export const Updater = () => {
   const current_article = useSelector((state: RootState) => state.articles.current_article)
   const articles = useSelector((state: RootState) => state.articles.articles)
   const [updateArticle, {isLoading, isError, isSuccess}] = useUpdateArticleMutation()
-  const debounceUpdateArticle = useDebounce(updateArticle, 1000)
+  const debounceUpdateArticle = useDebounce(updateArticle, 3000)
   const dispatch = useDispatch()
 
   useEffect(()=>{

@@ -10,7 +10,7 @@ from utils.environment import Config
 UPLOADS = Config.UPLOADS
 logging.basicConfig(filename='/var/log/backend/background_task.log', format='%(levelname)s:%(message)s', level=logging.INFO)
 client = Elasticsearch("http://es:9200")
-async_client = AsyncElasticsearch('http://es:9200')
+async_client = AsyncElasticsearch('http://es:9200', basic_auth="")
 article_index = 'articles'
 files_index = 'files'
 

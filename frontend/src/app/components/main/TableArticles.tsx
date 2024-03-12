@@ -364,7 +364,6 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
 
   return (
     <Theme preset={presetGpnDefault}>
-      {/* TODO: Плохо работает драг. Если увести файл и бросить за область, то поле не исчезает */}
       <div ref={ref} onDragStart={handlerDragStart} onDragOver={display} onDragEnd={hide}
            className='h-screen w-full relative flex flex-col justify-between'>
         <DragLayout/>

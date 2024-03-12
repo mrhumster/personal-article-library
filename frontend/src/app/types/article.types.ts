@@ -149,7 +149,7 @@ export interface FoundFileItemIFace extends FoundIFace {
     owner: string[]
   },
   highlight?: {
-    "attachment.content": string[],
+    "attachment.content"?: string[]
   }
 }
 
@@ -159,6 +159,10 @@ export interface FoundArticleItemIFace extends FoundIFace {
     owner: string[]
   },
   highlight?: {
-    "title": string[],
+    "title"?: string[],
+    "file_name"?: string[],
+    "authors.first_name"?: string[],
+    "authors.last_name"?: string[],
+    "authors.sur_name"?: string
   }
 }

@@ -17,3 +17,14 @@ async def get_result_from_es(query: str, current_user: User = Depends(get_curren
             "owner": current_user['username']
         }
     )
+
+@router.get("/suggest")
+async def get_suggest_from_es(prefix: str, field_name: str):
+    return await client.search_template(
+        index='articles',
+        id='pal-suggest-template',
+        params={
+            'prefix': prefix,
+            "field_name": field_name
+        }
+    )
