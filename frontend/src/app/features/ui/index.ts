@@ -18,5 +18,6 @@ export {
   showHighlight,
   resetUi,
   openSearchDialog,
-  closeSearchDialog
+  closeSearchDialog,
+  setActiveClickOutsideOnAdditionalInformation
 } from './uiSlice.ts'

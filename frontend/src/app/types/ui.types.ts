@@ -32,6 +32,9 @@ export interface uiState {
     }
     activeTab: number
     activeNotebook?: string
+    additionalInformation: {
+      isActiveClickOutside: boolean
+    }
   }
   uploadProgress: {
     show: boolean,

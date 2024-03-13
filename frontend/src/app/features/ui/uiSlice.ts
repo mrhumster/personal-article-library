@@ -20,7 +20,10 @@ export const initialState: uiState = {
   rightSideBar: {
     activeTab: 0,
     isSidebarOpen: false,
-    activeNotebook: undefined
+    activeNotebook: undefined,
+    additionalInformation: {
+      isActiveClickOutside: true
+    }
   },
   uploadProgress: {
     show: false,
@@ -124,6 +127,9 @@ export const uiSlice = createSlice({
     },
     closeSearchDialog: (state: uiState) => {
       state.search.showDialog = false
+    },
+    setActiveClickOutsideOnAdditionalInformation: (state: uiState, {payload}: {payload: boolean}) => {
+      state.rightSideBar.additionalInformation.isActiveClickOutside = payload
     }
   },
   extraReducers: (builder) => {
@@ -158,5 +164,6 @@ export const {
   setActiveNotebook,
   showHighlight,
   openSearchDialog,
-  closeSearchDialog
+  closeSearchDialog,
+  setActiveClickOutsideOnAdditionalInformation
 } = uiSlice.actions

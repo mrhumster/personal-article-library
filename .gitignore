@@ -770,4 +770,5 @@ cython_debug/
 /data/
 /logs/
 /frontend/node_modules2/
-!/.es.env
+/.es.env
+/media/

@@ -18,14 +18,13 @@ export const AdditionalInformationEdit = () => {
   const showMoreInfoRef = useRef<HTMLInputElement>(null)
   const showLessInfoRef = useRef<HTMLInputElement>(null)
   const current_article = useSelector((state: RootState) => state.articles.current_article)
-
+  const isActiveClickOutside = useSelector((state: RootState) => state.ui.rightSideBar.additionalInformation.isActiveClickOutside)
   const handleClickOutside = () => {
     setActive(false);
-    // setMoreInfo(false)
   }
 
   useClickOutside({
-    isActive: !!handleClickOutside,
+    isActive: isActiveClickOutside,
     handler: handleClickOutside,
     ignoreClicksInsideRefs: [moreInfoRef, formRef]
   })

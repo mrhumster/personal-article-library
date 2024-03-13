@@ -95,7 +95,8 @@ PUT _scripts/pal-suggest-template
         "song-suggest": {
           "prefix": "{{prefix}}",        
           "completion": {         
-              "field": "{{fieldname}}"  
+              "field": "{{field_name}}",
+              "skip_duplicates": true
           }
         }
       },
@@ -103,7 +104,7 @@ PUT _scripts/pal-suggest-template
     },
     "params": {
       "prefix": "Мос",
-      "fieldname": "additional_information.city"
+      "field_name": "additional_information.city"
     }
   }
 }
