@@ -1,8 +1,8 @@
 import React from "react";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../store";
+import {RootState} from "../../../../store";
 import {GridItem} from "@consta/uikit/Grid";
-import {AdditionalInformationTableLayout} from "./AdditionalInformationTableLayout.tsx";
+import {AdditionalInformationTableLayout} from "../layout/AdditionalInformationTableLayout.tsx";
 
 export const AdditionalInformationUnspecifiedTable = () => {
   const additional_information = useSelector((state: RootState) => state.articles.current_article?.additional_information)

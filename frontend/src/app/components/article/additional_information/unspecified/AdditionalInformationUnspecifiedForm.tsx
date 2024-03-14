@@ -1,6 +1,6 @@
 import {Grid} from "@consta/uikit/Grid";
 import React from "react";
-import {EditionField} from "./fields";
+import {EditionField} from "../fields";
 
 
 export const AdditionalInformationUnspecifiedForm = () => {

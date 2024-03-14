@@ -35,6 +35,9 @@ export interface uiState {
     additionalInformation: {
       isActiveClickOutside: boolean
     }
+  },
+  leftSideBar: {
+    isSidebarOpen: boolean
   }
   uploadProgress: {
     show: boolean,

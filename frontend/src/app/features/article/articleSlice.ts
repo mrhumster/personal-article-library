@@ -8,7 +8,8 @@ const initialState: ArticleStateIFace = {
     ids: [],
     entities: {}
   },
-  current_article: undefined
+  current_article: undefined,
+  new_article: undefined
 }
 
 export const articleSlice = createSlice({

@@ -92,13 +92,13 @@ export const getTitleNameByReferenceType = (reference_type: number | undefined) 
     case 2:
       return 'Название журнала'
     case 3:
-      return 'Название статьи (источника)'
+      return 'Название публикации'
     case 4:
       return 'Название газеты'
     case 5:
       return 'Название нормативного акта'
     case 6:
-      return 'Название сборника'
+      return 'Название энциклопедии'
     case 7:
       return 'Название (тема)'
     case 8:

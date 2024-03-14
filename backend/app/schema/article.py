@@ -97,6 +97,14 @@ class AdditionalInformationBook(BaseModel):
     publisher: Optional[str] = Field(None, max_length=200)
     month: Optional[int] = Field(None, gt=0, lt=13)
     day: Optional[int] = Field(None, gt=0, lt=32)
+    source: Optional[str] = Field(None, max_length=200)
+    country: Optional[str] = Field(None, max_length=200)
+    number: Optional[str] = Field(None, max_length=200)
+    code: Optional[str] = Field(None, max_length=200)
+    institution: Optional[str] = Field(None, max_length=200)
+    departament: Optional[str] = Field(None, max_length=200)
+    type: Optional[str] = Field(None, max_length=200)
+    series: Optional[str] = Field(None, max_length=200)
 
     @property
     def City(self):

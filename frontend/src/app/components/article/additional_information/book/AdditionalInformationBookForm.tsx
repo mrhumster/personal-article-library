@@ -1,6 +1,6 @@
 import {Grid} from "@consta/uikit/Grid";
 import React from "react";
-import {EditionField, EditorsField, CityField, PublisherField, MonthField, DayField} from "./fields";
+import {EditionField, EditorsField, CityField, PublisherField, MonthField, DayField} from "../fields";
 
 export const AdditionalInformationBookForm = () => {
 

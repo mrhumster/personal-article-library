@@ -19,5 +19,7 @@ export {
   resetUi,
   openSearchDialog,
   closeSearchDialog,
-  setActiveClickOutsideOnAdditionalInformation
+  setActiveClickOutsideOnAdditionalInformation,
+  openLeftSideBar,
+  closeLeftSideBar
 } from './uiSlice.ts'

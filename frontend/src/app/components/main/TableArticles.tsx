@@ -26,6 +26,7 @@ import {SelectedPanel} from "./SelectedPanel.tsx";
 import {AuthorsCell, FavoriteCell, ReadCell} from "./table_cells";
 import moment from "moment";
 import {ElasticSearch, SearchModal} from "./search";
+import {LeftSideBar} from "../sidebar";
 
 
 type TableArticlesIFace = {
@@ -364,6 +365,7 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
 
   return (
     <Theme preset={presetGpnDefault}>
+
       <div ref={ref} onDragStart={handlerDragStart} onDragOver={display} onDragEnd={hide}
            className='h-screen w-full relative flex flex-col justify-between'>
         <DragLayout/>

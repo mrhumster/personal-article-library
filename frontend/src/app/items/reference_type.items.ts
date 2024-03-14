@@ -26,7 +26,7 @@ export const ReferenceTypeItems: ReferenceTypeItem[] = [
     id: 5
   },
   {
-    label: 'Статья в сборнике',
+    label: 'Статья в энциклопедии',
     id: 6
   },
   {

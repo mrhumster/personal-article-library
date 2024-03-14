@@ -58,7 +58,7 @@ export const AddNewCollection = () => {
                                    onKeyPress={handleKeyPress}
                                    autoFocus
                                    placeholder={'Название коллекции'}/>
-  {/*if (!isClicked) return <Text className="ms-4 my-2 cursor-pointer hover:underline italic text-stone-500" onClick={() => setIsClicked(true)}>Новая коллекция</Text>*/}
+
   if (!isClicked) return (
     <div className={'mx-2 mt-2'}>
       <Button size={'s'} width={'full'} view={'clear'} loading={isLoading} onClick={() => setIsClicked(true)} label='Добавить коллекцию'/>

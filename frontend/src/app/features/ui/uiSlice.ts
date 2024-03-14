@@ -25,6 +25,9 @@ export const initialState: uiState = {
       isActiveClickOutside: true
     }
   },
+  leftSideBar: {
+    isSidebarOpen: false
+  },
   uploadProgress: {
     show: false,
     error: false,
@@ -74,6 +77,12 @@ export const uiSlice = createSlice({
     closeSideBar: (state: uiState) => {
       state.rightSideBar.isSidebarOpen = false
       state.rightSideBar.article = undefined
+    },
+    openLeftSideBar: (state: uiState) => {
+      state.leftSideBar.isSidebarOpen = true
+    },
+    closeLeftSideBar: (state: uiState) => {
+      state.leftSideBar.isSidebarOpen = false
     },
     setActiveTab: (state: uiState, action) => {
       state.rightSideBar.activeTab = action.payload
@@ -165,5 +174,7 @@ export const {
   showHighlight,
   openSearchDialog,
   closeSearchDialog,
-  setActiveClickOutsideOnAdditionalInformation
+  setActiveClickOutsideOnAdditionalInformation,
+  openLeftSideBar,
+  closeLeftSideBar
 } = uiSlice.actions

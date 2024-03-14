@@ -7,9 +7,21 @@ import {AddNewFileButton} from "./AddNewFileButton.tsx";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
 import {IconDocAdd} from "@consta/icons/IconDocAdd";
 import {Text} from "@consta/uikit/Text";
+import {useDispatch} from "react-redux";
+import {openLeftSideBar} from "../../features/ui";
 
 
-const items: ContextMenuItemDefault[] = [
+export const AddNewButtonWithDropdown = () => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const ref = useRef(null);
+  const dispatch = useDispatch()
+
+  const addArticleHandle = () => {
+    setIsOpen(false)
+    dispatch(openLeftSideBar())
+  }
+
+  const items: ContextMenuItemDefault[] = [
   {
     label: '',
     leftIcon: undefined,
@@ -17,13 +29,11 @@ const items: ContextMenuItemDefault[] = [
   },
   {
     label: 'Добавить вручную',
-    leftIcon: IconEdit
+    leftIcon: IconEdit,
+    onClick: addArticleHandle
   }
 ]
 
-export const AddNewButtonWithDropdown = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const ref = useRef(null);
   return (
     <div className="flex justify-center items-center p-3 h-20 w-full">
       <Button ref={ref}

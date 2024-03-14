@@ -19,7 +19,8 @@ export interface ArticleStateIFace {
       [key: string] : ArticleIFace
     }
   },
-  current_article?: ArticleIFace
+  current_article?: ArticleIFace,
+  new_article?: ArticleIFace
 }
 
 export interface WasOpeningScheme {
@@ -112,6 +113,14 @@ export interface AdditionalInformationIFace {
   publisher?: string
   month?: string
   day?: string
+  source?: string
+  country?: string
+  number?: string
+  code?: string
+  institution?: string
+  departament?: string
+  type?: string
+  series?: string
 }
 
 export type ReferenceTypeItem = {
