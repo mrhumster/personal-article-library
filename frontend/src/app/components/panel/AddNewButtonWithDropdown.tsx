@@ -7,17 +7,21 @@ import {AddNewFileButton} from "./AddNewFileButton.tsx";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
 import {IconDocAdd} from "@consta/icons/IconDocAdd";
 import {Text} from "@consta/uikit/Text";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {openLeftSideBar} from "../../features/ui";
+import {initNewArticle} from "../../features/article";
+import {RootState} from "../../store";
 
 
 export const AddNewButtonWithDropdown = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const new_article = useSelector((state: RootState) => state.articles.new_article)
   const ref = useRef(null);
   const dispatch = useDispatch()
 
   const addArticleHandle = () => {
     setIsOpen(false)
+    if (!new_article) dispatch(initNewArticle())
     dispatch(openLeftSideBar())
   }
 

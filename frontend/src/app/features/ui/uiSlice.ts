@@ -26,7 +26,8 @@ export const initialState: uiState = {
     }
   },
   leftSideBar: {
-    isSidebarOpen: false
+    isSidebarOpen: false,
+    formErrors: {}
   },
   uploadProgress: {
     show: false,
@@ -139,6 +140,10 @@ export const uiSlice = createSlice({
     },
     setActiveClickOutsideOnAdditionalInformation: (state: uiState, {payload}: {payload: boolean}) => {
       state.rightSideBar.additionalInformation.isActiveClickOutside = payload
+    },
+    setFormErrorByFieldName: (state: uiState, {payload}:{payload: {fieldName: string, errors: string[]}}) => {
+      const {fieldName, errors} = payload
+      if (payload) state.leftSideBar.formErrors[fieldName] = errors
     }
   },
   extraReducers: (builder) => {
@@ -176,5 +181,6 @@ export const {
   closeSearchDialog,
   setActiveClickOutsideOnAdditionalInformation,
   openLeftSideBar,
-  closeLeftSideBar
+  closeLeftSideBar,
+  setFormErrorByFieldName
 } = uiSlice.actions

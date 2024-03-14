@@ -12,6 +12,6 @@ export type {
   ArticleIFace, AuthorIFace, ArticleStateIFace, ReferenceTypeItem, PublicationDetails, FileScheme,
   EditorsIFace, AdditionalInformationIFace, CreateArticleIFace,
   FoundFileItemIFace, FoundArticleItemIFace} from './article.types.ts'
-export type {RightSideBarTabsItem, uiState} from './ui.types.ts'
+export type {RightSideBarTabsItem, uiState, formErrors} from './ui.types.ts'
 export type {CollectionStateIFace, CollectionIFace} from './collection.types.ts'
 export type {NoteBookIFace} from './notebook.types.ts'

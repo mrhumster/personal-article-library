@@ -21,5 +21,6 @@ export {
   closeSearchDialog,
   setActiveClickOutsideOnAdditionalInformation,
   openLeftSideBar,
-  closeLeftSideBar
+  closeLeftSideBar,
+  setFormErrorByFieldName
 } from './uiSlice.ts'

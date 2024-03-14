@@ -12,5 +12,8 @@ export {
   setCurrentUrls,
   setCurrentNoteBooks,
   addNoteBook,
+  initNewArticle,
+  setNewArticleReferenceType,
+  setNewArticleTitle,
   articleSlice
 } from './articleSlice.ts'

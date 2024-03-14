@@ -69,6 +69,15 @@ export const articleSlice = createSlice({
     },
     resetArticle: () => {
       return initialState
+    },
+    initNewArticle: (state: ArticleStateIFace) => {
+      state.new_article = {id: 'new', reference_type: 0, title: null, additional_information: {}}
+    },
+    setNewArticleReferenceType: (state: ArticleStateIFace, {payload}:{payload: number}) => {
+      if (state.new_article) state.new_article.reference_type = payload
+    },
+    setNewArticleTitle: (state: ArticleStateIFace, {payload}: {payload: string | null}) => {
+      if (state.new_article) state.new_article.title = payload
     }
   },
   extraReducers: (builder) => {
@@ -164,5 +173,8 @@ export const {
   setCurrentUrls,
   resetArticle,
   setCurrentNoteBooks,
-  addNoteBook
+  addNoteBook,
+  initNewArticle,
+  setNewArticleReferenceType,
+  setNewArticleTitle
 } = articleSlice.actions

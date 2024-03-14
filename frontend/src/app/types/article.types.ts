@@ -81,16 +81,16 @@ export interface Identifiers {
 
 export interface ArticleIFace {
   id: string
-  owner: string
-  added: string
+  owner?: string
+  added?: string
   publication?: PublicationDetails
   title: string | null
   source?: string
   files?: string[]
   reference_type: number
-  authors: AuthorIFace[]
+  authors?: AuthorIFace[]
   additional_information: AdditionalInformationIFace | null
-  urls: ArticleURLs
+  urls?: ArticleURLs
   identifiers?: Identifiers
   description?: string
   deleted?: boolean

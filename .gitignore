@@ -772,3 +772,4 @@ cython_debug/
 /frontend/node_modules2/
 /.es.env
 /media/
+/mongo/
