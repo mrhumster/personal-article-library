@@ -15,5 +15,6 @@ export {
   initNewArticle,
   setNewArticleReferenceType,
   setNewArticleTitle,
+  setNewArticleAuthors,
   articleSlice
 } from './articleSlice.ts'

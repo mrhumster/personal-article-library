@@ -17,7 +17,7 @@ export const TitleField = () => {
   const validate = (value: string) => {
     const fieldName = 'title'
     const fieldError: formErrors = { fieldName: fieldName, errors: [] }
-    if (value.length > 300) {fieldError.errors.push('Введите название не более 300 символов')}
+    if (value.length > 300) {fieldError.errors[0] = ['Введите название не более 300 символов']}
     dispatch(setFormErrorByFieldName(fieldError))
   }
 

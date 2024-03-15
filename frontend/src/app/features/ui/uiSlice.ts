@@ -141,7 +141,7 @@ export const uiSlice = createSlice({
     setActiveClickOutsideOnAdditionalInformation: (state: uiState, {payload}: {payload: boolean}) => {
       state.rightSideBar.additionalInformation.isActiveClickOutside = payload
     },
-    setFormErrorByFieldName: (state: uiState, {payload}:{payload: {fieldName: string, errors: string[]}}) => {
+    setFormErrorByFieldName: (state: uiState, {payload}:{payload: {fieldName: string, errors: (string[]|string)[]}}) => {
       const {fieldName, errors} = payload
       if (payload) state.leftSideBar.formErrors[fieldName] = errors
     }

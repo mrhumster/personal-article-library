@@ -78,6 +78,9 @@ export const articleSlice = createSlice({
     },
     setNewArticleTitle: (state: ArticleStateIFace, {payload}: {payload: string | null}) => {
       if (state.new_article) state.new_article.title = payload
+    },
+    setNewArticleAuthors: (state: ArticleStateIFace, {payload}: {payload: AuthorIFace[]}) => {
+      if (state.new_article) state.new_article.authors = payload
     }
   },
   extraReducers: (builder) => {
@@ -176,5 +179,6 @@ export const {
   addNoteBook,
   initNewArticle,
   setNewArticleReferenceType,
-  setNewArticleTitle
+  setNewArticleTitle,
+  setNewArticleAuthors
 } = articleSlice.actions

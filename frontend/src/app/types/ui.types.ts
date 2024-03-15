@@ -39,7 +39,7 @@ export interface uiState {
   leftSideBar: {
     isSidebarOpen: boolean
     formErrors: {
-      [field: string]: string[]
+      [field: string]: string[][]
     }
   }
   uploadProgress: {
@@ -65,5 +65,5 @@ export interface uiState {
 
 export interface formErrors {
   fieldName: string
-  errors: string[]
+  errors: string[][]
 }
