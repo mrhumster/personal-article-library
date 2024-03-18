@@ -208,7 +208,7 @@ class ArticleInDB(BaseModel):
 
 class NewArticleSchema(BaseModel):
     title: str = Field(max_length=200)
-    files: Optional[list[str]]
+    files: Optional[list[str]] = Field(default=[])
 
     @field_validator('files')
     def unique_files_id(cls, v):

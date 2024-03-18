@@ -6,6 +6,7 @@ import {RootState} from "../../../store";
 import {setNewArticlePublicationDetails} from "../../../features/article";
 import moment from "moment";
 import {setFormErrorByFieldName} from "../../../features/ui";
+import {formErrors} from "../../../types";
 
 
 
@@ -18,11 +19,13 @@ export const YearField = () => {
     dispatch(setNewArticlePublicationDetails({year: Number(value)}))
   }
   const validate = (value: string | null) => {
+    const errors: formErrors = {fieldName: 'publication.year', errors: []}
     if (value) {
       if (moment().isBefore(moment().year(Number(value)), 'year')) {
-        dispatch(setFormErrorByFieldName({fieldName: 'publication.year', errors: [['Этот год еще не наступил']]}))
+        errors.errors.push(['Год еще не наступил'])
       }
     }
+    dispatch(setFormErrorByFieldName(errors))
   }
   return (
     <GridItem col={2}>
