@@ -22,5 +22,6 @@ export {
   setActiveClickOutsideOnAdditionalInformation,
   openLeftSideBar,
   closeLeftSideBar,
-  setFormErrorByFieldName
+  setFormErrorByFieldName,
+  eraseFormErrors
 } from './uiSlice.ts'

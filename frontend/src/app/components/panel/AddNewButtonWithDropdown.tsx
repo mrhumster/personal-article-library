@@ -20,9 +20,9 @@ export const AddNewButtonWithDropdown = () => {
   const dispatch = useDispatch()
 
   const addArticleHandle = () => {
-    setIsOpen(false)
     if (!new_article) dispatch(initNewArticle())
     dispatch(openLeftSideBar())
+    setIsOpen(false)
   }
 
   const items: ContextMenuItemDefault[] = [

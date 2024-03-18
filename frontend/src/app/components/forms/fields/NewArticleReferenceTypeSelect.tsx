@@ -5,6 +5,7 @@ import {ReferenceTypeItem} from "../../../types";
 import {RootState} from "../../../store";
 import {ReferenceTypeItems} from "../../../items/reference_type.items";
 import {setNewArticleReferenceType} from "../../../features/article";
+import {eraseFormErrors} from "../../../features/ui";
 
 export const NewArticleReferenceTypeSelect = () => {
   const article = useSelector((state: RootState) => state.articles.new_article)
@@ -12,6 +13,7 @@ export const NewArticleReferenceTypeSelect = () => {
 
   const handleChange = (value: ReferenceTypeItem | null) => {
     if (value) dispatch(setNewArticleReferenceType(value.id))
+    dispatch(eraseFormErrors())
   }
     return (
       <div className='w-size flex items-stretch px-3'>

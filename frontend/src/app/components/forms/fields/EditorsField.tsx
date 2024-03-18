@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 
 import {RootState} from "../../../store";
 import {AuthorIFace, formErrors} from "../../../types";
-import {setNewArticleAuthors} from "../../../features/article";
+import {setNewArticleAdditionalInformation, setNewArticleAuthors} from "../../../features/article";
 import {authorToString} from "../../../utils";
 
 import {Button} from "@consta/uikit/Button";
@@ -15,43 +15,43 @@ import {FieldGroup} from "@consta/uikit/FieldGroup";
 import {setFormErrorByFieldName} from "../../../features/ui";
 
 
-export const AuthorsField = () => {
-  const authors = useSelector((state: RootState) => state.articles.new_article?.authors)
+export const EditorsField = () => {
+  const editors = useSelector((state: RootState) => state.articles.new_article?.additional_information?.editors)
   const [values, setValues] = useState<(string | null)[]>([null])
-  const errors = useSelector((state: RootState) => state.ui.leftSideBar.formErrors['authors'])
+  const errors = useSelector((state: RootState) => state.ui.leftSideBar.formErrors['additional_information.editors'])
   const dispatch = useDispatch()
 
   useEffect(() => {
     // init
-    if (!authors) {
+    if (!editors) {
       const emptyAuthor: AuthorIFace = {first_name: undefined, last_name: undefined, sur_name: undefined}
       dispatch(setNewArticleAuthors([emptyAuthor]))
     }
-    if (authors) {
-      setValues(authors.map((author) => authorToString(author)))
+    if (editors) {
+      setValues(editors.map((author) => authorToString(author)))
     }
   }, [])
 
   useEffect(() => {
-    const authors: AuthorIFace[] = []
+    const editors: AuthorIFace[] = []
     values.map((value) => {
-      const author: AuthorIFace = {first_name: undefined, last_name: undefined, sur_name: undefined}
+      const editor: AuthorIFace = {first_name: undefined, last_name: undefined, sur_name: undefined}
       if (value) {
         const [last_name, first_name, sur_name] = value
           .replace(/\s+/g, ' ')
           .split(' ', 3)
-        author.first_name = first_name
-        author.last_name = last_name
-        author.sur_name = sur_name
+        editor.first_name = first_name
+        editor.last_name = last_name
+        editor.sur_name = sur_name
       }
-      authors.push(author)
+      editors.push(editor)
     })
-    dispatch(setNewArticleAuthors(authors))
+    dispatch(setNewArticleAdditionalInformation({editors: editors}))
     validate(values)
   }, [values])
 
   const validate = (values: (string|null)[]) => {
-    const fieldName = 'authors'
+    const fieldName = 'additional_information.editors'
     const fieldErrors: formErrors = {fieldName: fieldName, errors: []}
     values.map((value, index) => {
       const error = []
@@ -88,11 +88,12 @@ export const AuthorsField = () => {
           return (
             <TextField className={'mb-3'}
                        key={index}
-                       label={'Авторы'}
+                       label={'Редакторы'}
                        value={value}
                        status={errors && errors[index] && errors[index].length > 0 ? 'alert' : undefined}
                        caption={errors && errors[index] && errors[index].join('\n')}
                        placeholder={'Фамилия Имя Отчество'}
+                       withClearButton
                        onChange={(value: string | null) => handleChange(value, index)}
             />
           )
@@ -104,6 +105,7 @@ export const AuthorsField = () => {
                            status={errors && errors[index] && errors[index].length > 0 ? 'alert' : undefined}
                            caption={errors && errors[index] && errors[index].join('\n')}
                            placeholder={'Фамилия Имя Отчество'}
+                           withClearButton
                            onChange={(value: string | null) => handleChange(value, index)}
                 />
                 <Button onlyIcon iconRight={IconClear} view={"secondary"}
@@ -114,7 +116,7 @@ export const AuthorsField = () => {
           )
         }
       )}
-      <Button label={'Добавить автора'} iconLeft={IconAdd} view={'clear'} size={'xs'}
+      <Button label={'Добавить редактора'} iconLeft={IconAdd} view={'clear'} size={'xs'}
               onClick={handleClickAdd} disabled={!values[values.length-1]}/>
     </GridItem>
   )

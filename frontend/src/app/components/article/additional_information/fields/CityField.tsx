@@ -27,7 +27,7 @@ export const CityField = () => {
     dispatch(setActiveClickOutsideOnAdditionalInformation(!open))
   }, [data]);
 
-  const getMailItems = () => {
+  const getItems = () => {
     if (data && data.length > 0) {
       return data.map((el: { text: string }, index: number) => ({
         id: index,
@@ -43,7 +43,7 @@ export const CityField = () => {
                     label={'Город'}
                     onChange={handleChange}
                     value={value}
-                    items={getMailItems()}
+                    items={getItems()}
                     dropdownOpen={open}
                     onDropdownOpen={onDropdownOpen}
                     searchFunction={(item, searchValue) => {

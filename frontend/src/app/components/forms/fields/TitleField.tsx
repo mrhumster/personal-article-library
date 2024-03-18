@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {GridItem} from "@consta/uikit/Grid";
 import {TextField} from "@consta/uikit/TextField";
 import {getTitleNameByReferenceType} from "../../../utils";
@@ -14,27 +14,29 @@ export const TitleField = () => {
   const errors = useSelector((state: RootState) => state.ui.leftSideBar.formErrors['title'])
   const dispatch = useDispatch()
 
-  const validate = (value: string) => {
+  const validate = (value: string | null | undefined) => {
     const fieldName = 'title'
-    const fieldError: formErrors = { fieldName: fieldName, errors: [] }
-    if (value.length > 300) {fieldError.errors[0] = ['Введите название не более 300 символов']}
+    const fieldError: formErrors = { fieldName: fieldName, errors: [[]] }
+    if (value && value.length > 300) {fieldError.errors[0].push('Введите название не более 300 символов')}
+    if (!value) {fieldError.errors[0].push('Поле обязательное для заполнения')}
     dispatch(setFormErrorByFieldName(fieldError))
   }
 
   const handleChange = (value: string | null) => {
-    if (value) validate(value)
+    validate(value)
     dispatch(setNewArticleTitle(value))
   }
 
+  useEffect(()=>{validate(value)}, [])
 
   return (
     <GridItem col={2}>
       <TextField label={getTitleNameByReferenceType(reference_type)}
                  value={value}
-                 caption={errors && errors.join('\n')}
+                 caption={errors && errors[0] && errors[0].join('\n')}
                  onChange={handleChange}
                  withClearButton
-                 status={errors ? 'alert' : undefined}
+                 status={(errors && errors[0] && errors[0].length > 0) ? 'alert' : undefined}
       />
     </GridItem>
   )

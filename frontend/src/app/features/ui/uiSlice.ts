@@ -141,9 +141,12 @@ export const uiSlice = createSlice({
     setActiveClickOutsideOnAdditionalInformation: (state: uiState, {payload}: {payload: boolean}) => {
       state.rightSideBar.additionalInformation.isActiveClickOutside = payload
     },
-    setFormErrorByFieldName: (state: uiState, {payload}:{payload: {fieldName: string, errors: (string[]|string)[]}}) => {
+    setFormErrorByFieldName: (state: uiState, {payload}:{payload: {fieldName: string, errors: string[][]}}) => {
       const {fieldName, errors} = payload
       if (payload) state.leftSideBar.formErrors[fieldName] = errors
+    },
+    eraseFormErrors: (state: uiState) => {
+      state.leftSideBar.formErrors = {}
     }
   },
   extraReducers: (builder) => {
@@ -182,5 +185,6 @@ export const {
   setActiveClickOutsideOnAdditionalInformation,
   openLeftSideBar,
   closeLeftSideBar,
-  setFormErrorByFieldName
+  setFormErrorByFieldName,
+  eraseFormErrors
 } = uiSlice.actions
