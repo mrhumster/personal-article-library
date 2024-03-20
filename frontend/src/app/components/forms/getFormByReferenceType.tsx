@@ -5,7 +5,7 @@ import {NewUnspecifiedArticleForm} from "./NewUnspecifiedArticleForm";
 import {NewBookArticleForm} from "./NewBookArticleForm.tsx";
 import {NewJournalArticleForm} from "./NewJournalArticleForm.tsx";
 import {NewWebArticleForm} from "./NewWebArticleForm.tsx";
-import {NewMagazineArticleForm} from "./NewMagazineArticleForm.tsx";
+import {NewNewspaperArticleForm} from "./NewNewspaperArticleForm.tsx";
 import {NewStatuteArticleForm} from "./NewStatuteArticleForm.tsx";
 import {NewEncyclopediaArticleForm} from "./NewEncyclopediaArticleForm.tsx";
 import {NewDissertationArticleForm} from "./NewDissertationArticleForm.tsx";
@@ -24,7 +24,7 @@ export const getFormByReferenceType = () => {
     case 3:
       return <NewWebArticleForm />
     case 4:
-      return <NewMagazineArticleForm />
+      return <NewNewspaperArticleForm />
     case 5:
       return <NewStatuteArticleForm />
     case 6:

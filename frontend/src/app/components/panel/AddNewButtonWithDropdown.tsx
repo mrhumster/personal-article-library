@@ -32,7 +32,7 @@ export const AddNewButtonWithDropdown = () => {
     rightSide: <AddNewFileButton text={<><IconDocAdd className="my-auto" size={'xs'}/><Text className="ms-2" size={"s"}>Добавить с ПК</Text></>} />
   },
   {
-    label: 'Добавить вручную',
+    label: 'Добавить в ручную',
     leftIcon: IconEdit,
     onClick: addArticleHandle
   }

@@ -2,7 +2,7 @@ import React from "react";
 import {Grid} from "@consta/uikit/Grid";
 import {
   AuthorsField,
-  CityField, DayField,
+  CityField, DayField, DescriptionField,
   EditionField,
   EditorsField, MonthField,
   PagesField, PublisherField,
@@ -26,6 +26,7 @@ export const NewBookArticleForm = () => {
       <PublisherField />
       <DayField />
       <MonthField />
+      <DescriptionField />
     </Grid>
   )
 }

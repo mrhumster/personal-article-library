@@ -32,6 +32,7 @@ export const EditionField = () => {
                  caption={errors && errors.join('\n')}
                  onChange={handleChange}
                  withClearButton
+                 placeholder={'2-е, second, ...'}
                  status={(errors && errors.length) ? 'alert' : undefined}
       />
     </GridItem>

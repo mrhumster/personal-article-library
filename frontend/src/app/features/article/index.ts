@@ -18,5 +18,6 @@ export {
   setNewArticleAuthors,
   setNewArticlePublicationDetails,
   setNewArticleAdditionalInformation,
+  setNewArticleDescription,
   articleSlice
 } from './articleSlice.ts'

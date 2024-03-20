@@ -92,7 +92,7 @@ export interface ArticleIFace {
   additional_information: AdditionalInformationIFace | null
   urls?: ArticleURLs
   identifiers?: Identifiers
-  description?: string
+  description?: string | null
   deleted?: boolean
   delete_date?: string
   favorite?: boolean
