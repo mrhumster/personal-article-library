@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {closeLeftSideBar} from "../../features/ui";
 import {useCreateArticleMutation} from "../../services/backend";
-import {addArticle} from "../../features/article";
+import {addArticle, initNewArticle} from "../../features/article";
 
 export const NewArticleButtons = () => {
   const errors = useSelector((state: RootState) => state.ui.leftSideBar.formErrors)
@@ -35,6 +35,7 @@ export const NewArticleButtons = () => {
     if (isSuccess && data) {
       dispatch(addArticle(data))
       dispatch(closeLeftSideBar())
+      dispatch(initNewArticle())
     }
   }, [isSuccess, data])
 

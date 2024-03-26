@@ -4,24 +4,23 @@ networks:
   pal-network:
 
 volumes:
-  node_modules:
   uploads:
   data_es:
 
 services:
   frontend:
-    build:
-      context: frontend
-      target: development
-    stdin_open: true
+    image: "node:18"
+    user: "root"
+    working_dir: "/usr/src/app"
     volumes:
       - ./frontend:/usr/src/app
-      - node_modules:/usr/src/app/node_modules
     restart: always
     environment:
-      NODE_PATH: /usr/src/app/node_modules
+      - NODE_PATH=/usr/src/node_modules
+      - NODE_ENV=development
     networks:
       - pal-network
+    command: "npm run dev"
   backend:
     build:
       context: ./backend
@@ -47,6 +46,8 @@ services:
       - pal-network
     volumes:
       - ./mongo/data:/data/db
+    ports:
+      - "27017:27017"
 
   mongo-express:
     image: mongo-express

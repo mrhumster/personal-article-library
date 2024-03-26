@@ -208,7 +208,22 @@ class ArticleInDB(BaseModel):
 
 class NewArticleSchema(BaseModel):
     title: str = Field(max_length=200)
-    files: Optional[list[str]] = Field(default=[])
+    files: Optional[list[str]] = Field(default=[], min_items=0, max_items=100)
+    publication: Optional[PublicationDetails] = Field(PublicationDetails())
+    authors: Optional[list[AuthorSchema]] = Field(None, max_items=10)
+    source: Optional[str] = Field(None, max_length=200)
+    reference_type: int = Field(0)
+    additional_information: Optional[AdditionalInformationBook] = Field(None)
+    urls: Optional[ArticleURLs] = Field(None)
+    identifiers: Optional[Identifiers] = Field(None)
+    description: Optional[str] = Field(None, max_length=2999)
+    deleted: Optional[bool] = Field(False)
+    delete_date: Optional[CustomDatetime] = Field(None)
+    favorite: Optional[bool] = Field(False)
+    read: Optional[bool] = Field(False)
+    read_date: Optional[CustomDatetime] = Field(None)
+    notebooks: Optional[list[str]] = Field([])
+
 
     @field_validator('files')
     def unique_files_id(cls, v):

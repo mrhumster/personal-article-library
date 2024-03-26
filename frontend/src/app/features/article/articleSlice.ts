@@ -91,6 +91,9 @@ export const articleSlice = createSlice({
     setNewArticleDescription: (state: ArticleStateIFace, {payload}: {payload: string | null}) => {
       if (state.new_article) state.new_article.description = payload
     },
+    addFileInCurrentArticle: (state: ArticleStateIFace, {payload}) => {
+      if (state.current_article) state.current_article.files = [...state.current_article.files, payload]
+    }
   },
   extraReducers: (builder) => {
     builder.addMatcher(
@@ -192,5 +195,6 @@ export const {
   setNewArticleAuthors,
   setNewArticlePublicationDetails,
   setNewArticleAdditionalInformation,
-  setNewArticleDescription
+  setNewArticleDescription,
+  addFileInCurrentArticle
 } = articleSlice.actions

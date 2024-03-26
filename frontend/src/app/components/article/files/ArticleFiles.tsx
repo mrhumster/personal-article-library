@@ -11,7 +11,7 @@ export const ArticleFiles = () => {
     <div className={'my-5'}>
       <div className='flex justify-start align-center items-center mt-3'>
         <span className='ms-1 text-zinc-500/90 uppercase text-xs font-semibold tracking-[.1em]'>Вложения</span>
-        <AddNewFileButton  article={current_article?.id} text={<IconHealth view={'brand'} className="ms-1" size={'s'}/>}/>
+        <AddNewFileButton article={current_article?.id} text={<IconHealth view={'brand'} className="ms-1" size={'s'}/>}/>
       </div>
       <div>
         {current_article?.files && current_article.files.map((file_id: string, index) =>

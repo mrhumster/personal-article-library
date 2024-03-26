@@ -19,5 +19,6 @@ export {
   setNewArticlePublicationDetails,
   setNewArticleAdditionalInformation,
   setNewArticleDescription,
+  addFileInCurrentArticle,
   articleSlice
 } from './articleSlice.ts'

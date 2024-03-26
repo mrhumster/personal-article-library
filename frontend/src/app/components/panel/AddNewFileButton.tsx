@@ -12,14 +12,13 @@ import moment from 'moment';
 import 'moment-timezone';
 import 'moment/locale/ru';
 import {CreateArticleIFace} from "../../types";
-import {addMessage} from "../../features/alert";
+import {addFileInCurrentArticle, setCurrentArticle} from "../../features/article";
 
 moment().locale('ru')
 
 export const AddNewFileButton = ({ text, article }:{text: ReactNode, article?: string}) => {
   const [addFile, addFileResult] = useAddFileMutation()
   const [addArticle, isSuccess] = useCreateArticleMutation()
-  const [updateArticle] = useUpdateArticleMutation()
   const getArticles = useGetArticlesQuery({})
   const { data } = useGetArticleQuery(article, {skip: !article})
 
@@ -48,11 +47,8 @@ export const AddNewFileButton = ({ text, article }:{text: ReactNode, article?: s
         files: [addFileResult.data.id]
       }
       if (article) {
-        if (data && data.files && data.files.indexOf(addFileResult.data.id) !== -1) {
-          dispatch(addMessage({'message': 'Такой файл уже есть в данной ссылке'}))
-        } else if (data && data.files && data.files.indexOf(addFileResult.data.id) === -1) {
-          updateArticle({...data, files: [...data.files, addFileResult.data.id]})
-        }
+        console.log('***',article, '***')
+        dispatch(addFileInCurrentArticle(addFileResult.data.id))
       } else {
         addArticle(newArticle)
       }

@@ -62,7 +62,7 @@ export const AttachFile = ({file_id}:{file_id: string}) => {
   const handleClickAttachment = () => {
     if (data && current_article?.id) {
       dispatch(openReader())
-      dispatch(openFile({file: data, article_id: current_article?.id}))
+      dispatch(openFile({file: data, article_id: current_article?.id, search_query: undefined}))
     }
   }
 
