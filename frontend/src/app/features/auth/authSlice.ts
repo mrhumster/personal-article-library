@@ -34,8 +34,19 @@ export const authSlice = createSlice({
     setFullName: (state: AuthState, action) => {
       state.fullName = action.payload
     },
-    clearAuthData: () => {
-      return initialState
+    setUserDataInRedux: (state: AuthState, {payload}) => {
+      state.isLogin = true
+      state.isExists = true
+      state.email = payload.email
+      state.fullName = payload.fullName
+      state.username = payload.username
+    },
+    clearAuthData: (state: AuthState) => {
+      state.isLogin = false
+      state.isExists = undefined
+      state.email = undefined
+      state.username = undefined
+      state.fullName = undefined
     },
   },
   extraReducers: (builder) => {
@@ -63,6 +74,16 @@ export const authSlice = createSlice({
       }
     )
     builder.addMatcher(
+      backendApi.endpoints.getArticles.matchRejected,
+      (state) => {
+        state.isLogin = false
+        state.isExists = undefined
+        state.email = undefined
+        state.username = undefined
+        state.fullName = undefined
+      }
+    )
+    builder.addMatcher(
       backendApi.endpoints.createUser.matchFulfilled,
       (state, {payload}) => {
         state.isLogin = true
@@ -78,5 +99,6 @@ export const {
   setFullName,
   setUserAsExist,
   setUserAsNotExist,
-  clearAuthData
+  clearAuthData,
+  setUserDataInRedux
 } = authSlice.actions

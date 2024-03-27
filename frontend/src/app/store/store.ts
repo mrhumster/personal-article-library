@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit'
+import {combineReducers, configureStore} from '@reduxjs/toolkit'
 import {authSlice} from "../features/auth"
 import { setupListeners } from "@reduxjs/toolkit/query";
 import {snackBarSlice} from "../features/alert";
@@ -7,26 +7,40 @@ import {backendApi} from "../services/backend";
 import {articleSlice} from "../features/article";
 import {collectionSlice} from "../features/collections";
 import {googleBookApi} from "../services/googleBookApi.ts";
+import thunk from 'redux-thunk';
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
+const persistConfig = {
+  key: 'root',
+  storage,
+}
+
+const rootReducer = combineReducers({
+    [backendApi.reducerPath]: backendApi.reducer,
+    [googleBookApi.reducerPath]: googleBookApi.reducer,
+    auth: authSlice.reducer,
+    snackBar: snackBarSlice.reducer,
+    ui: uiSlice.reducer,
+    articles: articleSlice.reducer,
+    collections: collectionSlice.reducer
+})
+
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({
-    reducer: {
-        [backendApi.reducerPath]: backendApi.reducer,
-        [googleBookApi.reducerPath]: googleBookApi.reducer,
-        auth: authSlice.reducer,
-        snackBar: snackBarSlice.reducer,
-        ui: uiSlice.reducer,
-        articles: articleSlice.reducer,
-        collections: collectionSlice.reducer
-    },
+    reducer: persistedReducer,
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()
             .concat(backendApi.middleware)
             .concat(googleBookApi.middleware)
+            .concat(thunk)
 })
 
 setupListeners(store.dispatch)
-// Infer the `RootState` and `AppDispatch` types from the store itself
+
 export type RootState = ReturnType<typeof store.getState>
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+
 export type AppDispatch = typeof store.dispatch
+
+export const persistor = persistStore(store)

@@ -5,5 +5,6 @@ export {
   clearAuthData,
   setEmail,
   setUsername,
-  setFullName
+  setFullName,
+  setUserDataInRedux
 } from './authSlice.ts'

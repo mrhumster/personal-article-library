@@ -8,6 +8,8 @@ import { store } from './app/store'
 import { Provider } from 'react-redux'
 import {WorkSpace} from "./app/pages/WorkSpace.tsx";
 import {ProtectedRoute} from "./app/routes/ProtectedRoute.tsx";
+import {PersistGate} from "redux-persist/integration/react";
+import {persistor} from "./app/store/store.ts";
 
 const router = createBrowserRouter(
   [{
@@ -26,7 +28,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
     <Theme preset={presetGpnDark}>
       <Provider store={store}>
-        <RouterProvider router={router} />
+        <PersistGate loading={null} persistor={persistor}>
+          <RouterProvider router={router} />
+        </PersistGate>
       </Provider>
     </Theme>
 )

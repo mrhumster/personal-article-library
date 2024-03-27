@@ -11,7 +11,7 @@ import {
   clearAuthData,
   setUsername as setUsernameAction,
   setEmail as setEmailAction,
-  setFullName as setFullNameAction
+  setFullName as setFullNameAction, setUserDataInRedux
 } from "../features/auth"
 import {RootState} from "../store";
 import {getUser} from "../hooks";
@@ -40,6 +40,20 @@ export const Login = () => {
   const [getToken, loginResult] = useGetTokenMutation()
   const [createUser] = useCreateUserMutation()
 
+  useEffect(()=>{
+    console.log(user)
+    if (user) {
+      dispatch(setUserDataInRedux({
+        fullName: user.fullName,
+        username: user.username,
+        email: user.email
+      }))
+    }
+    if (!user) {
+      dispatch(clearAuthData())
+    }
+  }, [])
+
   const handleChangeUsername = (value: string | null ) => setUsername(value);
   const handleChangePassword = (value: string | null ) => setPassword(value);
   const handleChangeRePassword = (value: string | null ) => setRePassword(value);
@@ -54,7 +68,7 @@ export const Login = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
-    if (auth.isExists === undefined) {
+    if (!auth.isLogin && !auth.username) {
       // Stage 1: set login
       dispatch(setUsernameAction(username))
     } else if (auth.isExists && auth.username) {
@@ -113,7 +127,7 @@ export const Login = () => {
                       onIconRightClick={handleClickOtherUser}
                 />
             }
-            {auth.isExists === undefined && <TextField
+            {!auth.isLogin && !auth.username && <TextField
                 autoFocus
                 className="px-16"
                 type="text"
