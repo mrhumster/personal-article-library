@@ -773,3 +773,4 @@ cython_debug/
 /.es.env
 /media/
 /mongo/
+/.idea/jsLinters/eslint.xml
