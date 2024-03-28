@@ -25,7 +25,7 @@ export const authorsToString = (authors: AuthorIFace[] | null) => {
   return <div className={'flex flex-wrap cursor-pointer'}>{content}</div>
 }
 
-export const authorToString = (author: AuthorIFace) => {
+export const authorToString = (author: AuthorIFace | undefined) => {
   if (author) {
     const {first_name, last_name, sur_name} = author
     return `${last_name ? last_name : ''} ${first_name ? first_name : ''} ${sur_name ? sur_name : ''}`

@@ -1,10 +1,10 @@
 import elasticsearch
 import requests
 from elasticsearch import AsyncElasticsearch, Elasticsearch
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Security
 from uvicorn.main import logger
 
-from authorisation.auth import get_current_active_user
+from authorisation.auth import get_current_active_user, get_api_key
 from schema.user import User
 from utils.environment import Config
 
@@ -132,3 +132,8 @@ async def get_suggest_from_es(prefix: str, field_name: str):
               }
             }
             create_search_template(name=template_id, template=search_template)
+
+
+@router.get('/test')
+async def test(api_key: str = Security(get_api_key)):
+    return f"Private Endpoint. API Key: {api_key}"

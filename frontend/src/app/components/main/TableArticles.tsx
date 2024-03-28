@@ -26,7 +26,6 @@ import {SelectedPanel} from "./SelectedPanel.tsx";
 import {AuthorsCell, FavoriteCell, ReadCell} from "./table_cells";
 import moment from "moment";
 import {ElasticSearch, SearchModal} from "./search";
-import {LeftSideBar} from "../sidebar";
 
 
 type TableArticlesIFace = {
@@ -342,7 +341,7 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
             .flat()
             .sort((a, b) => {
               const fa = a && a.last_name ? a.last_name : '',
-                    fb = b && b.last_name ? b.last_name : '';
+                fb = b && b.last_name ? b.last_name : '';
               if (fa && fb) {
                 if (fa < fb) {
                   return -1;
@@ -372,7 +371,7 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
         <div className={`h-[5%] flex items-center border-b border-slate-300 justify-items-stretch`}>
           <TableTitle title={title}/>
           <div id='buttons' className={`flex`}>
-            <ElasticSearch />
+            <ElasticSearch/>
           </div>
         </div>
         <div id='tableContainer' className={`grow overflow-y-auto ${selected.length > 0 ? 'h-[88%]' : 'h-[95%]'}`}>
@@ -406,7 +405,7 @@ export const TableArticles = ({filter, title}: TableArticlesIFace) => {
               onClickOutside={() => setIsOpenContextMenu(false)}
           />
       }
-      <SearchModal />
+      <SearchModal/>
     </Theme>
   )
 }

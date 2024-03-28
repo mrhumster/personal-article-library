@@ -21,12 +21,13 @@ origins = [
     "https://0.0.0.0",
     "https://localhost",
     "https://backend",
-    f"https://{Config.HOSTNAME}"
+    f"https://{Config.HOSTNAME}",
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
+    #allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

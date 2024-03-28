@@ -3,11 +3,11 @@ import {AvatarGroup} from "@consta/uikit/AvatarGroup";
 import {AuthorIFace} from "../../../types";
 import {authorToString} from "../../../utils";
 
-export const AuthorsCell = ({items}:{items: AuthorIFace[]}) => {
+export const AuthorsCell = ({items}:{items: AuthorIFace[] | undefined}) => {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (ref.current) ref.current.title = items.map((item) => authorToString(item)).join('\n')
+    if (ref.current && items) ref.current.title = items.map((item) => authorToString(item)).join('\n')
   }, [ref])
 
   if (items) {
